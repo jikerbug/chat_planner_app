@@ -1,5 +1,6 @@
 import 'package:chat_planner_app/api_in_local/hive_plan_api.dart';
 import 'package:chat_planner_app/functions/custom_dialog_function.dart';
+import 'package:chat_planner_app/functions/datetime_function.dart';
 import 'package:chat_planner_app/models/plan_model.dart';
 import 'package:chat_planner_app/providers/data.dart';
 import 'package:chat_planner_app/widgets/plan_tile.dart';
@@ -10,6 +11,9 @@ import 'package:provider/provider.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class PlanList extends StatefulWidget {
+  PlanList(this.selectedDay);
+
+  final String selectedDay;
   @override
   _PlanListState createState() => _PlanListState();
 }
@@ -53,11 +57,46 @@ class _PlanListState extends State<PlanList> {
                   child: Text('아이템이 존재하지 않습니다.'),
                 );
               } else {
-                // if (item.title[0] != 'a') {
-                //   return Container(
-                //     key: ValueKey(item),
-                //   );
-                // }
+                if (widget.selectedDay != '전체') {
+                  DateTime selectedDateTime =
+                      DateTimeFunction.getDateTimeOfSelectedDate(
+                          widget.selectedDay);
+                  print(
+                      'selectedDateTime: $selectedDateTime / selectedDay : ${widget.selectedDay}');
+
+                  if (item.isHabit) {
+                    bool isSelectedDayEqualsAimDayOfWeek = false;
+                    for (String dayName in item.aimDaysOfWeek) {
+                      if (dayName == widget.selectedDay) {
+                        isSelectedDayEqualsAimDayOfWeek = true;
+                        break;
+                      }
+                    }
+
+                    if (!isSelectedDayEqualsAimDayOfWeek) {
+                      return Container(
+                        key: ValueKey(item),
+                      );
+                    }
+                  } else {
+                    if (item.habitEndOrTaskDateInfo ==
+                        DateTimeFunction.noLimitNotation) {
+                      if (DateTimeFunction.getTodayOfWeek() !=
+                          widget.selectedDay) {
+                        return Container(
+                          key: ValueKey(item),
+                        );
+                      }
+                    } else {
+                      if (selectedDateTime.toString().substring(0, 10) !=
+                          item.habitEndOrTaskDateInfo) {
+                        return Container(
+                          key: ValueKey(item),
+                        );
+                      }
+                    }
+                  }
+                }
 
                 return PlanTile(
                   deleteFunction: () {

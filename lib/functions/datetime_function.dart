@@ -1,5 +1,3 @@
-import 'package:intl/intl.dart';
-
 class Day {
   Day({this.isSelected = false, required this.name});
   String name;
@@ -11,6 +9,8 @@ class Day {
 }
 
 class DateTimeFunction {
+  static const String noLimitNotation = '기한 없음';
+
   static List<String> get dayListForPlanScreen =>
       ['전체', '월', '화', '수', '목', '금', '토', '일'];
   static List<Day> get dayListForPlanAddScreen {
@@ -26,30 +26,37 @@ class DateTimeFunction {
   }
 
   static String getTodayOfWeek() {
-    String todayOfWeek = DateFormat('EEEE').format(DateTime.now());
-    switch (todayOfWeek) {
-      case 'Monday':
-        todayOfWeek = '월';
-        break;
-      case 'Tuesday':
-        todayOfWeek = '화';
-        break;
-      case 'Wednesday':
-        todayOfWeek = '수';
-        break;
-      case 'Thursday':
-        todayOfWeek = '목';
-        break;
-      case 'Friday':
-        todayOfWeek = '금';
-        break;
-      case 'Saturday':
-        todayOfWeek = '토';
-        break;
-      case 'Sunday':
-        todayOfWeek = '일';
-        break;
+    //weekday는 1부터 7까지, 월요일부터, 일요일까지임!! -> 전체는 index 0이니까 포함될 일 없다.
+    return dayListForPlanScreen[DateTime.now().weekday];
+  }
+
+  static DateTime getDateTimeOfSelectedDate(String selectedDay) {
+    if (selectedDay == '전체') {
+      print('이경우는 로직상 도달할 수 없는 것으로 설계됨. \n해당 메시지 발견시 로직 보완바람');
     }
-    return todayOfWeek;
+    if (selectedDay == getTodayOfWeek()) {
+      return DateTime.now();
+    } else {
+      DateTime tempDayOfWeekDateTime = DateTime.now();
+      bool isSelectedDateFuture = true;
+      while (
+          dayListForPlanScreen[tempDayOfWeekDateTime.weekday] != selectedDay) {
+        if (tempDayOfWeekDateTime.weekday == 1) {
+          isSelectedDateFuture = false;
+        }
+        tempDayOfWeekDateTime = tempDayOfWeekDateTime.add(Duration(days: 1));
+      }
+
+      if (selectedDay == dayListForPlanScreen[1]) {
+        //월요일
+        isSelectedDateFuture = false;
+      }
+
+      if (isSelectedDateFuture) {
+        return tempDayOfWeekDateTime;
+      } else {
+        return tempDayOfWeekDateTime.subtract(Duration(days: 7));
+      }
+    }
   }
 }

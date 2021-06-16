@@ -19,10 +19,11 @@ class HivePlanApi {
       title: (fieldName == 'title') ? value : item.title,
       isChecked: (fieldName == 'isChecked') ? value : item.isChecked,
       timestamp: (fieldName == 'timestamp') ? value : item.timestamp,
-      isOneTimeTask:
-          (fieldName == 'isOneTimeTask') ? value : item.isOneTimeTask,
+      isHabit: (fieldName == 'isOneTimeTask') ? value : item.isHabit,
       aimDaysOfWeek:
           (fieldName == 'aimDaysOfWeek') ? value : item.aimDaysOfWeek,
+      habitEndOrTaskDateInfo:
+          (fieldName == 'aimDaysOfWeek') ? value : item.habitEndOrTaskDateInfo,
     );
   }
 

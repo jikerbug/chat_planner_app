@@ -21,15 +21,16 @@ class PlanModelAdapter extends TypeAdapter<PlanModel> {
       title: fields[1] as String,
       isChecked: fields[2] as bool,
       timestamp: fields[3] as String,
-      isOneTimeTask: fields[4] as bool,
+      isHabit: fields[4] as bool,
       aimDaysOfWeek: (fields[5] as List).cast<dynamic>(),
+      habitEndOrTaskDateInfo: fields[6] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, PlanModel obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -39,9 +40,11 @@ class PlanModelAdapter extends TypeAdapter<PlanModel> {
       ..writeByte(3)
       ..write(obj.timestamp)
       ..writeByte(4)
-      ..write(obj.isOneTimeTask)
+      ..write(obj.isHabit)
       ..writeByte(5)
-      ..write(obj.aimDaysOfWeek);
+      ..write(obj.aimDaysOfWeek)
+      ..writeByte(6)
+      ..write(obj.habitEndOrTaskDateInfo);
   }
 
   @override

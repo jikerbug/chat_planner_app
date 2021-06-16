@@ -1,9 +1,6 @@
 import 'package:chat_planner_app/functions/datetime_function.dart';
 import 'package:chat_planner_app/modules/plan_list.dart';
-import 'package:chat_planner_app/providers/data.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 import '../functions/custom_dialog_function.dart';
 
 class InfoPanel extends StatefulWidget {
@@ -116,16 +113,16 @@ class _PlanScreenState extends State<PlanScreen> {
                 SizedBox(
                   width: 5,
                 ),
-                for (String category
+                for (String dayCategory
                     in DateTimeFunction.dayListForPlanScreen) ...{
                   GestureDetector(
                     onTap: () {
                       setState(() {
-                        selectedDay = category;
+                        selectedDay = dayCategory;
                       });
                     },
                     child: Material(
-                      color: (selectedDay == category)
+                      color: (selectedDay == dayCategory)
                           ? Colors.white
                           : Colors.transparent,
                       borderRadius: BorderRadius.vertical(
@@ -135,9 +132,9 @@ class _PlanScreenState extends State<PlanScreen> {
                       child: CircleAvatar(
                         backgroundColor: Colors.transparent,
                         child: Text(
-                          category,
+                          dayCategory,
                           style: TextStyle(
-                              color: (selectedDay == category)
+                              color: (selectedDay == dayCategory)
                                   ? Colors.black
                                   : Colors.white),
                         ),
@@ -170,7 +167,7 @@ class _PlanScreenState extends State<PlanScreen> {
                     style: TextStyle(color: Colors.green),
                   ),
                 ),
-                Expanded(child: PlanList()),
+                Expanded(child: PlanList(selectedDay)),
               ],
             ),
           ),

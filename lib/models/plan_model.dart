@@ -21,17 +21,21 @@ class PlanModel {
   final String timestamp;
 
   @HiveField(4)
-  final bool isOneTimeTask;
+  final bool isHabit;
 
   @HiveField(5)
   final List aimDaysOfWeek;
+
+  @HiveField(6)
+  final String habitEndOrTaskDateInfo;
 
   PlanModel({
     required this.id,
     required this.title,
     required this.isChecked,
     required this.timestamp,
-    required this.isOneTimeTask,
+    required this.isHabit,
     required this.aimDaysOfWeek,
+    required this.habitEndOrTaskDateInfo,
   });
 }

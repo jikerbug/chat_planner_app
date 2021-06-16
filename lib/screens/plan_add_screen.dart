@@ -9,6 +9,7 @@
 // 그것 이외에도 7시기상, 6시기상 같은 것들에 대해 전체 사용자가 얼마나 해당 습관을
 // 채택하고 있는지 보는 것도 좋을 것 같다.
 
+import 'package:chat_planner_app/functions/custom_dialog_function.dart';
 import 'package:chat_planner_app/functions/datetime_function.dart';
 import 'package:chat_planner_app/models/plan_model.dart';
 import 'package:chat_planner_app/widgets/rounded_button.dart';
@@ -21,8 +22,6 @@ class PlanAddScreen extends StatefulWidget {
   _PlanAddScreenState createState() => _PlanAddScreenState();
 }
 
-String noLimitNotation = '기한 없음';
-
 class _PlanAddScreenState extends State<PlanAddScreen> {
   String title = '';
   var textEditingController = TextEditingController();
@@ -30,22 +29,27 @@ class _PlanAddScreenState extends State<PlanAddScreen> {
   bool isHabit = true;
   bool isEveryDay = false;
   bool isWeekDay = false;
-
-  String selectHabitEndOrTaskDate = noLimitNotation;
+  String noLimitNotation = DateTimeFunction.noLimitNotation;
+  late String habitEndOrTaskDateInfo = noLimitNotation;
 
   Future<String> _selectDate() async {
-    if (selectHabitEndOrTaskDate == noLimitNotation) {
-      selectHabitEndOrTaskDate = DateTime.now().toString().substring(0, 10);
+    if (habitEndOrTaskDateInfo == noLimitNotation) {
+      habitEndOrTaskDateInfo = DateTime.now().toString().substring(0, 10);
     }
     // locale 설정하기 위해 pubspec_copy.yaml 파일과 메인에 코드 추가!!
     DateTime? picked = await showDatePicker(
       context: context,
       locale: const Locale('ko', 'KO'),
-      initialDate: DateTime.parse(selectHabitEndOrTaskDate),
+      initialDate: DateTime.parse(habitEndOrTaskDateInfo),
       firstDate: DateTime.now(),
       lastDate: DateTime(DateTime.now().year + 2),
       builder: (BuildContext context, Widget? child) {
-        return child!;
+        return Theme(
+            data: ThemeData(
+              primaryColor: Colors.teal,
+              primarySwatch: Colors.teal,
+            ),
+            child: child!);
       },
     );
     if (picked != null) {
@@ -186,14 +190,14 @@ class _PlanAddScreenState extends State<PlanAddScreen> {
                                       new Radius.circular(50.0)),
                                   border: new Border.all(
                                     color: day.isSelected
-                                        ? Colors.green
+                                        ? Colors.teal
                                         : Colors.black,
                                     width: 1.5,
                                   ),
                                 ),
                                 child: CircleAvatar(
                                   backgroundColor: day.isSelected
-                                      ? Colors.green
+                                      ? Colors.teal
                                       : Colors.transparent,
                                   child: Text(
                                     day.name,
@@ -229,14 +233,17 @@ class _PlanAddScreenState extends State<PlanAddScreen> {
                   ),
                 TextButton(
                     onPressed: () async {
-                      if (selectHabitEndOrTaskDate == noLimitNotation) {
-                        selectHabitEndOrTaskDate = await _selectDate();
+                      if (habitEndOrTaskDateInfo == noLimitNotation) {
+                        habitEndOrTaskDateInfo = await _selectDate();
                       } else {
-                        selectHabitEndOrTaskDate = noLimitNotation;
+                        habitEndOrTaskDateInfo = noLimitNotation;
                       }
                       setState(() {});
                     },
-                    child: Text(selectHabitEndOrTaskDate)),
+                    child: Text(
+                      habitEndOrTaskDateInfo,
+                      style: TextStyle(color: Colors.teal),
+                    )),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -249,7 +256,7 @@ class _PlanAddScreenState extends State<PlanAddScreen> {
                         title: '닫기'),
                     RoundedButton(
                         minWidth: 100.0,
-                        color: Colors.green,
+                        color: Colors.teal,
                         onPressed: () {
                           if (title != '') {
                             final box = Hive.box<PlanModel>('word');
@@ -265,6 +272,26 @@ class _PlanAddScreenState extends State<PlanAddScreen> {
                             }
                             print(id);
 
+                            List<String> aimDaysOfWeek = [];
+                            if (isHabit) {
+                              for (Day day in dayList) {
+                                if (day.isSelected) {
+                                  aimDaysOfWeek.add(day.name);
+                                }
+                              }
+
+                              if (aimDaysOfWeek.length == 0) {
+                                CustomDialogFunction.dialogFunction(
+                                    context: context,
+                                    isTwoButton: false,
+                                    isLeftAlign: false,
+                                    onPressed: () {},
+                                    title: '요일 선택',
+                                    text: '습관을 실천할 요일을 선택해 주세요',
+                                    size: 'small');
+                                return;
+                              }
+                            }
                             box.put(
                               id,
                               PlanModel(
@@ -272,8 +299,9 @@ class _PlanAddScreenState extends State<PlanAddScreen> {
                                 title: title,
                                 isChecked: false,
                                 timestamp: DateTime.now().toString(),
-                                isOneTimeTask: false,
-                                aimDaysOfWeek: [],
+                                isHabit: isHabit,
+                                aimDaysOfWeek: aimDaysOfWeek,
+                                habitEndOrTaskDateInfo: habitEndOrTaskDateInfo,
                               ),
                             );
                             Navigator.pop(context);
