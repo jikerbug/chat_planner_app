@@ -1,13 +1,6 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 class FirebasePlanApi {
-  static late final DatabaseReference db;
-
-  static void setDbRef(app) {
-    db = FirebaseDatabase(app: app).reference().child('plans');
-  }
-
   static final FirebaseDatabase database = FirebaseDatabase.instance;
   static final DatabaseReference plansRef = database.reference().child('plans');
 

@@ -1,6 +1,9 @@
+import 'package:chat_planner_app/functions/datetime_function.dart';
 import 'package:chat_planner_app/modules/plan_list.dart';
+import 'package:chat_planner_app/providers/data.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import '../functions/custom_dialog_function.dart';
 
 class InfoPanel extends StatefulWidget {
@@ -91,35 +94,12 @@ class PlanScreen extends StatefulWidget {
 }
 
 class _PlanScreenState extends State<PlanScreen> {
-  List<String> dayList = ['전체', '월', '화', '수', '목', '금', '토', '일'];
-  String selectedDay = DateFormat('EEEE').format(DateTime.now());
+  late String selectedDay;
 
   @override
   void initState() {
     super.initState();
-    switch (selectedDay) {
-      case 'Monday':
-        selectedDay = '월';
-        break;
-      case 'Tuesday':
-        selectedDay = '화';
-        break;
-      case 'Wednesday':
-        selectedDay = '수';
-        break;
-      case 'Thursday':
-        selectedDay = '목';
-        break;
-      case 'Friday':
-        selectedDay = '금';
-        break;
-      case 'Saturday':
-        selectedDay = '토';
-        break;
-      case 'Sunday':
-        selectedDay = '일';
-        break;
-    }
+    selectedDay = DateTimeFunction.getTodayOfWeek();
   }
 
   @override
@@ -136,7 +116,8 @@ class _PlanScreenState extends State<PlanScreen> {
                 SizedBox(
                   width: 5,
                 ),
-                for (String category in dayList) ...{
+                for (String category
+                    in DateTimeFunction.dayListForPlanScreen) ...{
                   GestureDetector(
                     onTap: () {
                       setState(() {

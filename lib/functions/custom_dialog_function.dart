@@ -51,8 +51,7 @@ class CustomDialogFunction {
                       TextButton(
                         child: Text(
                           "취소",
-                          style: TextStyle(
-                              color: Colors.green, fontWeight: FontWeight.bold),
+                          style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         onPressed: () {
                           Navigator.pop(context);
@@ -61,8 +60,7 @@ class CustomDialogFunction {
                       TextButton(
                         child: Text(
                           "확인",
-                          style: TextStyle(
-                              color: Colors.green, fontWeight: FontWeight.bold),
+                          style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         onPressed: () {
                           onPressed();
@@ -74,8 +72,7 @@ class CustomDialogFunction {
                       TextButton(
                         child: Text(
                           "확인",
-                          style: TextStyle(
-                              color: Colors.green, fontWeight: FontWeight.bold),
+                          style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         onPressed: () {
                           Navigator.pop(context);

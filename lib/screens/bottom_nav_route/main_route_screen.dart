@@ -1,4 +1,3 @@
-import 'package:chat_planner_app/models/plan.dart';
 import 'package:chat_planner_app/providers/data.dart';
 import 'package:chat_planner_app/screens/side_nav_route/side_nav.dart';
 import 'package:chat_planner_app/widgets/bottom_bar.dart';
@@ -13,10 +12,8 @@ import 'package:chat_planner_app/api/firestore_heart_api.dart';
 class MainRouteScreen extends StatefulWidget {
   MainRouteScreen({
     required this.userInfo,
-    required this.tasks,
   });
   final Map userInfo;
-  final Map tasks;
   static const String id = 'main_route_screen';
 
   @override
@@ -40,42 +37,12 @@ class _MainRouteScreenState extends State<MainRouteScreen> {
       userId: widget.userInfo['userId'],
     );
 
-    //할일 목록 가져오기
-    List<Plan> tasks = [];
-    String title;
-    bool isChecked;
-    String timestamp;
-    int index;
-
-    Map<dynamic, dynamic> map = widget.tasks;
-
-    map.forEach((key, value) {
-      title = value['title'];
-      isChecked = value['isChecked'];
-      timestamp = value['timestamp'];
-      index = 0;
-
-      tasks.add(Plan(
-          title: title,
-          isChecked: isChecked,
-          timestamp: timestamp,
-          index: index));
-    });
-
-    tasks.sort((a, b) {
-      return a.compareTo(b);
-    });
-    providerData.setTaskList(tasks);
-
     //유저정보가져오기
     providerData.setUserInfo(widget.userInfo);
 
     return ChangeNotifierProvider<Data>(
       create: (context) => providerData,
-      child: MaterialApp(
-        // MaterialApp은 라우트를 통해 화면을 구성한다.
-        home: Home(userId: userId),
-      ),
+      child: Home(userId: userId),
     );
   }
 }
@@ -139,79 +106,6 @@ class _HomeState extends State<Home> {
           ),
           resizeToAvoidBottomInset: false,
           floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-          // appBar: AppBar(
-          //     backgroundColor: Colors.green,
-          //     title: Text(appBarTitle),
-          //     actions: [
-          //       Padding(
-          //         padding: const EdgeInsets.symmetric(vertical: 12.0),
-          //         child: MaterialButton(
-          //           shape: RoundedRectangleBorder(
-          //               borderRadius: new BorderRadius.circular(30.0)),
-          //           minWidth: 50.0,
-          //           onPressed: () {},
-          //           elevation: 10.0,
-          //           color: Colors.teal,
-          //           child: Row(
-          //             children: [
-          //               Icon(
-          //                 Icons.badge,
-          //                 color: Colors.yellow,
-          //               ),
-          //               SizedBox(
-          //                 width: 5.0,
-          //               ),
-          //               Text(
-          //                 '1',
-          //                 style: TextStyle(
-          //                     fontSize: 18.0,
-          //                     color: Colors.white,
-          //                     fontWeight: FontWeight.bold),
-          //               ),
-          //             ],
-          //           ),
-          //         ),
-          //       ),
-          //       SizedBox(
-          //         width: 10.0,
-          //       ),
-          //       Padding(
-          //         padding: const EdgeInsets.symmetric(vertical: 12.0),
-          //         child: MaterialButton(
-          //           shape: RoundedRectangleBorder(
-          //               borderRadius: new BorderRadius.circular(30.0)),
-          //           minWidth: 50.0,
-          //           onPressed: () {},
-          //           elevation: 10.0,
-          //           color: Colors.black54,
-          //           child: Row(
-          //             children: [
-          //               Icon(
-          //                 Icons.favorite,
-          //                 color: Colors.red,
-          //               ),
-          //               SizedBox(
-          //                 width: 5.0,
-          //               ),
-          //               Text(
-          //                 '$totalHeartCount',
-          //                 style: TextStyle(
-          //                     fontSize: 18.0,
-          //                     color: Colors.white,
-          //                     fontWeight: FontWeight.bold),
-          //               ),
-          //             ],
-          //           ),
-          //         ),
-          //       ),
-          //       // CoinAccount(
-          //       //   totalCoinCount: totalCoinCount,
-          //       //   prevTotalCoinCount: prevTotalCoinCount,
-          //       // ),
-          //       SizedBox(
-          //         width: 10.0,
-          //       )
-          //     ]),
           floatingActionButton: FloatingActionButton(
             backgroundColor: Colors.teal,
             child: Icon(Icons.add),

@@ -20,10 +20,18 @@ class PlanModel {
   @HiveField(3)
   final String timestamp;
 
+  @HiveField(4)
+  final bool isOneTimeTask;
+
+  @HiveField(5)
+  final List aimDaysOfWeek;
+
   PlanModel({
     required this.id,
     required this.title,
     required this.isChecked,
     required this.timestamp,
+    required this.isOneTimeTask,
+    required this.aimDaysOfWeek,
   });
 }

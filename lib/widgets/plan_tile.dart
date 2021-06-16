@@ -1,5 +1,3 @@
-import 'package:chat_planner_app/api_in_local/plan_api.dart';
-import 'package:chat_planner_app/functions/custom_dialog_function.dart';
 import 'package:chat_planner_app/providers/data.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -96,7 +94,6 @@ class _PlanTileState extends State<PlanTile> {
                               : null),
                     ),
               trailing: Checkbox(
-                activeColor: Colors.green,
                 value: widget.isChecked,
                 onChanged: (value) {
                   widget.checkFunction(value);

@@ -9,111 +9,281 @@
 // 그것 이외에도 7시기상, 6시기상 같은 것들에 대해 전체 사용자가 얼마나 해당 습관을
 // 채택하고 있는지 보는 것도 좋을 것 같다.
 
-import 'package:chat_planner_app/api/firebase_plan_api.dart';
+import 'package:chat_planner_app/functions/datetime_function.dart';
 import 'package:chat_planner_app/models/plan_model.dart';
-import 'package:chat_planner_app/providers/data.dart';
 import 'package:chat_planner_app/widgets/rounded_button.dart';
 import 'package:flutter/material.dart';
-import 'package:chat_planner_app/api_in_local/plan_api.dart';
 import 'package:hive/hive.dart';
-import 'package:provider/provider.dart';
 
 class PlanAddScreen extends StatefulWidget {
-  static String id = 'HabitAddScreen';
+  static String id = 'PlanAddScreen';
   @override
   _PlanAddScreenState createState() => _PlanAddScreenState();
 }
 
+String noLimitNotation = '기한 없음';
+
 class _PlanAddScreenState extends State<PlanAddScreen> {
   String title = '';
   var textEditingController = TextEditingController();
+  List<Day> dayList = DateTimeFunction.dayListForPlanAddScreen;
+  bool isHabit = true;
+  bool isEveryDay = false;
+  bool isWeekDay = false;
+
+  String selectHabitEndOrTaskDate = noLimitNotation;
+
+  Future<String> _selectDate() async {
+    if (selectHabitEndOrTaskDate == noLimitNotation) {
+      selectHabitEndOrTaskDate = DateTime.now().toString().substring(0, 10);
+    }
+    // locale 설정하기 위해 pubspec_copy.yaml 파일과 메인에 코드 추가!!
+    DateTime? picked = await showDatePicker(
+      context: context,
+      locale: const Locale('ko', 'KO'),
+      initialDate: DateTime.parse(selectHabitEndOrTaskDate),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(DateTime.now().year + 2),
+      builder: (BuildContext context, Widget? child) {
+        return child!;
+      },
+    );
+    if (picked != null) {
+      return picked.toString().substring(0, 10);
+    } else {
+      return noLimitNotation;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 30.0, horizontal: 50.0),
-          child: Column(
-            children: [
-              Text(
-                '계획 추가',
-                style: TextStyle(
-                    fontSize: 20.0,
-                    color: Colors.teal,
-                    fontWeight: FontWeight.w500),
-              ),
-              Container(
-                width: 200.0,
-                child: TextField(
-                  textAlign: TextAlign.center,
-                  controller: textEditingController,
-                  autofocus: true,
-                  onChanged: (value) {
-                    title = value;
-                  },
-                  decoration: InputDecoration(
-                      contentPadding: EdgeInsets.only(
-                          bottom: 5,
-                          top: 20), //  <- you can it to 0.0 for no space
-                      isDense: true),
+          padding: EdgeInsets.only(top: 30.0),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Container(
+                  width: 200.0,
+                  child: TextField(
+                    textAlign: TextAlign.start,
+                    controller: textEditingController,
+                    autofocus: true,
+                    onChanged: (value) {
+                      title = value;
+                    },
+                    decoration: InputDecoration(
+                        hintText: '실천할 계획을 입력해주세요',
+                        contentPadding: EdgeInsets.only(
+                            bottom: 5,
+                            top: 20), //  <- you can it to 0.0 for no space
+                        isDense: true),
+                  ),
                 ),
-              ),
-              SizedBox(
-                height: 30,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  RoundedButton(
-                      minWidth: 100.0,
-                      color: Colors.orangeAccent,
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      title: '닫기'),
-                  RoundedButton(
-                      minWidth: 100.0,
-                      color: Colors.green,
-                      onPressed: () {
-                        if (title != '') {
-                          final box = Hive.box<PlanModel>('word');
-
-                          int id = 0;
-
-                          if (box.isNotEmpty) {
-                            final prevItem = box.getAt(box.length - 1);
-
-                            if (prevItem != null) {
-                              id = prevItem.id + 1;
-                            }
+                SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Checkbox(
+                        value: isHabit,
+                        onChanged: (value) {
+                          if (value == true) {
+                            setState(() {
+                              isHabit = true;
+                            });
                           }
-                          print(id);
+                        }),
+                    Text('습관'),
+                    Checkbox(
+                        value: !isHabit,
+                        onChanged: (value) {
+                          if (value == true) {
+                            setState(() {
+                              isHabit = false;
+                            });
+                          }
+                        }),
+                    Text('할일'),
+                  ],
+                ),
+                if (isHabit)
+                  Column(
+                    children: [
+                      Text(
+                        '반복할 요일을 선택해주세요',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Checkbox(
+                              value: isEveryDay,
+                              onChanged: (value) {
+                                setState(() {
+                                  isEveryDay = value!;
+                                  isWeekDay = false;
+                                  for (Day day in dayList) {
+                                    day.isSelected = true;
+                                  }
+                                  if (value == false) {
+                                    for (Day day in dayList) {
+                                      day.isSelected = false;
+                                    }
+                                  }
+                                });
+                              }),
+                          Text('매일'),
+                          Checkbox(
+                              value: isWeekDay,
+                              onChanged: (value) {
+                                setState(() {
+                                  isWeekDay = value!;
+                                  isEveryDay = false;
+                                  for (Day day in dayList) {
+                                    if (day.name != '토' && day.name != '일') {
+                                      day.isSelected = true;
+                                    } else {
+                                      day.isSelected = false;
+                                    }
+                                  }
+                                  if (value == false) {
+                                    for (Day day in dayList) {
+                                      day.isSelected = false;
+                                    }
+                                  }
+                                });
+                              }),
+                          Text('주중'),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          SizedBox(
+                            width: 5,
+                          ),
+                          for (Day day in dayList) ...{
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  day.click();
+                                  isEveryDay = false;
+                                  isWeekDay = false;
+                                });
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: new BorderRadius.all(
+                                      new Radius.circular(50.0)),
+                                  border: new Border.all(
+                                    color: day.isSelected
+                                        ? Colors.green
+                                        : Colors.black,
+                                    width: 1.5,
+                                  ),
+                                ),
+                                child: CircleAvatar(
+                                  backgroundColor: day.isSelected
+                                      ? Colors.green
+                                      : Colors.transparent,
+                                  child: Text(
+                                    day.name,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: day.isSelected
+                                          ? Colors.white
+                                          : Colors.black,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            )
+                          },
+                          SizedBox(
+                            width: 5,
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      Text(
+                        '습관을 종료할 날짜를 선택해주세요',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                if (!isHabit)
+                  Text(
+                    '할일을 실천할 날짜를 선택해주세요',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                TextButton(
+                    onPressed: () async {
+                      if (selectHabitEndOrTaskDate == noLimitNotation) {
+                        selectHabitEndOrTaskDate = await _selectDate();
+                      } else {
+                        selectHabitEndOrTaskDate = noLimitNotation;
+                      }
+                      setState(() {});
+                    },
+                    child: Text(selectHabitEndOrTaskDate)),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    RoundedButton(
+                        minWidth: 100.0,
+                        color: Colors.orangeAccent,
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        title: '닫기'),
+                    RoundedButton(
+                        minWidth: 100.0,
+                        color: Colors.green,
+                        onPressed: () {
+                          if (title != '') {
+                            final box = Hive.box<PlanModel>('word');
 
-                          box.put(
-                            id,
-                            PlanModel(
-                              id: id,
-                              title: title,
-                              isChecked: false,
-                              timestamp: DateTime.now().toString(),
-                            ),
-                          );
-                          // Data providerData =
-                          //     Provider.of<Data>(context, listen: false);
-                          // int planLength = providerData.listCount;
-                          // String timestamp = DateTime.now().toString();
-                          // Provider.of<Data>(this.context, listen: false)
-                          //     .addToList(title, timestamp, 0, planLength);
-                          //
-                          // PlanApi.addPlan(title, timestamp, planLength);
-                          // Navigator.pop(context);
-                        }
-                      },
-                      title: '추가'),
-                ],
-              ),
-            ],
+                            int id = 0;
+
+                            if (box.isNotEmpty) {
+                              final prevItem = box.getAt(box.length - 1);
+
+                              if (prevItem != null) {
+                                id = prevItem.id + 1;
+                              }
+                            }
+                            print(id);
+
+                            box.put(
+                              id,
+                              PlanModel(
+                                id: id,
+                                title: title,
+                                isChecked: false,
+                                timestamp: DateTime.now().toString(),
+                                isOneTimeTask: false,
+                                aimDaysOfWeek: [],
+                              ),
+                            );
+                            Navigator.pop(context);
+                          }
+                        },
+                        title: '추가'),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
