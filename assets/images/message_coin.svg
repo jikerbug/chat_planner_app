@@ -1,0 +1,17 @@
+<svg width="64" height="64" xmlns="http://www.w3.org/2000/svg">
+
+ <g>
+  <title>background</title>
+  <rect fill="none" id="canvas_background" height="402" width="582" y="-1" x="-1"/>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <circle fill="#facc20" id="svg_4" r="24" cy="32" cx="32" class="st17"/>
+  <path fill="#ffffff" opacity="0.2" id="svg_7" d="m10.1,34.1c0,-13.3 10.7,-24 24,-24c6.1,0 11.7,2.3 15.9,6c-4.4,-5 -10.8,-8.1 -18,-8.1c-13.3,0 -24,10.7 -24,24c0,7.2 3.1,13.6 8.1,18c-3.8,-4.3 -6,-9.8 -6,-15.9z" class="st49"/>
+  <path stroke="null" fill="#231f20" opacity="0.1" id="svg_8" d="m47.9,14c3.8,4.2 6,9.8 6,15.9c0,13.3 -10.7,24 -24,24c-6.1,0 -11.7,-2.3 -15.9,-6c4.4,5 10.8,8.1 18,8.1c13.3,0 24,-10.7 24,-24c0,-7.2 -3.1,-13.6 -8.1,-18z" class="st5"/>
+  <path opacity="0.3" fill="#ffffff" id="svg_10" d="m45.99452,12.5l-33.4,33.4c-0.3,-0.5 -0.7,-1 -1,-1.5l0,0l33,-33l0,0c0.5,0.4 0.9,0.7 1.4,1.1z" class="st3"/>
+  <path opacity="0.3" fill="#ffffff" id="svg_11" d="m52.40548,19.6l-33,33c-1.6,-1 -3,-2.1 -4.4,-3.4l33.9,-33.9c1.4,1.2 2.6,2.7 3.5,4.3z" class="st3"/>
+  <polygon fill="#ffffff" id="svg_13" points="40.3,22.5 36.3,21.2 40.3,19.8 41.7,15.7 43,19.8 47.1,21.2 43,22.5 41.7,26.6   " class="st3"/>
+  <polygon fill="#ffffff" id="svg_14" points="46.3,27.4 44,26.6 46.3,25.8 47.1,23.5 47.9,25.8 50.2,26.6 47.9,27.4 47.1,29.7   " class="st3"/>
+ </g>
+</svg>

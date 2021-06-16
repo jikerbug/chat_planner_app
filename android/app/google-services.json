@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "208922242160",
+    "project_id": "one-week-app-24a41",
+    "storage_bucket": "one-week-app-24a41.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:208922242160:android:bb15fe91a78b40d5ffd8b5",
+        "android_client_info": {
+          "package_name": "com.mindnetwork.one_week_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "208922242160-19omfkihs6r6u1s48b2788c1kit04l7o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mindnetwork.one_week_app",
+            "certificate_hash": "1aef94004b0ade4ddcc2797fe941f357b9af74ff"
+          }
+        },
+        {
+          "client_id": "208922242160-ndb8di3dau4v5v495eu25mi4t9cr6921.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCSBAmRXhZIDydWXBlCvGWCswsFJwlj8F8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "208922242160-ndb8di3dau4v5v495eu25mi4t9cr6921.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
