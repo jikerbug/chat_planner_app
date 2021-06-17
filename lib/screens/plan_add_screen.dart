@@ -140,10 +140,11 @@ class _PlanAddScreenState extends State<PlanAddScreen> {
                               }
                             }
                             HivePlanApi.addHabit(
-                                title: title,
-                                isHabit: isHabit,
-                                aimDaysOfWeek: aimDaysOfWeek,
-                                habitEndOrTaskDateInfo: habitEndOrTaskDateInfo);
+                              title: title,
+                              isHabit: isHabit,
+                              aimDaysOfWeek: aimDaysOfWeek,
+                              habitEndOrTaskDateInfo: habitEndOrTaskDateInfo,
+                            );
                             Navigator.pop(context);
                           }
                         },

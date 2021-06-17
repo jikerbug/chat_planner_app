@@ -66,51 +66,44 @@ class _PlanListState extends State<PlanList> {
                   key: ValueKey(item),
                 );
               }
-
-              if (widget.selectedDay !=
-                      DateTimeFunction.getTodayOfWeek(
-                          widget.nowSyncedAtReload) &&
-                  widget.selectedDay != '전체') {
-                DateTime selectedDateTime =
-                    DateTimeFunction.getDateTimeOfSelectedDate(
-                        widget.selectedDay, widget.nowSyncedAtReload);
-                if (selectedDateTime.compareTo(widget.nowSyncedAtReload) > 0) {
-                  return futurePlanTile(box, index, item);
-                } else if (selectedDateTime
-                        .compareTo(widget.nowSyncedAtReload) <
-                    0) {
-                  bool isChecked = false;
-
-                  recordBox.values
-                      .where((element) =>
-                          element.planTimestampId == item.timestamp)
-                      .where((element) {
-                    return DateTimeFunction.isSameDate(
-                        element.doneTimestamp, selectedDateTime.toString());
-                  }).forEach((element) {
-                    print('there is done record');
-                    isChecked = true;
-                  });
-                  if (selectedDateTime.weekday ==
-                      widget.nowSyncedAtReload
-                          .subtract(Duration(days: 1))
-                          .weekday) {
-                    return pastPlanTile(box, index, item, 'yesterday',
-                        isChecked, selectedDateTime);
-                  }
-                  return pastPlanTile(
-                      box, index, item, '', isChecked, selectedDateTime);
-                }
-              }
-
-              return activatedPlanTile(box, index, item);
+              return getPlanTile(box, index, item, recordBox);
             },
             itemCount: box.length,
           );
         });
   }
 
-  bool isItemInvisibleCondition(item) {
+  Widget getPlanTile(box, index, item, recordBox) {
+    if (widget.selectedDay !=
+            DateTimeFunction.getTodayOfWeek(widget.nowSyncedAtReload) &&
+        widget.selectedDay != '전체') {
+      DateTime selectedDateTime = DateTimeFunction.getDateTimeOfSelectedDate(
+          widget.selectedDay, widget.nowSyncedAtReload);
+      if (selectedDateTime.compareTo(widget.nowSyncedAtReload) > 0) {
+        return futurePlanTile(box, index, item);
+      } else if (selectedDateTime.compareTo(widget.nowSyncedAtReload) < 0) {
+        bool isChecked = false;
+        recordBox.values
+            .where((element) => element.planTimestampId == item.timestamp)
+            .where((element) {
+          return DateTimeFunction.isSameDate(
+              element.doneTimestamp, selectedDateTime.toString());
+        }).forEach((element) {
+          print('there is done record');
+          isChecked = true;
+        });
+        if (selectedDateTime.weekday ==
+            widget.nowSyncedAtReload.subtract(Duration(days: 1)).weekday) {
+          return pastPlanTile(
+              box, index, item, 'yesterday', isChecked, selectedDateTime);
+        }
+        return pastPlanTile(box, index, item, '', isChecked, selectedDateTime);
+      }
+    }
+    return activatedPlanTile(box, index, item);
+  }
+
+  bool isItemInvisibleCondition(PlanModel item) {
     if (widget.selectedDay != '전체') {
       DateTime selectedDateTime = DateTimeFunction.getDateTimeOfSelectedDate(
           widget.selectedDay, widget.nowSyncedAtReload);

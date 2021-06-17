@@ -1,5 +1,6 @@
 import 'package:chat_planner_app/functions/datetime_function.dart';
 import 'package:chat_planner_app/modules/plan_list.dart';
+import 'package:chat_planner_app/screens/bottom_sheet/plan_category_select.dart';
 import 'package:flutter/material.dart';
 import '../functions/custom_dialog_function.dart';
 
@@ -175,7 +176,13 @@ class _PlanScreenState extends State<PlanScreen> {
                                   RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(50.0),
                       ))),
-                      onPressed: () {},
+                      onPressed: () {
+                        showModalBottomSheet(
+                          isScrollControlled: true,
+                          context: context,
+                          builder: (context) => PlanCategorySelect(),
+                        );
+                      },
                       child: Container(
                         padding: EdgeInsets.symmetric(horizontal: 10.0),
                         decoration: BoxDecoration(
