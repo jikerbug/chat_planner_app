@@ -73,7 +73,6 @@ class _HomeState extends State<Home> {
     // TODO: implement initState
     super.initState();
     Function myHeartCallback = (getHeartCount) {
-      print('sadas');
       if (!mounted) return;
       setState(() {
         totalHeartCount = getHeartCount;

@@ -6,13 +6,17 @@ import 'package:hive/hive.dart';
 import 'models/plan_model.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
+import 'models/record_model.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
   await Hive.initFlutter();
   Hive.registerAdapter(PlanModelAdapter());
-  await Hive.openBox<PlanModel>('word');
+  Hive.registerAdapter(RecordModelAdapter());
+  await Hive.openBox<PlanModel>('plan');
+  await Hive.openBox<RecordModel>('record');
 
   runApp(MaterialApp(
     localizationsDelegates: [

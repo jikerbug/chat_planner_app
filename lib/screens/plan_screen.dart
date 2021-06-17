@@ -92,15 +92,17 @@ class PlanScreen extends StatefulWidget {
 
 class _PlanScreenState extends State<PlanScreen> {
   late String selectedDay;
-
+  late DateTime nowSyncedAtReload;
   @override
   void initState() {
     super.initState();
-    selectedDay = DateTimeFunction.getTodayOfWeek();
+    nowSyncedAtReload = DateTime.now();
+    selectedDay = DateTimeFunction.getTodayOfWeek(nowSyncedAtReload);
   }
 
   @override
   Widget build(BuildContext context) {
+    nowSyncedAtReload = DateTime.now();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -160,14 +162,52 @@ class _PlanScreenState extends State<PlanScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                TextButton(
-                  onPressed: () {},
-                  child: Text(
-                    '카테고리 - 전체',
-                    style: TextStyle(color: Colors.green),
-                  ),
+                SizedBox(
+                  height: 10.0,
                 ),
-                Expanded(child: PlanList(selectedDay)),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextButton(
+                      style: ButtonStyle(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50.0),
+                      ))),
+                      onPressed: () {},
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 10.0),
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              BorderRadius.all(new Radius.circular(50.0)),
+                          border: Border.all(
+                            color: Colors.green,
+                            width: 1.5,
+                          ),
+                        ),
+                        child: Text(
+                          '카테고리 - 전체',
+                          style: TextStyle(color: Colors.green),
+                        ),
+                      ),
+                    ),
+                    Center(
+                      child: TextButton(
+                        onPressed: () {
+                          print('구현타입1 : 버튼 클릭시 1주일 전 기록으로 이동!, 다시클릭하면 돌아온다.');
+                          print(
+                              '구현타입2 : 버튼 클릭시 전체 습관의 전체 실천 기록을 한눈에 볼 수 있다.(습관 loop 처럼)');
+                        },
+                        child: Text(
+                          '${DateTimeFunction.todayDateString(selectedDay, nowSyncedAtReload)}',
+                          style: TextStyle(color: Colors.green),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Expanded(child: PlanList(selectedDay, nowSyncedAtReload)),
               ],
             ),
           ),

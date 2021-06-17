@@ -2,6 +2,36 @@ import 'package:chat_planner_app/models/plan_model.dart';
 import 'package:hive/hive.dart';
 
 class HivePlanApi {
+  static void addHabit(
+      {required title,
+      required isHabit,
+      required aimDaysOfWeek,
+      required habitEndOrTaskDateInfo}) {
+    final box = Hive.box<PlanModel>('plan');
+    int id = 0;
+
+    if (box.isNotEmpty) {
+      final prevItem = box.getAt(box.length - 1);
+
+      if (prevItem != null) {
+        id = prevItem.id + 1;
+      }
+    }
+    print(id);
+    box.put(
+      id,
+      PlanModel(
+        id: id,
+        title: title,
+        isChecked: false,
+        timestamp: DateTime.now().toString(),
+        isHabit: isHabit,
+        aimDaysOfWeek: aimDaysOfWeek,
+        habitEndOrTaskDateInfo: habitEndOrTaskDateInfo,
+      ),
+    );
+  }
+
   static void changeOneFieldValue(Box<PlanModel> box, index, PlanModel item,
       {required String fieldName, required dynamic value}) {
     var insertModel = getOneFieldValueChangedPlanModel(item,

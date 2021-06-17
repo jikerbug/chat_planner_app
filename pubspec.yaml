@@ -30,6 +30,7 @@ dependencies:
   hive_flutter: ^1.0.0
 
   dropdown_search: ^0.6.1
+  flutter_svg: ^0.22.0
 
 
 dev_dependencies:
