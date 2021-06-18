@@ -71,7 +71,7 @@ class DateTimeFunction {
         getDateTimeOfSelectedDate(selectedDay, nowWhenReloaded);
     String result;
     result =
-        '${selectedDateTime.year}년 ${selectedDateTime.month}월 ${selectedDateTime.day}일 ${dayListForPlanScreen[selectedDateTime.weekday]}요일';
+        '${selectedDateTime.month}월 ${selectedDateTime.day}일 ${dayListForPlanScreen[selectedDateTime.weekday]}요일';
     if (selectedDay == dayListForPlanScreen[nowWhenReloaded.weekday]) {
       result += '(금일)';
     }

@@ -1,12 +1,13 @@
 import 'package:chat_planner_app/api_in_local/hive_plan_api.dart';
 import 'package:chat_planner_app/api_in_local/hive_record_api.dart';
 import 'package:chat_planner_app/functions/custom_dialog_function.dart';
-import 'package:chat_planner_app/functions/datetime_function.dart';
+import 'package:chat_planner_app/functions/date_time_function.dart';
 import 'package:chat_planner_app/models/plan_model.dart';
 import 'package:chat_planner_app/models/record_model.dart';
 import 'package:chat_planner_app/providers/data.dart';
 import 'package:chat_planner_app/widgets/plan_tile.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
@@ -26,6 +27,20 @@ class _PlanListState extends State<PlanList> {
   Widget build(BuildContext context) {
     final userId = Provider.of<Data>(context, listen: false).userId;
     Box recordBox = Hive.box<RecordModel>('record');
+    // return ValueListenableBuilder(
+    //     valueListenable: Hive.box<PlanModel>('plan').listenable(),
+    //     builder: (context, Box<PlanModel> box, child) {
+    //       return ReorderableListView.builder(
+    //           scrollDirection: Axis.vertical,
+    //           shrinkWrap: true,
+    //           itemCount: 10,
+    //           onReorder: (oldIndex, newIndex) {
+    //             HivePlanApi.reorderPlanData(box, oldIndex, newIndex);
+    //           },
+    //           itemBuilder: (_, i) =>
+    //               ListTile(key: ValueKey(i), title: Text("List1: $i")));
+    //     });
+
     return ValueListenableBuilder(
         valueListenable: Hive.box<PlanModel>('plan').listenable(),
         builder: (context, Box<PlanModel> box, child) {
@@ -46,6 +61,7 @@ class _PlanListState extends State<PlanList> {
             ));
           }
           return ReorderableListView.builder(
+            buildDefaultDragHandles: false,
             onReorder: (oldIndex, newIndex) {
               HivePlanApi.reorderPlanData(box, oldIndex, newIndex);
             },
@@ -66,7 +82,11 @@ class _PlanListState extends State<PlanList> {
                   key: ValueKey(item),
                 );
               }
-              return getPlanTile(box, index, item, recordBox);
+
+              return ReorderableDelayedDragStartListener(
+                  key: ValueKey(item),
+                  index: index,
+                  child: getPlanTile(box, index, item, recordBox));
             },
             itemCount: box.length,
           );
@@ -155,7 +175,6 @@ class _PlanListState extends State<PlanList> {
               size: 'small');
         }
       },
-      key: ValueKey(item),
       isChecked: false,
       title: item.title,
       index: index,
@@ -210,7 +229,6 @@ class _PlanListState extends State<PlanList> {
               size: 'small');
         }
       },
-      key: ValueKey(item),
       isChecked: isChecked,
       title: item.title,
       index: index,
@@ -246,7 +264,6 @@ class _PlanListState extends State<PlanList> {
               size: 'small');
         }
       },
-      key: ValueKey(item),
       isChecked: item.isChecked,
       title: item.title,
       index: index,

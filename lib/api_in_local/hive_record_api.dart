@@ -1,4 +1,4 @@
-import 'package:chat_planner_app/functions/datetime_function.dart';
+import 'package:chat_planner_app/functions/date_time_function.dart';
 import 'package:chat_planner_app/models/record_model.dart';
 import 'package:hive/hive.dart';
 

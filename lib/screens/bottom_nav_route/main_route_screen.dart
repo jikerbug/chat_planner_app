@@ -1,11 +1,12 @@
 import 'package:chat_planner_app/providers/data.dart';
+import 'package:chat_planner_app/screens/chat/chat_list_sceen.dart';
 import 'package:chat_planner_app/screens/side_nav_route/side_nav.dart';
 import 'package:chat_planner_app/widgets/bottom_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../plan_add_screen.dart';
-import '../plan_screen.dart';
+import '../plan/plan_add_screen.dart';
+import '../plan/plan_screen.dart';
 
 import 'package:chat_planner_app/api/firestore_heart_api.dart';
 
@@ -68,6 +69,14 @@ class _HomeState extends State<Home> {
     });
   }
 
+  String fabType = 'addPlan';
+
+  void changeFAB(fabType) {
+    setState(() {
+      this.fabType = fabType;
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -84,6 +93,15 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    Icon fabIcon;
+    if (fabType == PlanScreen.id) {
+      fabIcon = Icon(Icons.add);
+    } else if (fabType == ChatListScreen.id) {
+      fabIcon = Icon(Icons.search);
+    } else {
+      fabIcon = Icon(Icons.add);
+    }
+
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -107,7 +125,7 @@ class _HomeState extends State<Home> {
           floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
           floatingActionButton: FloatingActionButton(
             backgroundColor: Colors.teal,
-            child: Icon(Icons.add),
+            child: fabIcon,
             onPressed: () {
               showModalBottomSheet(
                 isScrollControlled: true, //full screen으로 modal 쓸 수 있게 해준다.
@@ -121,10 +139,14 @@ class _HomeState extends State<Home> {
             key: navigatorKey,
             initialRoute: '/',
             onGenerateRoute: (RouteSettings settings) {
-              WidgetBuilder builder = (context) => PlanScreen();
+              WidgetBuilder builder =
+                  (context) => PlanScreen(fabFunc: changeFAB);
               switch (settings.name) {
                 case '/':
-                  builder = (context) => PlanScreen();
+                  builder = (context) => PlanScreen(fabFunc: changeFAB);
+                  break;
+                case '/chats':
+                  builder = (context) => ChatListScreen(fabFunc: changeFAB);
                   break;
               }
               return MaterialPageRoute(

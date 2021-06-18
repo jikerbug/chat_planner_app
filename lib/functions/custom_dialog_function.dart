@@ -85,4 +85,15 @@ class CustomDialogFunction {
       },
     );
   }
+
+  static void dayOfWeekNotSelected(context) {
+    dialogFunction(
+        context: context,
+        isTwoButton: false,
+        isLeftAlign: false,
+        onPressed: () {},
+        title: '요일 선택',
+        text: '습관을 실천할 요일을 선택해 주세요',
+        size: 'small');
+  }
 }

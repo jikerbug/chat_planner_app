@@ -11,8 +11,11 @@
 
 import 'package:chat_planner_app/api_in_local/hive_plan_api.dart';
 import 'package:chat_planner_app/functions/custom_dialog_function.dart';
-import 'package:chat_planner_app/functions/datetime_function.dart';
+import 'package:chat_planner_app/functions/date_time_function.dart';
+import 'plan_category_select.dart';
+import 'package:chat_planner_app/widgets/circle_border_box.dart';
 import 'package:chat_planner_app/widgets/rounded_button.dart';
+import 'package:chat_planner_app/widgets/thin_button.dart';
 import 'package:flutter/material.dart';
 
 class PlanAddScreen extends StatefulWidget {
@@ -28,13 +31,23 @@ class _PlanAddScreenState extends State<PlanAddScreen> {
   bool isHabit = true;
   bool isEveryDay = false;
   bool isWeekDay = false;
+  bool isMonWedFri = false;
+  bool isTueThuSat = false;
   String noLimitNotation = DateTimeFunction.noLimitNotation;
   late String habitEndOrTaskDateInfo = noLimitNotation;
 
+  Widget sameGroupGapBox() => SizedBox(
+        height: 5.0,
+      );
+  Widget otherGroupGapBox() => SizedBox(
+        height: 20.0,
+      );
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
+    return Container(
+      height: MediaQuery.of(context).size.height * 9 / 10,
+      child: SafeArea(
         child: Padding(
           padding: EdgeInsets.only(top: 30.0),
           child: SingleChildScrollView(
@@ -57,9 +70,7 @@ class _PlanAddScreenState extends State<PlanAddScreen> {
                         isDense: true),
                   ),
                 ),
-                SizedBox(
-                  height: 10,
-                ),
+                otherGroupGapBox(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -85,10 +96,12 @@ class _PlanAddScreenState extends State<PlanAddScreen> {
                     Text('할일'),
                   ],
                 ),
+                otherGroupGapBox(),
                 if (isHabit) habitDayOfWeekSelector(),
                 if (!isHabit)
                   Text('할일을 실천할 날짜를 선택해주세요',
                       style: TextStyle(fontWeight: FontWeight.bold)),
+                sameGroupGapBox(),
                 TextButton(
                     onPressed: () async {
                       if (habitEndOrTaskDateInfo == noLimitNotation) {
@@ -104,6 +117,22 @@ class _PlanAddScreenState extends State<PlanAddScreen> {
                       habitEndOrTaskDateInfo,
                       style: TextStyle(color: Colors.teal),
                     )),
+                otherGroupGapBox(),
+                Text('계획을 공유할 채팅방과 카테고리를 선택해주세요',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+                sameGroupGapBox(),
+                ThinButton(
+                    onPressed: () {
+                      showModalBottomSheet(
+                        isScrollControlled:
+                            true, //full screen으로 modal 쓸 수 있게 해준다.
+                        context: context,
+                        builder: (context) => PlanCategorySelect(),
+                      );
+                    },
+                    title: '카테고리 - 전체 / 채팅방 - 없음',
+                    color: Colors.teal),
+                otherGroupGapBox(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -128,14 +157,8 @@ class _PlanAddScreenState extends State<PlanAddScreen> {
                               }
 
                               if (aimDaysOfWeek.length == 0) {
-                                CustomDialogFunction.dialogFunction(
-                                    context: context,
-                                    isTwoButton: false,
-                                    isLeftAlign: false,
-                                    onPressed: () {},
-                                    title: '요일 선택',
-                                    text: '습관을 실천할 요일을 선택해 주세요',
-                                    size: 'small');
+                                CustomDialogFunction.dayOfWeekNotSelected(
+                                    context);
                                 return;
                               }
                             }
@@ -166,9 +189,7 @@ class _PlanAddScreenState extends State<PlanAddScreen> {
           '반복할 요일을 선택해주세요',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        SizedBox(
-          height: 10,
-        ),
+        sameGroupGapBox(),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -178,6 +199,8 @@ class _PlanAddScreenState extends State<PlanAddScreen> {
                   setState(() {
                     isEveryDay = value!;
                     isWeekDay = false;
+                    isMonWedFri = false;
+                    isTueThuSat = false;
                     for (Day day in dayList) {
                       day.isSelected = true;
                     }
@@ -195,6 +218,8 @@ class _PlanAddScreenState extends State<PlanAddScreen> {
                   setState(() {
                     isWeekDay = value!;
                     isEveryDay = false;
+                    isMonWedFri = false;
+                    isTueThuSat = false;
                     for (Day day in dayList) {
                       if (day.name != '토' && day.name != '일') {
                         day.isSelected = true;
@@ -210,11 +235,59 @@ class _PlanAddScreenState extends State<PlanAddScreen> {
                   });
                 }),
             Text('주중'),
+            Checkbox(
+                value: isMonWedFri,
+                onChanged: (value) {
+                  setState(() {
+                    isMonWedFri = value!;
+                    isWeekDay = false;
+                    isEveryDay = false;
+                    isTueThuSat = false;
+                    for (Day day in dayList) {
+                      if (day.name == '월' ||
+                          day.name == '수' ||
+                          day.name == '금') {
+                        day.isSelected = true;
+                      } else {
+                        day.isSelected = false;
+                      }
+                    }
+                    if (value == false) {
+                      for (Day day in dayList) {
+                        day.isSelected = false;
+                      }
+                    }
+                  });
+                }),
+            Text('월수금'),
+            Checkbox(
+                value: isTueThuSat,
+                onChanged: (value) {
+                  setState(() {
+                    isTueThuSat = value!;
+                    isWeekDay = false;
+                    isMonWedFri = false;
+                    isEveryDay = false;
+                    for (Day day in dayList) {
+                      if (day.name == '화' ||
+                          day.name == '목' ||
+                          day.name == '토') {
+                        day.isSelected = true;
+                      } else {
+                        day.isSelected = false;
+                      }
+                    }
+                    if (value == false) {
+                      for (Day day in dayList) {
+                        day.isSelected = false;
+                      }
+                    }
+                  });
+                }),
+            Text('화목토'),
           ],
         ),
-        SizedBox(
-          height: 10,
-        ),
+        sameGroupGapBox(),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -230,26 +303,13 @@ class _PlanAddScreenState extends State<PlanAddScreen> {
                     isWeekDay = false;
                   });
                 },
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius:
-                        new BorderRadius.all(new Radius.circular(50.0)),
-                    border: new Border.all(
-                      color: day.isSelected ? Colors.teal : Colors.black,
-                      width: 1.5,
-                    ),
-                  ),
-                  child: CircleAvatar(
-                    backgroundColor:
-                        day.isSelected ? Colors.teal : Colors.transparent,
-                    child: Text(
-                      day.name,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: day.isSelected ? Colors.white : Colors.black,
-                      ),
-                    ),
-                  ),
+                child: CircleBorderBox(
+                  radius: -1.0,
+                  title: day.name,
+                  textColor: day.isSelected ? Colors.white : Colors.black,
+                  backGroundColor:
+                      day.isSelected ? Colors.teal : Colors.transparent,
+                  borderColor: day.isSelected ? Colors.teal : Colors.black,
                 ),
               )
             },
@@ -258,9 +318,7 @@ class _PlanAddScreenState extends State<PlanAddScreen> {
             ),
           ],
         ),
-        SizedBox(
-          height: 30,
-        ),
+        otherGroupGapBox(),
         Text(
           '습관을 종료할 날짜를 선택해주세요',
           style: TextStyle(fontWeight: FontWeight.bold),
