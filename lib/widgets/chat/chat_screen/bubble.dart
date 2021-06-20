@@ -1,3 +1,4 @@
+import 'package:chat_planner_app/screens/chat/cheer_message_select.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:chat_planner_app/screens/profile_view_screen.dart';
@@ -332,6 +333,11 @@ class _BubbleState extends State<Bubble> {
                     setState(() {
                       isHearted = true;
                     });
+                    showModalBottomSheet(
+                      isScrollControlled: true,
+                      context: context,
+                      builder: (context) => CheerMessageSelect(),
+                    );
                   },
                   child: isHearted
                       ? Icon(
