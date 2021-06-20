@@ -1,4 +1,5 @@
 import 'package:chat_planner_app/screens/bottom_nav_route/main_route_screen.dart';
+import 'package:chat_planner_app/screens/chat/chat_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -35,6 +36,15 @@ void main() async {
       visualDensity: VisualDensity.adaptivePlatformDensity,
     ),
     home: MyApp(),
+    initialRoute: MainRouteScreen.id,
+    routes: {
+      MainRouteScreen.id: (context) => MainRouteScreen(userInfo: {
+            'userId': 'mindnetworkcorp@gmail',
+            'profileUrl': 'no_profile_image'
+          }),
+      //mainRoute end
+      ChatScreen.id: (context) => ChatScreen(),
+    },
   ));
 }
 
@@ -42,7 +52,10 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MainRouteScreen(userInfo: {'userId': 'mindnetworkcorp@gmail'});
+    return MainRouteScreen(userInfo: {
+      'userId': 'mindnetworkcorp@gmail',
+      'profileUrl': 'no_profile_image'
+    });
   }
 }
 

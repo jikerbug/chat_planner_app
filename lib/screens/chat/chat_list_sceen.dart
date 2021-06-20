@@ -15,21 +15,21 @@ class ChatListScreen extends StatefulWidget {
 }
 
 class _ChatListScreenState extends State<ChatListScreen> {
-  final List<User> users = [
-    User(
-      idUser: 'soso',
+  final List<ChatRoom> chatRooms = [
+    ChatRoom(
+      serverId: 'mindnetworkcorp@gmail',
       lastMessageTime: DateTime.now(),
-      name: "지백",
+      name: "나와의 채팅",
     ),
-    User(
-      idUser: 'soso',
+    ChatRoom(
+      serverId: 'soso',
       lastMessageTime: DateTime.now(),
-      name: "빡빡이",
+      name: "가족톡",
     ),
-    User(
-      idUser: 'soso',
+    ChatRoom(
+      serverId: 'soso',
       lastMessageTime: DateTime.now(),
-      name: "우기",
+      name: "코딩톡",
     ),
   ];
 
@@ -37,7 +37,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
+    super.initState();
     Future.delayed(Duration.zero, () {
       widget.fabFunc(ChatListScreen.id);
     });
@@ -50,7 +50,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
       children: [
         InfoPanel('reward'),
         FriendsHeader(texts: texts),
-        FriendsBody(users: users),
+        FriendsBody(chatRooms: chatRooms),
       ],
     ));
   }

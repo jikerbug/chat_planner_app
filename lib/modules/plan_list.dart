@@ -1,5 +1,7 @@
+import 'package:chat_planner_app/api/firestore_api.dart';
 import 'package:chat_planner_app/api_in_local/hive_plan_api.dart';
 import 'package:chat_planner_app/api_in_local/hive_record_api.dart';
+import 'package:chat_planner_app/functions/chat_room_enter_function.dart';
 import 'package:chat_planner_app/functions/custom_dialog_function.dart';
 import 'package:chat_planner_app/functions/date_time_function.dart';
 import 'package:chat_planner_app/models/plan_model.dart';
@@ -248,6 +250,10 @@ class _PlanListState extends State<PlanList> {
           HiveRecordApi.addRecord(
               planTimestampId: item.timestamp,
               doneTimestamp: widget.nowSyncedAtReload.toString());
+          FireStoreApi.sendDoneMessages(item.title, 'mindnetworkcorp@gmail',
+              'mindnetworkcorp@gmail', 'mindnetworkcorp@gmail');
+
+          ChatRoomEnterFunctions.chatRoomEnterProcess(context);
         } else {
           CustomDialogFunction.dialogFunction(
               context: context,

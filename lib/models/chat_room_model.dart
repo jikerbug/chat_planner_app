@@ -1,19 +1,15 @@
-import 'package:flutter/foundation.dart';
-
-import 'package:meta/meta.dart';
-
 class UserField {
   static final String lastMessageTime = 'lastMessageTime';
 }
 
-class User {
-  final String idUser;
+class ChatRoom {
+  final String serverId;
   final String name;
 
   final DateTime lastMessageTime;
 
-  const User({
-    required this.idUser,
+  const ChatRoom({
+    required this.serverId,
     required this.name,
     required this.lastMessageTime,
   });

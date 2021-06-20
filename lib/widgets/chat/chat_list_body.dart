@@ -1,12 +1,15 @@
+import 'package:chat_planner_app/functions/chat_room_enter_function.dart';
 import 'package:chat_planner_app/models/chat_room_model.dart';
+import 'package:chat_planner_app/providers/data.dart';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class FriendsBody extends StatelessWidget {
-  final List<User> users;
+  final List<ChatRoom> chatRooms;
 
-  const FriendsBody({
-    required this.users,
+  FriendsBody({
+    required this.chatRooms,
   });
 
   @override
@@ -27,23 +30,44 @@ class FriendsBody extends StatelessWidget {
   Widget buildChats() => ListView.builder(
         physics: BouncingScrollPhysics(),
         itemBuilder: (context, index) {
-          final user = users[index];
+          late Widget circleAvatarChild;
+          final chatRoom = chatRooms[index];
+          String userId = Provider.of<Data>(context).userId;
+
+          if (chatRoom.serverId == userId) {
+            circleAvatarChild = Icon(
+              Icons.person,
+              color: Colors.black,
+            );
+          } else {
+            circleAvatarChild = Icon(
+              Icons.people_rounded,
+              color: Colors.black,
+            );
+          }
 
           return Container(
             height: 70,
             child: ListTile(
               onTap: () {
-                // Navigator.of(context).push(MaterialPageRoute(
-                //   builder: (context) => ChatPage(user: user),
-                // ));
+                ChatRoomEnterFunctions.chatRoomEnterProcess(context);
               },
-              leading: CircleAvatar(
-                radius: 25,
+              leading: Material(
+                shape: CircleBorder(),
+                elevation: 3.0,
+                child: CircleAvatar(
+                  backgroundColor: Colors.white,
+                  child: circleAvatarChild,
+                  radius: 25,
+                ),
               ),
-              title: Text(user.name),
+              title: Text(
+                chatRoom.name,
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
             ),
           );
         },
-        itemCount: users.length,
+        itemCount: chatRooms.length,
       );
 }
