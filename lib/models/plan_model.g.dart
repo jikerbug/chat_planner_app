@@ -20,7 +20,7 @@ class PlanModelAdapter extends TypeAdapter<PlanModel> {
       id: fields[0] as int,
       title: fields[1] as String,
       isChecked: fields[2] as bool,
-      timestamp: fields[3] as String,
+      createdTime: fields[3] as String,
       isHabit: fields[4] as bool,
       aimDaysOfWeek: (fields[5] as List).cast<dynamic>(),
       habitEndOrTaskDateInfo: fields[6] as String,
@@ -38,7 +38,7 @@ class PlanModelAdapter extends TypeAdapter<PlanModel> {
       ..writeByte(2)
       ..write(obj.isChecked)
       ..writeByte(3)
-      ..write(obj.timestamp)
+      ..write(obj.createdTime)
       ..writeByte(4)
       ..write(obj.isHabit)
       ..writeByte(5)

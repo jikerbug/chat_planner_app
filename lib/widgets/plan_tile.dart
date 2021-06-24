@@ -8,7 +8,7 @@ class PlanTile extends StatefulWidget {
   final bool isChecked;
   final String title;
   final int index;
-  final String timestamp;
+  final String createTime;
   final String type;
   final void Function() deleteFunction;
   final void Function(dynamic) checkFunction;
@@ -17,7 +17,7 @@ class PlanTile extends StatefulWidget {
     required this.isChecked,
     required this.title,
     required this.index,
-    required this.timestamp,
+    required this.createTime,
     required this.type,
     required this.deleteFunction,
     required this.checkFunction,

@@ -162,7 +162,7 @@ class _PlanAddScreenState extends State<PlanAddScreen> {
                                 return;
                               }
                             }
-                            HivePlanApi.addHabit(
+                            HivePlanApi.addPlan(
                               title: title,
                               isHabit: isHabit,
                               aimDaysOfWeek: aimDaysOfWeek,

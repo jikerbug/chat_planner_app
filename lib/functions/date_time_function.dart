@@ -45,13 +45,14 @@ class DateTimeFunction {
       while (
           dayListForPlanScreen[tempDayOfWeekDateTime.weekday] != selectedDay) {
         if (tempDayOfWeekDateTime.weekday == 1) {
+          //월요일(월요일을 거쳐서 한주가 바뀌어야 선택한 요일로 돌아올 수 있음)
           isSelectedDateFuture = false;
         }
         tempDayOfWeekDateTime = tempDayOfWeekDateTime.add(Duration(days: 1));
       }
 
       if (selectedDay == dayListForPlanScreen[1]) {
-        //월요일
+        //월요일은 애초에 현재아니면 과거
         isSelectedDateFuture = false;
       }
 

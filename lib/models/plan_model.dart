@@ -1,3 +1,4 @@
+import 'package:chat_planner_app/models/record_model.dart';
 import 'package:hive/hive.dart';
 
 part 'plan_model.g.dart';
@@ -18,7 +19,7 @@ class PlanModel {
   final bool isChecked;
 
   @HiveField(3)
-  final String timestamp;
+  final String createdTime;
 
   @HiveField(4)
   final bool isHabit;
@@ -33,7 +34,7 @@ class PlanModel {
     required this.id,
     required this.title,
     required this.isChecked,
-    required this.timestamp,
+    required this.createdTime,
     required this.isHabit,
     required this.aimDaysOfWeek,
     required this.habitEndOrTaskDateInfo,

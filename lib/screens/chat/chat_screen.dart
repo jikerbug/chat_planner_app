@@ -1,10 +1,7 @@
 import 'package:chat_planner_app/api/firebase_chat_api.dart';
 import 'package:flutter/material.dart';
-import 'package:chat_planner_app/api/firestore_api.dart';
-import 'package:chat_planner_app/api/firestore_heart_api.dart';
 import 'package:chat_planner_app/functions/custom_dialog_function.dart';
 import 'package:chat_planner_app/modules/message_stream.dart';
-import 'package:chat_planner_app/widgets/chat/chat_screen/app_bar_title.dart';
 import 'package:chat_planner_app/widgets/chat/chat_screen/coin_fab.dart';
 import 'package:chat_planner_app/widgets/chat/chat_screen/message_sender.dart';
 
@@ -121,35 +118,8 @@ class _ChatScreenState extends State<ChatScreen> {
             color: Colors.black, //change your color here
           ),
           backgroundColor: Colors.white,
-          title: AppBarTitle(
-            chatRoomId: chatRoomId,
-            friendUserId: friendUserId,
-            friendNickname: friendNickname,
-            friendProfileUrl: friendProfileUrl,
-            extendCount: extendCount,
-          ),
+          title: Text('나와의 채팅'),
           actions: [
-            GestureDetector(
-              child: Image.asset(
-                'images/gift_1.png',
-                width: 30,
-                height: 30,
-                fit: BoxFit.fitWidth,
-              ),
-              onTap: () {
-                CustomDialogFunction.dialogFunction(
-                    isLeftAlign: false,
-                    context: context,
-                    isTwoButton: true,
-                    onPressed: () async {
-                      FireStoreApi.sendHeartGiftMessage(
-                          userId, chatRoomId, friendUserId);
-                    },
-                    title: "하트 선물하기",
-                    text: '친구에게 하트 1개를 선물하시겠습니까?\n50코인이 지불됩니다.',
-                    size: 'small');
-              },
-            ),
             PopupMenuButton<String>(
               onSelected: handleAppBarMenuClick,
               itemBuilder: (BuildContext context) {

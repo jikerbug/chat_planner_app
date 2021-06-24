@@ -2,7 +2,7 @@ import 'package:chat_planner_app/models/plan_model.dart';
 import 'package:hive/hive.dart';
 
 class HivePlanApi {
-  static void addHabit(
+  static void addPlan(
       {required title,
       required isHabit,
       required aimDaysOfWeek,
@@ -24,7 +24,7 @@ class HivePlanApi {
         id: id,
         title: title,
         isChecked: false,
-        timestamp: DateTime.now().toString(),
+        createdTime: DateTime.now().toString(),
         isHabit: isHabit,
         aimDaysOfWeek: aimDaysOfWeek,
         habitEndOrTaskDateInfo: habitEndOrTaskDateInfo,
@@ -48,7 +48,7 @@ class HivePlanApi {
       id: (fieldName == 'id') ? value : item.id,
       title: (fieldName == 'title') ? value : item.title,
       isChecked: (fieldName == 'isChecked') ? value : item.isChecked,
-      timestamp: (fieldName == 'timestamp') ? value : item.timestamp,
+      createdTime: (fieldName == 'timestamp') ? value : item.createdTime,
       isHabit: (fieldName == 'isOneTimeTask') ? value : item.isHabit,
       aimDaysOfWeek:
           (fieldName == 'aimDaysOfWeek') ? value : item.aimDaysOfWeek,

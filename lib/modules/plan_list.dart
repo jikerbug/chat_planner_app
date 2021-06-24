@@ -28,20 +28,6 @@ class _PlanListState extends State<PlanList> {
   @override
   Widget build(BuildContext context) {
     final userId = Provider.of<Data>(context, listen: false).userId;
-    Box recordBox = Hive.box<RecordModel>('record');
-    // return ValueListenableBuilder(
-    //     valueListenable: Hive.box<PlanModel>('plan').listenable(),
-    //     builder: (context, Box<PlanModel> box, child) {
-    //       return ReorderableListView.builder(
-    //           scrollDirection: Axis.vertical,
-    //           shrinkWrap: true,
-    //           itemCount: 10,
-    //           onReorder: (oldIndex, newIndex) {
-    //             HivePlanApi.reorderPlanData(box, oldIndex, newIndex);
-    //           },
-    //           itemBuilder: (_, i) =>
-    //               ListTile(key: ValueKey(i), title: Text("List1: $i")));
-    //     });
 
     return ValueListenableBuilder(
         valueListenable: Hive.box<PlanModel>('plan').listenable(),
@@ -88,14 +74,19 @@ class _PlanListState extends State<PlanList> {
               return ReorderableDelayedDragStartListener(
                   key: ValueKey(item),
                   index: index,
-                  child: getPlanTile(box, index, item, recordBox));
+                  child: FutureBuilder(
+                    builder: (buildContext, snapshot) {
+                      return getPlanTile(box, index, item);
+                    },
+                    future: HiveRecordApi.openPlanRecordBox(item.createdTime),
+                  ));
             },
             itemCount: box.length,
           );
         });
   }
 
-  Widget getPlanTile(box, index, item, recordBox) {
+  Widget getPlanTile(box, index, item) {
     if (widget.selectedDay !=
             DateTimeFunction.getTodayOfWeek(widget.nowSyncedAtReload) &&
         widget.selectedDay != '전체') {
@@ -105,9 +96,9 @@ class _PlanListState extends State<PlanList> {
         return futurePlanTile(box, index, item);
       } else if (selectedDateTime.compareTo(widget.nowSyncedAtReload) < 0) {
         bool isChecked = false;
-        recordBox.values
-            .where((element) => element.planTimestampId == item.timestamp)
-            .where((element) {
+
+        Box recordBox = Hive.box<RecordModel>(item.createdTime);
+        recordBox.values.where((element) {
           return DateTimeFunction.isSameDate(
               element.doneTimestamp, selectedDateTime.toString());
         }).forEach((element) {
@@ -180,7 +171,7 @@ class _PlanListState extends State<PlanList> {
       isChecked: false,
       title: item.title,
       index: index,
-      timestamp: item.timestamp,
+      createTime: item.createdTime,
       type: 'future',
     );
   }
@@ -200,7 +191,7 @@ class _PlanListState extends State<PlanList> {
                 isLeftAlign: false,
                 onPressed: () {
                   HiveRecordApi.addRecord(
-                    planTimestampId: item.timestamp,
+                    item: item,
                     doneTimestamp: selectedDateTime.toString(),
                   );
                   setState(() {});
@@ -234,7 +225,7 @@ class _PlanListState extends State<PlanList> {
       isChecked: isChecked,
       title: item.title,
       index: index,
-      timestamp: item.timestamp,
+      createTime: item.createdTime,
       type: 'past',
     );
   }
@@ -248,8 +239,7 @@ class _PlanListState extends State<PlanList> {
         if (value == true) {
           HivePlanApi.checkPlanDone(box, index, item);
           HiveRecordApi.addRecord(
-              planTimestampId: item.timestamp,
-              doneTimestamp: widget.nowSyncedAtReload.toString());
+              item: item, doneTimestamp: widget.nowSyncedAtReload.toString());
           FireStoreApi.sendDoneMessages(item.title, 'mindnetworkcorp@gmail',
               'mindnetworkcorp@gmail', 'mindnetworkcorp@gmail');
 
@@ -262,7 +252,7 @@ class _PlanListState extends State<PlanList> {
               onPressed: () {
                 HivePlanApi.unCheckPlan(box, index, item);
                 HiveRecordApi.deleteRecordOfToday(
-                    planTimestampId: item.timestamp,
+                    item: item,
                     deleteTimestamp: widget.nowSyncedAtReload.toString());
               },
               title: '실천 취소 안내',
@@ -273,7 +263,7 @@ class _PlanListState extends State<PlanList> {
       isChecked: item.isChecked,
       title: item.title,
       index: index,
-      timestamp: item.timestamp,
+      createTime: item.createdTime,
       type: 'activated',
     );
   }

@@ -18,20 +18,17 @@ class RecordModelAdapter extends TypeAdapter<RecordModel> {
     };
     return RecordModel(
       id: fields[0] as int,
-      planTimestampId: fields[1] as String,
-      doneTimestamp: fields[2] as String,
+      doneTimestamp: fields[1] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, RecordModel obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(2)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.planTimestampId)
-      ..writeByte(2)
       ..write(obj.doneTimestamp);
   }
 

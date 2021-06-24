@@ -1,14 +1,23 @@
 import 'package:chat_planner_app/functions/date_time_function.dart';
+import 'package:chat_planner_app/models/plan_model.dart';
 import 'package:chat_planner_app/models/record_model.dart';
 import 'package:hive/hive.dart';
 
 class HiveRecordApi {
   static final box = Hive.box<RecordModel>('record');
 
+  static Future<void> openPlanRecordBox(planCreatedTime) async {
+    if (!Hive.isBoxOpen(planCreatedTime)) {
+      await Hive.openBox<RecordModel>(planCreatedTime);
+    }
+  }
+
   static void addRecord({
-    required planTimestampId,
+    required PlanModel item,
     required doneTimestamp,
-  }) {
+  }) async {
+    await openPlanRecordBox(item.createdTime);
+    final box = Hive.box<RecordModel>(item.createdTime);
     int id = 0;
 
     if (box.isNotEmpty) {
@@ -23,7 +32,6 @@ class HiveRecordApi {
       id,
       RecordModel(
         id: id,
-        planTimestampId: planTimestampId,
         doneTimestamp: doneTimestamp,
       ),
     );
@@ -34,14 +42,15 @@ class HiveRecordApi {
   }
 
   static void deleteRecordOfToday(
-      {required String planTimestampId, required String deleteTimestamp}) {
+      {required PlanModel item, required String deleteTimestamp}) async {
+    await openPlanRecordBox(item.createdTime);
+    final box = Hive.box<RecordModel>(item.createdTime);
     print('before delete');
     box.values.forEach((element) {
       print(element.id);
     });
     box.values
         .where((element) =>
-            element.planTimestampId == planTimestampId &&
             DateTimeFunction.isSameDate(deleteTimestamp, element.doneTimestamp))
         .forEach((element) {
       print(element.id);

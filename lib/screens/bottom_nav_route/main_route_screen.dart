@@ -62,13 +62,6 @@ class _HomeState extends State<Home> {
   int prevTotalCoinCount = 0;
   int totalHeartCount = 0;
 
-  String appBarTitle = '홈';
-  void changeAppBarTitle(title) {
-    setState(() {
-      appBarTitle = title;
-    });
-  }
-
   String fabType = 'addPlan';
 
   void changeFAB(fabType) {
@@ -154,10 +147,8 @@ class _HomeState extends State<Home> {
               );
             },
           ),
-          bottomNavigationBar: BottomBar(
-              navigatorKey: navigatorKey,
-              appBarCallback: changeAppBarTitle,
-              userId: widget.userId),
+          bottomNavigationBar:
+              BottomBar(navigatorKey: navigatorKey, userId: widget.userId),
         ),
       ),
     );

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
 class BottomBar extends StatefulWidget {
-  BottomBar({this.navigatorKey, required this.appBarCallback, this.userId});
+  BottomBar({this.navigatorKey, this.userId});
   final navigatorKey;
-  final Function appBarCallback;
   final userId;
 
   @override
@@ -35,19 +34,15 @@ class _BottomBarState extends State<BottomBar> {
     switch (index) {
       case 0:
         widget.navigatorKey.currentState.pushNamed('/');
-        widget.appBarCallback('홈');
         break;
       case 1:
         widget.navigatorKey.currentState.pushNamed('/chats');
-        widget.appBarCallback('채팅');
         break;
       case 2:
         widget.navigatorKey.currentState.pushNamed('/friends');
-        widget.appBarCallback('친구');
         break;
       case 3:
         widget.navigatorKey.currentState.pushNamed('/ranks');
-        widget.appBarCallback('랭킹');
         break;
     }
     // widget.navigatorKey.currentState
