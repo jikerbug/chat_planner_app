@@ -34,3 +34,5 @@ const kInputDecoration = InputDecoration(
     borderRadius: BorderRadius.all(Radius.circular(32.0)),
   ),
 );
+
+const String kTodoRecordBoxName = 'todo_record';

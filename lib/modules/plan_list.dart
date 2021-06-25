@@ -9,6 +9,7 @@ import 'package:chat_planner_app/models_hive/plan_model.dart';
 import 'package:chat_planner_app/models_hive/record_model.dart';
 import 'package:chat_planner_app/models_singleton/user.dart';
 import 'package:chat_planner_app/providers/data.dart';
+import '../constants.dart';
 import '../widgets/plan/plan_tile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -89,7 +90,7 @@ class _PlanListState extends State<PlanList> {
         });
   }
 
-  Widget getPlanTile(box, index, item) {
+  Widget getPlanTile(box, index, PlanModel item) {
     if (widget.selectedDay !=
             DateTimeFunction.getTodayOfWeek(widget.nowSyncedAtReload) &&
         widget.selectedDay != '전체') {
@@ -99,8 +100,12 @@ class _PlanListState extends State<PlanList> {
         return futurePlanTile(box, index, item);
       } else if (selectedDateTime.compareTo(widget.nowSyncedAtReload) < 0) {
         bool isChecked = false;
-
-        Box recordBox = Hive.box<RecordModel>(item.createdTime);
+        Box recordBox;
+        if (item.isHabit) {
+          recordBox = Hive.box<RecordModel>(item.createdTime);
+        } else {
+          recordBox = Hive.box<RecordModel>(kTodoRecordBoxName);
+        }
         recordBox.values.where((element) {
           return DateTimeFunction.isSameDate(
               element.doneTimestamp, selectedDateTime.toString());
@@ -156,6 +161,7 @@ class _PlanListState extends State<PlanList> {
 
   Widget futurePlanTile(box, index, item) {
     return PlanTile(
+      isHabit: item.isHabit,
       deleteFunction: () {
         HivePlanApi.deletePlanData(box, index);
       },
@@ -182,6 +188,7 @@ class _PlanListState extends State<PlanList> {
   Widget pastPlanTile(box, index, item, type, isChecked, selectedDateTime) {
     //하트를 써서 체크할 수 있다.
     return PlanTile(
+      isHabit: item.isHabit,
       deleteFunction: () {
         HivePlanApi.deletePlanData(box, index);
       },
@@ -235,6 +242,7 @@ class _PlanListState extends State<PlanList> {
 
   Widget activatedPlanTile(box, index, PlanModel item) {
     return PlanTile(
+      isHabit: item.isHabit,
       deleteFunction: () {
         HivePlanApi.deletePlanData(box, index);
       },

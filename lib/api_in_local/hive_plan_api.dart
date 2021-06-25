@@ -22,7 +22,9 @@ class HivePlanApi {
     print(id);
 
     String createdTime = DateTime.now().toString();
-    await HiveRecordApi.openPlanRecordBox(createdTime);
+
+    await HiveRecordApi.openHabitRecordBox(createdTime, isHabit);
+
     box.put(
       id,
       PlanModel(

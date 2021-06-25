@@ -1,4 +1,5 @@
 import 'package:chat_planner_app/api_in_local/hive_record_api.dart';
+import 'package:chat_planner_app/api_in_local/hive_todo_record_api.dart';
 import 'package:chat_planner_app/functions/date_time_function.dart';
 import 'package:chat_planner_app/models/event.dart';
 import 'package:chat_planner_app/providers/data.dart';
@@ -9,6 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class PlanTile extends StatefulWidget {
+  final bool isHabit;
   final bool isChecked;
   final String title;
   final int index;
@@ -18,6 +20,7 @@ class PlanTile extends StatefulWidget {
   final void Function(dynamic) checkFunction;
 
   PlanTile({
+    required this.isHabit,
     required this.isChecked,
     required this.title,
     required this.index,
@@ -61,23 +64,37 @@ class _PlanTileState extends State<PlanTile> {
     }
     return GestureDetector(
       onTap: () {
-        Map recordMap = HiveRecordApi.getRecordsMapOfPlan(widget.createdTime);
+        Map recordMap = HiveRecordApi.getRecordsMapOfPlan(
+            widget.createdTime, widget.isHabit);
+
         Map<DateTime, List<Event>> eventSource = {};
+        DateTime? dateKey;
         recordMap.forEach((key, value) {
+          String description;
+          if (widget.isHabit) {
+            description =
+                '${DateTimeFunction.doneDateTimeString(value.doneTimestamp)}에 실천';
+          } else {
+            description =
+                '${value.title}\n${DateTimeFunction.doneDateTimeString(value.doneTimestamp)}에 실천';
+          }
           print(value.doneTimestamp);
-          eventSource.putIfAbsent(
-              DateTime.parse(value.doneTimestamp),
-              () => [
-                    Event(
-                        '${DateTimeFunction.doneDateTimeString(value.doneTimestamp)}에 실천')
-                  ]);
+          if (dateKey == null) {
+            dateKey = DateTime.parse(value.doneTimestamp);
+          }
+
+          if (eventSource.containsKey(dateKey)) {
+            eventSource[dateKey]!.add(Event(description));
+          } else {
+            eventSource[dateKey!] = [Event(description)];
+          }
         });
 
         Navigator.push(
           context,
           CupertinoPageRoute(
             builder: (BuildContext context) => PlanRecordScreen(
-              title: widget.title,
+              title: widget.isHabit ? widget.title : '할일 실천 기록',
               eventSource: eventSource,
               createdTime: widget.createdTime,
               deleteFunction: widget.deleteFunction,

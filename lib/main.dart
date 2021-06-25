@@ -1,3 +1,4 @@
+import 'package:chat_planner_app/constants.dart';
 import 'package:chat_planner_app/screens/bottom_nav_route/main_route_screen.dart';
 import 'package:chat_planner_app/screens/chat/chat_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -8,6 +9,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'api_in_local/hive_record_api.dart';
 import 'models_hive/plan_model.dart';
 import 'models_hive/record_model.dart';
+import 'models_hive/todo_record_model.dart';
 import 'models_hive/user_model.dart';
 
 void main() async {
@@ -17,14 +19,17 @@ void main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(PlanModelAdapter());
   Hive.registerAdapter(RecordModelAdapter());
+  Hive.registerAdapter(TodoRecordModelAdapter());
   Hive.registerAdapter(UserModelAdapter());
   await Hive.openBox<PlanModel>('plan');
   await Hive.openBox<RecordModel>('record');
   await Hive.openBox<UserModel>('user');
+  await Hive.openBox<TodoRecordModel>(kTodoRecordBoxName);
   final planBox = Hive.box<PlanModel>('plan');
   planBox.values.forEach((PlanModel element) async {
-    //TODO: plan에 lastDoneDate 넣자. 그리고 1주일 이상 지난놈은 안불러온다.
-    await HiveRecordApi.openPlanRecordBox(element.createdTime);
+    //TODO:planEndDate가 지나고 1주일이 지난 놈들은 안불러온다.
+    await HiveRecordApi.openHabitRecordBox(
+        element.createdTime, element.isHabit);
   });
 
   runApp(MaterialApp(
