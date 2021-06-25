@@ -1,12 +1,14 @@
-import 'package:chat_planner_app/models/plan_model.dart';
+import 'package:chat_planner_app/api_in_local/hive_record_api.dart';
+import 'package:chat_planner_app/models_hive/plan_model.dart';
 import 'package:hive/hive.dart';
 
 class HivePlanApi {
-  static void addPlan(
+  static Future<void> addPlan(
       {required title,
       required isHabit,
       required aimDaysOfWeek,
-      required habitEndOrTaskDateInfo}) {
+      required planEndDateInfo,
+      required selectedChatRoomId}) async {
     final box = Hive.box<PlanModel>('plan');
     int id = 0;
 
@@ -18,17 +20,20 @@ class HivePlanApi {
       }
     }
     print(id);
+
+    String createdTime = DateTime.now().toString();
+    await HiveRecordApi.openPlanRecordBox(createdTime);
     box.put(
       id,
       PlanModel(
-        id: id,
-        title: title,
-        isChecked: false,
-        createdTime: DateTime.now().toString(),
-        isHabit: isHabit,
-        aimDaysOfWeek: aimDaysOfWeek,
-        habitEndOrTaskDateInfo: habitEndOrTaskDateInfo,
-      ),
+          id: id,
+          title: title,
+          isChecked: false,
+          createdTime: createdTime,
+          isHabit: isHabit,
+          aimDaysOfWeek: aimDaysOfWeek,
+          planEndDate: planEndDateInfo,
+          selectedChatRoomId: selectedChatRoomId),
     );
   }
 
@@ -52,13 +57,21 @@ class HivePlanApi {
       isHabit: (fieldName == 'isOneTimeTask') ? value : item.isHabit,
       aimDaysOfWeek:
           (fieldName == 'aimDaysOfWeek') ? value : item.aimDaysOfWeek,
-      habitEndOrTaskDateInfo:
-          (fieldName == 'aimDaysOfWeek') ? value : item.habitEndOrTaskDateInfo,
+      planEndDate: (fieldName == 'aimDaysOfWeek') ? value : item.planEndDate,
+      selectedChatRoomId:
+          (fieldName == 'selectedChatRoomId') ? value : item.selectedChatRoomId,
     );
   }
 
   static void unCheckPlan(Box<PlanModel> box, index, PlanModel item) {
     changeOneFieldValue(box, index, item, fieldName: 'isChecked', value: false);
+  }
+
+  static void unCheckEveryPlan(box) {
+    box.values.forEach((element) {
+      changeOneFieldValue(box, element.id, element,
+          fieldName: 'isChecked', value: false);
+    });
   }
 
   static void checkPlanDone(Box<PlanModel> box, index, PlanModel item) {
@@ -76,7 +89,6 @@ class HivePlanApi {
     // 중간에 원소가 삭제되어도 key는 변화x -> i는 lastIndex까지의 key값을 갖는다.
     // box.get(i + 1);로 lastIndex까지를 가져오게 된다.
     var alterItem;
-    var insertModel;
     for (int i = index; i < lastIndex; i++) {
       alterItem = box.get(i + 1);
       changeOneFieldValue(box, i, alterItem!, fieldName: 'id', value: i);

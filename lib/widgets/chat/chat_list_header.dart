@@ -1,4 +1,3 @@
-import 'package:chat_planner_app/widgets/circle_border_box.dart';
 import 'package:flutter/material.dart';
 
 class FriendsHeader extends StatefulWidget {

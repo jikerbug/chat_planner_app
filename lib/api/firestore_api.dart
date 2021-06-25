@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:chat_planner_app/api/firestore_send_prebuilt_msg_api.dart';
-import 'package:chat_planner_app/functions/util_functions.dart';
+import 'package:chat_planner_app/functions/util_function.dart';
 import 'package:intl/intl.dart';
 
 import 'firebase_chat_api.dart';
@@ -26,30 +26,30 @@ class FireStoreApi {
 
   static Future<void> sendDateBubbleIfLastSentDateIsNotToday(
       String chatRoomId) async {
-    DateTime sendDate = DateTime.now();
-    String sendDateFormatted = DateFormat('yyyy-MM-dd').format(sendDate);
-
-    DocumentSnapshot ds =
-        await _fireStore.collection('chatRooms').doc(chatRoomId).get();
-
-    Map data = ds.data() as Map;
-    String lastSentDate = data['lastSentDate'];
-    if (lastSentDate != sendDateFormatted) {
-      await _fireStore
-          .collection('chatRooms')
-          .doc(chatRoomId)
-          .update({"lastSentDate": sendDateFormatted});
-      await _fireStore
-          .collection('chatRooms')
-          .doc(chatRoomId)
-          .collection('messages')
-          .add({'time': sendDate, 'type': 'date', 'date': sendDateFormatted});
-    }
+    // DateTime sendDate = DateTime.now();
+    // String sendDateFormatted = DateFormat('yyyy-MM-dd').format(sendDate);
+    //
+    // DocumentSnapshot ds =
+    //     await _fireStore.collection('chatRooms').doc(chatRoomId).get();
+    //
+    // Map data = ds.data() as Map;
+    // String lastSentDate = data['lastSentDate'];
+    // if (lastSentDate != sendDateFormatted) {
+    //   await _fireStore
+    //       .collection('chatRooms')
+    //       .doc(chatRoomId)
+    //       .update({"lastSentDate": sendDateFormatted});
+    //   await _fireStore
+    //       .collection('chatRooms')
+    //       .doc(chatRoomId)
+    //       .collection('messages')
+    //       .add({'time': sendDate, 'type': 'date', 'date': sendDateFormatted});
+    // }
   }
 
   static Future<Map> createChatRoomDocAndGetInfo(now, userId, friendId) async {
     String sendDateFormatted = DateFormat('yyyy-MM-dd').format(now);
-    DateTime expireTime = UtilFunctions.getExpireTime(now);
+    DateTime expireTime = UtilFunction.getExpireTime(now);
 
     DocumentReference dr = await _fireStore.collection('chatRooms').add({
       "createdTime": now,
@@ -196,7 +196,7 @@ class FireStoreApi {
     messagesCollection.add({
       'text': userMsg,
       'sender': userId,
-      'time': DateTime.now().toLocal(),
+      'time': DateTime.now(),
       'type': 'done'
     });
   }
@@ -216,7 +216,7 @@ class FireStoreApi {
     messagesCollection.add({
       'text': userMsg,
       'sender': userId,
-      'time': DateTime.now().toLocal(),
+      'time': DateTime.now(),
       'type': 'done'
     });
   }
@@ -234,7 +234,7 @@ class FireStoreApi {
     messagesCollection.add({
       'text': '하트 1개를 선물했습니다.',
       'sender': userId,
-      'time': DateTime.now().toLocal(),
+      'time': DateTime.now(),
       'type': 'gift'
     });
   }

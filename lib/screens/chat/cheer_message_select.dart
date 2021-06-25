@@ -32,6 +32,9 @@ class _CheerMessageSelectState extends State<CheerMessageSelect> {
               shrinkWrap: true,
               itemBuilder: (context, index) {
                 return ListTile(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
                   title: Text(
                     planCategoryList[index],
                     style: TextStyle(fontWeight: FontWeight.bold),

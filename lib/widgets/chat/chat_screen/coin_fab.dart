@@ -25,7 +25,7 @@ class _CoinFABState extends State<CoinFAB> with SingleTickerProviderStateMixin {
     animationController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 250));
     unfoldAnimation = Tween(begin: 0.0, end: 1.0).animate(animationController);
-    rotationAnimation = Tween<double>(begin: 180.0, end: 0.0).animate(
+    rotationAnimation = Tween<double>(begin: 0.0, end: 90.0).animate(
         CurvedAnimation(parent: animationController, curve: Curves.easeOut));
     super.initState();
     animationController.addListener(() {
@@ -40,9 +40,6 @@ class _CoinFABState extends State<CoinFAB> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    int coinCount = widget.coinCount;
-    int myCoinCount = widget.myCoinCount;
-    int otherCoinCount = widget.friendCoinCount;
     return Stack(
       children: [
         Positioned(
@@ -59,24 +56,9 @@ class _CoinFABState extends State<CoinFAB> with SingleTickerProviderStateMixin {
                   onPressed: () {
                     //Navigator.pushNamed(context, TaskScreen.id);
                   },
-                  icon: Icon(Icons.perm_identity_outlined),
-                  backgroundColor: Colors.green,
-                  label: Text("응원한 사람 : 혁구"),
-                ),
-              ),
-              Transform.translate(
-                offset: Offset.fromDirection(
-                    getRadiansFromDegree(90), unfoldAnimation.value * 120),
-                child: FloatingActionButton.extended(
-                  heroTag: null,
-                  elevation: hiddenButtonElevation,
-                  onPressed: () {
-                    //Navigator.pushNamed(context, TaskScreen.id);
-                  },
-                  icon: Icon(Icons.accessibility, color: Colors.black),
                   backgroundColor: Colors.white,
                   label: Text(
-                    "응원받은 사람 : 지백",
+                    "총 42002개 실천",
                     style: TextStyle(color: Colors.black),
                   ),
                 ),
@@ -100,9 +82,9 @@ class _CoinFABState extends State<CoinFAB> with SingleTickerProviderStateMixin {
                     transform: Matrix4.rotationZ(
                         getRadiansFromDegree(rotationAnimation.value)),
                     alignment: Alignment.center,
-                    child: Icon(Icons.attach_money)),
+                    child: Icon(Icons.people)),
                 backgroundColor: Colors.teal,
-                label: Text("푸시업 30개 계획을 응원중"),
+                label: Text("금일 32개 실천"),
               ),
             ],
           ),

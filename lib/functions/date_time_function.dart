@@ -64,9 +64,19 @@ class DateTimeFunction {
     }
   }
 
+  static String doneDateTimeString(String doneTimestamp) {
+    DateTime doneDateTime = DateTime.parse(doneTimestamp);
+    String doneInfo =
+        '${doneDateTime.month}월 ${doneDateTime.day}일 ${dayListForPlanScreen[doneDateTime.weekday]}요일';
+    doneInfo += ' ';
+    doneInfo += '${doneDateTime.hour}시 ${doneDateTime.minute}분';
+    return doneInfo;
+  }
+
+  static String wholeDayOfWeekInfo = '전체 요일(실천 가능)';
   static String todayDateString(selectedDay, nowWhenReloaded) {
     if (selectedDay == '전체') {
-      return '전체 요일';
+      return wholeDayOfWeekInfo;
     }
     DateTime selectedDateTime =
         getDateTimeOfSelectedDate(selectedDay, nowWhenReloaded);
@@ -85,9 +95,13 @@ class DateTimeFunction {
     return adt.year == bdt.year && adt.month == bdt.month && adt.day == bdt.day;
   }
 
+  static String dateTimeToDateString(selectedDateTime) {
+    return selectedDateTime.toString().substring(0, 10);
+  }
+
   static Future<String> selectDate(habitEndOrTaskDateInfo, context) async {
     if (habitEndOrTaskDateInfo == noLimitNotation) {
-      habitEndOrTaskDateInfo = DateTime.now().toString().substring(0, 10);
+      habitEndOrTaskDateInfo = dateTimeToDateString(DateTime.now());
     }
     // locale 설정하기 위해 pubspec_copy.yaml 파일과 메인에 코드 추가!!
     DateTime? picked = await showDatePicker(
@@ -106,7 +120,7 @@ class DateTimeFunction {
       },
     );
     if (picked != null) {
-      return picked.toString().substring(0, 10);
+      return dateTimeToDateString(picked);
     } else {
       return noLimitNotation;
     }

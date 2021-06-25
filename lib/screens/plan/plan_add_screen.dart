@@ -12,6 +12,7 @@
 import 'package:chat_planner_app/api_in_local/hive_plan_api.dart';
 import 'package:chat_planner_app/functions/custom_dialog_function.dart';
 import 'package:chat_planner_app/functions/date_time_function.dart';
+import 'package:chat_planner_app/models_singleton/user.dart';
 import 'plan_category_select.dart';
 import 'package:chat_planner_app/widgets/circle_border_box.dart';
 import 'package:chat_planner_app/widgets/rounded_button.dart';
@@ -34,7 +35,9 @@ class _PlanAddScreenState extends State<PlanAddScreen> {
   bool isMonWedFri = false;
   bool isTueThuSat = false;
   String noLimitNotation = DateTimeFunction.noLimitNotation;
-  late String habitEndOrTaskDateInfo = noLimitNotation;
+  late String planEndDateInfo = noLimitNotation;
+  String selectedChatRoomId = 'none';
+  String selectedChatRoomName = '없음';
 
   Widget sameGroupGapBox() => SizedBox(
         height: 5.0,
@@ -104,17 +107,16 @@ class _PlanAddScreenState extends State<PlanAddScreen> {
                 sameGroupGapBox(),
                 TextButton(
                     onPressed: () async {
-                      if (habitEndOrTaskDateInfo == noLimitNotation) {
-                        habitEndOrTaskDateInfo =
-                            await DateTimeFunction.selectDate(
-                                habitEndOrTaskDateInfo, context);
+                      if (planEndDateInfo == noLimitNotation) {
+                        planEndDateInfo = await DateTimeFunction.selectDate(
+                            planEndDateInfo, context);
                       } else {
-                        habitEndOrTaskDateInfo = noLimitNotation;
+                        planEndDateInfo = noLimitNotation;
                       }
                       setState(() {});
                     },
                     child: Text(
-                      habitEndOrTaskDateInfo,
+                      planEndDateInfo,
                       style: TextStyle(color: Colors.teal),
                     )),
                 otherGroupGapBox(),
@@ -123,14 +125,26 @@ class _PlanAddScreenState extends State<PlanAddScreen> {
                 sameGroupGapBox(),
                 ThinButton(
                     onPressed: () {
+                      User user = User();
+                      String userId = user.userId;
+                      print('야야야 $userId');
                       showModalBottomSheet(
                         isScrollControlled:
                             true, //full screen으로 modal 쓸 수 있게 해준다.
                         context: context,
-                        builder: (context) => PlanCategorySelect(),
+                        builder: (context) => PlanCategorySelect(
+                          chatRoomCallback: (chatRoomId, chatRoomName) {
+                            setState(() {
+                              selectedChatRoomId = chatRoomId;
+                              selectedChatRoomName = chatRoomName;
+                            });
+                            return 'success';
+                          },
+                          userId: userId,
+                        ),
                       );
                     },
-                    title: '카테고리 - 전체 / 채팅방 - 없음',
+                    title: '카테고리 - 전체 / 채팅방 - $selectedChatRoomName',
                     color: Colors.teal),
                 otherGroupGapBox(),
                 Row(
@@ -166,7 +180,8 @@ class _PlanAddScreenState extends State<PlanAddScreen> {
                               title: title,
                               isHabit: isHabit,
                               aimDaysOfWeek: aimDaysOfWeek,
-                              habitEndOrTaskDateInfo: habitEndOrTaskDateInfo,
+                              planEndDateInfo: planEndDateInfo,
+                              selectedChatRoomId: selectedChatRoomId,
                             );
                             Navigator.pop(context);
                           }

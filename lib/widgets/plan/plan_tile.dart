@@ -1,4 +1,8 @@
+import 'package:chat_planner_app/api_in_local/hive_record_api.dart';
+import 'package:chat_planner_app/functions/date_time_function.dart';
+import 'package:chat_planner_app/models/event.dart';
 import 'package:chat_planner_app/providers/data.dart';
+import 'package:chat_planner_app/screens/plan/plan_record_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -8,7 +12,7 @@ class PlanTile extends StatefulWidget {
   final bool isChecked;
   final String title;
   final int index;
-  final String createTime;
+  final String createdTime;
   final String type;
   final void Function() deleteFunction;
   final void Function(dynamic) checkFunction;
@@ -17,7 +21,7 @@ class PlanTile extends StatefulWidget {
     required this.isChecked,
     required this.title,
     required this.index,
-    required this.createTime,
+    required this.createdTime,
     required this.type,
     required this.deleteFunction,
     required this.checkFunction,
@@ -43,7 +47,6 @@ class _PlanTileState extends State<PlanTile> {
         color: Colors.grey,
         width: 35, height: 35,
       ),
-      onTap: widget.deleteFunction,
     );
   }
 
@@ -58,7 +61,29 @@ class _PlanTileState extends State<PlanTile> {
     }
     return GestureDetector(
       onTap: () {
-        print('실천 요약 달력을 출력!!');
+        Map recordMap = HiveRecordApi.getRecordsMapOfPlan(widget.createdTime);
+        Map<DateTime, List<Event>> eventSource = {};
+        recordMap.forEach((key, value) {
+          print(value.doneTimestamp);
+          eventSource.putIfAbsent(
+              DateTime.parse(value.doneTimestamp),
+              () => [
+                    Event(
+                        '${DateTimeFunction.doneDateTimeString(value.doneTimestamp)}에 실천')
+                  ]);
+        });
+
+        Navigator.push(
+          context,
+          CupertinoPageRoute(
+            builder: (BuildContext context) => PlanRecordScreen(
+              title: widget.title,
+              eventSource: eventSource,
+              createdTime: widget.createdTime,
+              deleteFunction: widget.deleteFunction,
+            ),
+          ),
+        );
       },
       //Material 없애면 화면 이상해짐
       child: ListTile(
@@ -84,7 +109,7 @@ class _PlanTileState extends State<PlanTile> {
                   ),
                 ],
                 Text(
-                  widget.title + ' 하기',
+                  widget.title,
                   style: TextStyle(
                       fontSize: 18.0,
                       fontWeight: FontWeight.bold,
@@ -93,7 +118,7 @@ class _PlanTileState extends State<PlanTile> {
                 ),
               ])
             : Text(
-                widget.title + ' 하기',
+                widget.title,
                 style: TextStyle(
                     fontSize: 17.0,
                     decoration:

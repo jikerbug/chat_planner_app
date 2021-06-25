@@ -293,6 +293,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "7.0.1"
+  flutter_clean_calendar:
+    dependency: "direct main"
+    description:
+      name: flutter_clean_calendar
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.0"
   flutter_localizations:
     dependency: "direct main"
     description: flutter
@@ -588,6 +595,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.1"
+  simple_gesture_detector:
+    dependency: transitive
+    description:
+      name: simple_gesture_detector
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.0"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -646,6 +660,13 @@ packages:
     dependency: transitive
     description:
       name: synchronized
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.0"
+  table_calendar:
+    dependency: "direct main"
+    description:
+      name: table_calendar
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.0"

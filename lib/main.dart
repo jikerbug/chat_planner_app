@@ -4,10 +4,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hive/hive.dart';
-import 'models/plan_model.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-
-import 'models/record_model.dart';
+import 'api_in_local/hive_record_api.dart';
+import 'models_hive/plan_model.dart';
+import 'models_hive/record_model.dart';
+import 'models_hive/user_model.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,8 +17,14 @@ void main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(PlanModelAdapter());
   Hive.registerAdapter(RecordModelAdapter());
+  Hive.registerAdapter(UserModelAdapter());
   await Hive.openBox<PlanModel>('plan');
   await Hive.openBox<RecordModel>('record');
+  await Hive.openBox<UserModel>('user');
+  final planBox = Hive.box<PlanModel>('plan');
+  planBox.values.forEach((element) async {
+    await HiveRecordApi.openPlanRecordBox(element.createdTime);
+  });
 
   runApp(MaterialApp(
     localizationsDelegates: [

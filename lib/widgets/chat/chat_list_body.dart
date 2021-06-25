@@ -1,14 +1,14 @@
 import 'package:chat_planner_app/functions/chat_room_enter_function.dart';
-import 'package:chat_planner_app/models/chat_room_model.dart';
+import 'package:chat_planner_app/models/chat_room.dart';
 import 'package:chat_planner_app/providers/data.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class FriendsBody extends StatelessWidget {
+class ChatRoomsBody extends StatelessWidget {
   final List<ChatRoom> chatRooms;
 
-  FriendsBody({
+  ChatRoomsBody({
     required this.chatRooms,
   });
 
@@ -50,7 +50,8 @@ class FriendsBody extends StatelessWidget {
             height: 70,
             child: ListTile(
               onTap: () {
-                ChatRoomEnterFunctions.chatRoomEnterProcess(context);
+                ChatRoomEnterFunctions.chatRoomEnterProcess(
+                    context, chatRoom.serverId, chatRoom.name);
               },
               leading: Material(
                 shape: CircleBorder(),

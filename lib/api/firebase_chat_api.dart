@@ -1,10 +1,4 @@
 import 'package:firebase_database/firebase_database.dart';
-import 'package:chat_planner_app/api/firestore_send_prebuilt_msg_api.dart';
-import 'package:chat_planner_app/functions/chat_room_enter_function.dart';
-import 'package:chat_planner_app/functions/util_functions.dart';
-import 'package:chat_planner_app/providers/data.dart';
-import 'package:provider/provider.dart';
-import 'firestore_api.dart';
 
 class FirebaseChatApi {
   //리스너를 단 놈들은 어차피 따로 fetch가 되기 때문에, userInfo와 따로 구성함

@@ -1,4 +1,4 @@
-import 'package:chat_planner_app/models/record_model.dart';
+import 'package:chat_planner_app/models_hive/record_model.dart';
 import 'package:hive/hive.dart';
 
 part 'plan_model.g.dart';
@@ -28,7 +28,10 @@ class PlanModel {
   final List aimDaysOfWeek;
 
   @HiveField(6)
-  final String habitEndOrTaskDateInfo;
+  final String planEndDate;
+
+  @HiveField(7)
+  final String selectedChatRoomId;
 
   PlanModel({
     required this.id,
@@ -37,6 +40,7 @@ class PlanModel {
     required this.createdTime,
     required this.isHabit,
     required this.aimDaysOfWeek,
-    required this.habitEndOrTaskDateInfo,
+    required this.planEndDate,
+    required this.selectedChatRoomId,
   });
 }

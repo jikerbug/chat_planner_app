@@ -1,3 +1,4 @@
+import '../../models_singleton/user.dart';
 import 'package:chat_planner_app/providers/data.dart';
 import 'package:chat_planner_app/screens/chat/chat_list_sceen.dart';
 import 'package:chat_planner_app/screens/side_nav_route/side_nav.dart';
@@ -29,6 +30,8 @@ class _MainRouteScreenState extends State<MainRouteScreen> {
   void initState() {
     super.initState();
     userId = widget.userInfo['userId'];
+    User user = User();
+    user.setUserId(userId);
   }
 
   @override
@@ -131,17 +134,21 @@ class _HomeState extends State<Home> {
             key: navigatorKey,
             initialRoute: '/',
             onGenerateRoute: (RouteSettings settings) {
-              WidgetBuilder builder =
-                  (context) => PlanScreen(fabFunc: changeFAB);
+              WidgetBuilder builder = (context) => PlanScreen(
+                    fabFunc: changeFAB,
+                    userId: widget.userId,
+                  );
               switch (settings.name) {
                 case '/':
-                  builder = (context) => PlanScreen(fabFunc: changeFAB);
+                  builder = (context) =>
+                      PlanScreen(fabFunc: changeFAB, userId: widget.userId);
                   break;
                 case '/chats':
-                  builder = (context) => ChatListScreen(fabFunc: changeFAB);
+                  builder = (context) => ChatListScreen(
+                      fabCallback: changeFAB, userId: widget.userId);
                   break;
               }
-              return MaterialPageRoute(
+              return NoDelayPageRoute(
                 builder: builder,
                 settings: settings,
               );
@@ -153,4 +160,12 @@ class _HomeState extends State<Home> {
       ),
     );
   }
+}
+
+class NoDelayPageRoute extends MaterialPageRoute {
+  @override
+  Duration get transitionDuration => Duration(milliseconds: 0);
+
+  NoDelayPageRoute({builder, settings})
+      : super(builder: builder, settings: settings);
 }

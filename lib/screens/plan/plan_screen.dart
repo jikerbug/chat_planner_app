@@ -1,15 +1,18 @@
 import 'package:chat_planner_app/functions/date_time_function.dart';
 import 'package:chat_planner_app/modules/plan_list.dart';
+import 'package:chat_planner_app/providers/data.dart';
 import 'package:chat_planner_app/widgets/plan/info_panel.dart';
+import 'package:provider/provider.dart';
 import 'plan_category_select.dart';
 import 'package:chat_planner_app/widgets/thin_button.dart';
 import 'package:flutter/material.dart';
 
 class PlanScreen extends StatefulWidget {
-  static const String id = 'task_screen';
+  static const String id = 'plan_screen';
 
-  PlanScreen({required this.fabFunc});
+  PlanScreen({required this.fabFunc, required this.userId});
   final Function fabFunc;
+  final String userId;
 
   @override
   _PlanScreenState createState() => _PlanScreenState();
@@ -18,6 +21,9 @@ class PlanScreen extends StatefulWidget {
 class _PlanScreenState extends State<PlanScreen> {
   late String selectedDay;
   late DateTime nowSyncedAtReload;
+  String selectedChatRoomId = 'none';
+  String selectedChatRoomName = '없음';
+
   @override
   void initState() {
     super.initState();
@@ -60,6 +66,7 @@ class _PlanScreenState extends State<PlanScreen> {
                         top: Radius.circular(10.0),
                       ),
                       child: CircleAvatar(
+                        radius: MediaQuery.of(context).size.width / 18,
                         backgroundColor: Colors.transparent,
                         child: Text(
                           dayCategory,
@@ -101,7 +108,16 @@ class _PlanScreenState extends State<PlanScreen> {
                         showModalBottomSheet(
                           isScrollControlled: true,
                           context: context,
-                          builder: (context) => PlanCategorySelect(),
+                          builder: (context) => PlanCategorySelect(
+                            chatRoomCallback: (chatRoomId, chatRoomName) {
+                              setState(() {
+                                selectedChatRoomId = chatRoomId;
+                                selectedChatRoomName = chatRoomName;
+                              });
+                              return 'success';
+                            },
+                            userId: widget.userId,
+                          ),
                         );
                       },
                       title: '카테고리 - 전체',

@@ -17,6 +17,7 @@ class _ChatScreenState extends State<ChatScreen> {
   int myCoinCount = 0;
   int friendCoinCount = 0;
   late String chatRoomId;
+  late String chatRoomName;
   late bool isNotExpired;
   String friendUserId = '';
   String userId = '';
@@ -46,6 +47,8 @@ class _ChatScreenState extends State<ChatScreen> {
     //상대방의 코인 적립개수를 보는 로직
     //InitState이후에 argument를 사용할 수 있다...!!
     Future.delayed(Duration.zero, () async {
+      //메시지스트림을 위해 불러와야하는 놈들
+      //이놈들을 포함한 다른 놈들은 build에서 불러오면 된다.
       Map argument = ModalRoute.of(context)!.settings.arguments as Map;
       friendUserId = argument['friendUserId'];
       userId = argument['userId'];
@@ -70,7 +73,7 @@ class _ChatScreenState extends State<ChatScreen> {
     switch (value) {
       case '채팅방 나가기':
         print("채팅방 나가기?");
-        CustomDialogFunction.dialogFunction(
+        CustomDialogFunction.dialog(
             isLeftAlign: false,
             context: context,
             isTwoButton: true,
@@ -89,7 +92,7 @@ class _ChatScreenState extends State<ChatScreen> {
         break;
       case '채팅방 정보 보기':
         if (expireTimeFormatted != null) {
-          CustomDialogFunction.dialogFunction(
+          CustomDialogFunction.dialog(
               isLeftAlign: false,
               context: context,
               isTwoButton: false,
@@ -111,6 +114,7 @@ class _ChatScreenState extends State<ChatScreen> {
     friendUserId = argument['friendUserId'];
     friendNickname = argument['friendNickname'];
     userId = argument['userId'];
+    chatRoomName = argument['chatRoomName'];
 
     return Scaffold(
       appBar: AppBar(
@@ -118,7 +122,10 @@ class _ChatScreenState extends State<ChatScreen> {
             color: Colors.black, //change your color here
           ),
           backgroundColor: Colors.white,
-          title: Text('나와의 채팅'),
+          title: Text(
+            chatRoomName,
+            style: TextStyle(color: Colors.black),
+          ),
           actions: [
             PopupMenuButton<String>(
               onSelected: handleAppBarMenuClick,

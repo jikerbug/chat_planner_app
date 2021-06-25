@@ -1,15 +1,15 @@
 import 'package:chat_planner_app/api/firestore_api.dart';
 import 'package:chat_planner_app/api_in_local/hive_plan_api.dart';
 import 'package:chat_planner_app/api_in_local/hive_record_api.dart';
+import 'package:chat_planner_app/api_in_local/hive_user_api.dart';
 import 'package:chat_planner_app/functions/chat_room_enter_function.dart';
 import 'package:chat_planner_app/functions/custom_dialog_function.dart';
 import 'package:chat_planner_app/functions/date_time_function.dart';
-import 'package:chat_planner_app/models/plan_model.dart';
-import 'package:chat_planner_app/models/record_model.dart';
+import 'package:chat_planner_app/models_hive/plan_model.dart';
+import 'package:chat_planner_app/models_hive/record_model.dart';
 import 'package:chat_planner_app/providers/data.dart';
-import 'package:chat_planner_app/widgets/plan_tile.dart';
+import '../widgets/plan/plan_tile.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
@@ -25,6 +25,14 @@ class PlanList extends StatefulWidget {
 }
 
 class _PlanListState extends State<PlanList> {
+  @override
+  void initState() {
+    super.initState();
+    final planBox = Hive.box<PlanModel>('plan');
+    final userId = Provider.of<Data>(context, listen: false).userId;
+    HiveUserApi.refreshPlanByLastCheckInDate(userId, DateTime.now(), planBox);
+  }
+
   @override
   Widget build(BuildContext context) {
     final userId = Provider.of<Data>(context, listen: false).userId;
@@ -72,14 +80,10 @@ class _PlanListState extends State<PlanList> {
               }
 
               return ReorderableDelayedDragStartListener(
-                  key: ValueKey(item),
-                  index: index,
-                  child: FutureBuilder(
-                    builder: (buildContext, snapshot) {
-                      return getPlanTile(box, index, item);
-                    },
-                    future: HiveRecordApi.openPlanRecordBox(item.createdTime),
-                  ));
+                key: ValueKey(item),
+                index: index,
+                child: getPlanTile(box, index, item),
+              );
             },
             itemCount: box.length,
           );
@@ -135,14 +139,14 @@ class _PlanListState extends State<PlanList> {
           return true;
         }
       } else {
-        if (item.habitEndOrTaskDateInfo == DateTimeFunction.noLimitNotation) {
+        if (item.planEndDate == DateTimeFunction.noLimitNotation) {
           if (DateTimeFunction.getTodayOfWeek(widget.nowSyncedAtReload) !=
               widget.selectedDay) {
             return true;
           }
         } else {
-          if (selectedDateTime.toString().substring(0, 10) !=
-              item.habitEndOrTaskDateInfo) {
+          if (DateTimeFunction.dateTimeToDateString(selectedDateTime) !=
+              item.planEndDate) {
             return true;
           }
         }
@@ -158,7 +162,7 @@ class _PlanListState extends State<PlanList> {
       },
       checkFunction: (value) {
         if (value == true) {
-          CustomDialogFunction.dialogFunction(
+          CustomDialogFunction.dialog(
               context: context,
               isTwoButton: false,
               isLeftAlign: false,
@@ -171,7 +175,7 @@ class _PlanListState extends State<PlanList> {
       isChecked: false,
       title: item.title,
       index: index,
-      createTime: item.createdTime,
+      createdTime: item.createdTime,
       type: 'future',
     );
   }
@@ -185,7 +189,7 @@ class _PlanListState extends State<PlanList> {
       checkFunction: (value) {
         if (value == true) {
           if (type == 'yesterday') {
-            CustomDialogFunction.dialogFunction(
+            CustomDialogFunction.dialog(
                 context: context,
                 isTwoButton: true,
                 isLeftAlign: false,
@@ -200,7 +204,7 @@ class _PlanListState extends State<PlanList> {
                 text: '어제의 계획을 실천하려면 하트 10개가 필요합니다.\n실천하시겠습니까?',
                 size: 'small');
           } else {
-            CustomDialogFunction.dialogFunction(
+            CustomDialogFunction.dialog(
                 context: context,
                 isTwoButton: false,
                 isLeftAlign: false,
@@ -210,7 +214,7 @@ class _PlanListState extends State<PlanList> {
                 size: 'small');
           }
         } else {
-          CustomDialogFunction.dialogFunction(
+          CustomDialogFunction.dialog(
               context: context,
               isTwoButton: false,
               isLeftAlign: false,
@@ -225,27 +229,42 @@ class _PlanListState extends State<PlanList> {
       isChecked: isChecked,
       title: item.title,
       index: index,
-      createTime: item.createdTime,
+      createdTime: item.createdTime,
       type: 'past',
     );
   }
 
-  Widget activatedPlanTile(box, index, item) {
+  Widget activatedPlanTile(box, index, PlanModel item) {
     return PlanTile(
       deleteFunction: () {
         HivePlanApi.deletePlanData(box, index);
       },
       checkFunction: (value) {
         if (value == true) {
-          HivePlanApi.checkPlanDone(box, index, item);
-          HiveRecordApi.addRecord(
-              item: item, doneTimestamp: widget.nowSyncedAtReload.toString());
-          FireStoreApi.sendDoneMessages(item.title, 'mindnetworkcorp@gmail',
-              'mindnetworkcorp@gmail', 'mindnetworkcorp@gmail');
+          if (widget.nowSyncedAtReload.day != DateTime.now().day) {
+            CustomDialogFunction.dialog(
+                context: context,
+                isTwoButton: false,
+                isLeftAlign: false,
+                onPressed: () {},
+                title: '날짜 변경 안내',
+                text: '날짜가 변경되었습니다.\n앱 재시작 후 실천을 표시해주세요',
+                size: 'small');
+          } else {
+            HivePlanApi.checkPlanDone(box, index, item);
+            HiveRecordApi.addRecord(
+                item: item, doneTimestamp: DateTime.now().toString());
+            String chatRoomId = item.selectedChatRoomId;
+            print('chatRoomId');
+            print(chatRoomId);
+            FireStoreApi.sendDoneMessages(item.title, 'mindnetworkcorp@gmail',
+                chatRoomId, 'mindnetworkcorp@gmail');
 
-          ChatRoomEnterFunctions.chatRoomEnterProcess(context);
+            ChatRoomEnterFunctions.chatRoomEnterProcess(
+                context, chatRoomId, '나와의 채팅');
+          }
         } else {
-          CustomDialogFunction.dialogFunction(
+          CustomDialogFunction.dialog(
               context: context,
               isTwoButton: true,
               isLeftAlign: false,
@@ -263,7 +282,7 @@ class _PlanListState extends State<PlanList> {
       isChecked: item.isChecked,
       title: item.title,
       index: index,
-      createTime: item.createdTime,
+      createdTime: item.createdTime,
       type: 'activated',
     );
   }

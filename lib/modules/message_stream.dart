@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:chat_planner_app/api/firestore_api.dart';
-import 'package:chat_planner_app/functions/util_functions.dart';
+import 'package:chat_planner_app/functions/util_function.dart';
 import 'package:chat_planner_app/widgets/chat/chat_screen/bubble.dart';
 import 'package:paginate_firestore/paginate_firestore.dart';
 
@@ -140,7 +140,7 @@ class MessageStream extends StatelessWidget {
 
           String sender = data['sender'];
           if (chatRoomId == 'mainWaitingRoom') {
-            sender = UtilFunctions.userIdToWaitingRoomUserNickname(sender);
+            sender = UtilFunction.userIdToWaitingRoomUserNickname(sender);
           } else {
             sender = (friendUserId == sender) ? friendNickname : sender;
           }

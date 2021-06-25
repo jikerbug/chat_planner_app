@@ -1,6 +1,6 @@
 import 'package:intl/intl.dart';
 
-class UtilFunctions {
+class UtilFunction {
   static List userCodeAList = [
     '춤추는',
     '유연한',

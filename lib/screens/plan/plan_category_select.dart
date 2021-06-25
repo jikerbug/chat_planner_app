@@ -1,8 +1,14 @@
+import 'package:chat_planner_app/providers/data.dart';
 import 'package:chat_planner_app/widgets/circle_border_box.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class PlanCategorySelect extends StatefulWidget {
+  PlanCategorySelect({required this.chatRoomCallback, required this.userId});
+  final String Function(String, String) chatRoomCallback;
+  final String userId;
+
   @override
   _PlanCategorySelectState createState() => _PlanCategorySelectState();
 }
@@ -13,13 +19,13 @@ class _PlanCategorySelectState extends State<PlanCategorySelect> {
   static String typeNone = '없음';
 
   final List planCategoryList = [planTypeWhole, typeNone, '운동'];
-
   final List chatCategoryList = [chatTypeMyself, typeNone, '친구방'];
 
   bool isChatCategoryFolded = false;
 
   @override
   Widget build(BuildContext context) {
+    final List chatRoomIdList = [widget.userId, 'none', 'test_friend'];
     return Container(
       height: MediaQuery.of(context).size.height * 3 / 5,
       child: Row(
@@ -67,10 +73,17 @@ class _PlanCategorySelectState extends State<PlanCategorySelect> {
                   child: ListView.separated(
                     shrinkWrap: true,
                     itemBuilder: (context, index) {
-                      return categoryTile(
-                          title: chatCategoryList[index],
-                          planCount: 1,
-                          index: index);
+                      return GestureDetector(
+                        onTap: () {
+                          widget.chatRoomCallback(
+                              chatRoomIdList[index], chatCategoryList[index]);
+                          Navigator.pop(context);
+                        },
+                        child: categoryTile(
+                            title: chatCategoryList[index],
+                            planCount: 1,
+                            index: index),
+                      );
                     },
                     itemCount: chatCategoryList.length,
                     separatorBuilder: (context, index) {

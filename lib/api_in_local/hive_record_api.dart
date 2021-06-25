@@ -1,18 +1,22 @@
 import 'package:chat_planner_app/functions/date_time_function.dart';
-import 'package:chat_planner_app/models/plan_model.dart';
-import 'package:chat_planner_app/models/record_model.dart';
+import 'package:chat_planner_app/models_hive/plan_model.dart';
+import 'package:chat_planner_app/models_hive/record_model.dart';
 import 'package:hive/hive.dart';
 
 class HiveRecordApi {
-  static final box = Hive.box<RecordModel>('record');
+  static Map getRecordsMapOfPlan(planCreatedTime) {
+    final box = Hive.box<RecordModel>(planCreatedTime);
+    return box.toMap();
+  }
 
-  static Future<void> openPlanRecordBox(planCreatedTime) async {
+  static Future<String> openPlanRecordBox(planCreatedTime) async {
     if (!Hive.isBoxOpen(planCreatedTime)) {
       await Hive.openBox<RecordModel>(planCreatedTime);
     }
+    return 'success';
   }
 
-  static void addRecord({
+  static Future<void> addRecord({
     required PlanModel item,
     required doneTimestamp,
   }) async {
@@ -53,8 +57,6 @@ class HiveRecordApi {
         .where((element) =>
             DateTimeFunction.isSameDate(deleteTimestamp, element.doneTimestamp))
         .forEach((element) {
-      print(element.id);
-      print(element.doneTimestamp);
       box.delete(element.id);
     });
 

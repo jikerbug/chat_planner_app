@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CustomDialogFunction {
-  static void dialogFunction(
+  static void dialog(
       {required BuildContext context,
       required bool isTwoButton,
       required bool isLeftAlign,
@@ -87,7 +87,7 @@ class CustomDialogFunction {
   }
 
   static void dayOfWeekNotSelected(context) {
-    dialogFunction(
+    dialog(
         context: context,
         isTwoButton: false,
         isLeftAlign: false,

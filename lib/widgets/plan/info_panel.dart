@@ -47,7 +47,7 @@ class _InfoPanelState extends State<InfoPanel> {
         ),
         GestureDetector(
           onTap: () {
-            CustomDialogFunction.dialogFunction(
+            CustomDialogFunction.dialog(
                 context: context,
                 isTwoButton: false,
                 isLeftAlign: true,
