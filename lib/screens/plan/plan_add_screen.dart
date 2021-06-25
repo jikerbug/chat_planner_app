@@ -12,7 +12,6 @@
 import 'package:chat_planner_app/api_in_local/hive_plan_api.dart';
 import 'package:chat_planner_app/functions/custom_dialog_function.dart';
 import 'package:chat_planner_app/functions/date_time_function.dart';
-import 'package:chat_planner_app/models_singleton/user.dart';
 import 'plan_category_select.dart';
 import 'package:chat_planner_app/widgets/circle_border_box.dart';
 import 'package:chat_planner_app/widgets/rounded_button.dart';
@@ -125,9 +124,6 @@ class _PlanAddScreenState extends State<PlanAddScreen> {
                 sameGroupGapBox(),
                 ThinButton(
                     onPressed: () {
-                      User user = User();
-                      String userId = user.userId;
-                      print('야야야 $userId');
                       showModalBottomSheet(
                         isScrollControlled:
                             true, //full screen으로 modal 쓸 수 있게 해준다.
@@ -140,7 +136,6 @@ class _PlanAddScreenState extends State<PlanAddScreen> {
                             });
                             return 'success';
                           },
-                          userId: userId,
                         ),
                       );
                     },

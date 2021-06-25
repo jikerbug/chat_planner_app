@@ -124,10 +124,10 @@ class FireStoreApi {
     ///sendMessageDateBubble을 보낼때, ThreeDaysAgoTimeStamp를 : 해당을 Timestamp로!!
   }
 
-  static void sendMessage(text, userId, chatRoomId, friendUserId, time,
+  static void sendMessage(text, userId, chatRoomId, time,
       {isFirstTimeline = true}) async {
     FirebaseChatApi.changeChatRoomStateOfFriendIfMatched(
-        chatRoomId, userId, friendUserId);
+        chatRoomId, userId, 'friendUserId');
 
     //await sendDateBubbleIfLastSentDateIsNotToday(chatRoomId);
     //얘는 firstTimeLine 체크를 위해 밖에서 메세지를 보낸다. 따라서 밖에서 해당 프로세스를 진행할 것이다.
@@ -145,9 +145,9 @@ class FireStoreApi {
   }
 
   static void sendAddAgainMessages(
-      title, userId, chatRoomId, checkCount, friendUserId) async {
+      title, userId, chatRoomId, checkCount) async {
     FirebaseChatApi.changeChatRoomStateOfFriendIfMatched(
-        chatRoomId, userId, friendUserId);
+        chatRoomId, userId, 'friendUserId');
     await sendDateBubbleIfLastSentDateIsNotToday(chatRoomId);
     final messagesCollection = _fireStore
         .collection('chatRooms')
@@ -164,9 +164,9 @@ class FireStoreApi {
   }
 
   static void sendAddMessages(
-      title, selectedCategory, userId, chatRoomId, friendUserId) async {
+      title, selectedCategory, userId, chatRoomId) async {
     FirebaseChatApi.changeChatRoomStateOfFriendIfMatched(
-        chatRoomId, userId, friendUserId);
+        chatRoomId, userId, 'friendUserId');
     await sendDateBubbleIfLastSentDateIsNotToday(chatRoomId);
     final messagesCollection = _fireStore
         .collection('chatRooms')
@@ -182,9 +182,9 @@ class FireStoreApi {
     });
   }
 
-  static void sendDoneMessages(title, userId, chatRoomId, friendUserId) async {
+  static void sendDoneMessages(title, userId, chatRoomId) async {
     FirebaseChatApi.changeChatRoomStateOfFriendIfMatched(
-        chatRoomId, userId, friendUserId);
+        chatRoomId, userId, 'friendUserId');
     await sendDateBubbleIfLastSentDateIsNotToday(chatRoomId);
     String userMsg = '$title 완료!';
 
@@ -201,10 +201,9 @@ class FireStoreApi {
     });
   }
 
-  static void sendTimerMessages(
-      title, userId, chatRoomId, minuteCount, friendUserId) async {
+  static void sendTimerMessages(title, userId, chatRoomId, minuteCount) async {
     FirebaseChatApi.changeChatRoomStateOfFriendIfMatched(
-        chatRoomId, userId, friendUserId);
+        chatRoomId, userId, 'friendUserId');
     await sendDateBubbleIfLastSentDateIsNotToday(chatRoomId);
     String userMsg = '$title 실천하기\n$minuteCount분 완료!';
 
@@ -221,9 +220,9 @@ class FireStoreApi {
     });
   }
 
-  static void sendHeartGiftMessage(userId, chatRoomId, friendUserId) async {
+  static void sendHeartGiftMessage(userId, chatRoomId) async {
     FirebaseChatApi.changeChatRoomStateOfFriendIfMatched(
-        chatRoomId, userId, friendUserId);
+        chatRoomId, userId, 'friendUserId');
     await sendDateBubbleIfLastSentDateIsNotToday(chatRoomId);
 
     final messagesCollection = _fireStore

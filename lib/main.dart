@@ -22,7 +22,8 @@ void main() async {
   await Hive.openBox<RecordModel>('record');
   await Hive.openBox<UserModel>('user');
   final planBox = Hive.box<PlanModel>('plan');
-  planBox.values.forEach((element) async {
+  planBox.values.forEach((PlanModel element) async {
+    //TODO: plan에 lastDoneDate 넣자. 그리고 1주일 이상 지난놈은 안불러온다.
     await HiveRecordApi.openPlanRecordBox(element.createdTime);
   });
 
@@ -42,28 +43,15 @@ void main() async {
       primarySwatch: Colors.green,
       visualDensity: VisualDensity.adaptivePlatformDensity,
     ),
-    home: MyApp(),
     initialRoute: MainRouteScreen.id,
     routes: {
       MainRouteScreen.id: (context) => MainRouteScreen(userInfo: {
             'userId': 'mindnetworkcorp@gmail',
-            'profileUrl': 'no_profile_image'
           }),
       //mainRoute end
       ChatScreen.id: (context) => ChatScreen(),
     },
   ));
-}
-
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MainRouteScreen(userInfo: {
-      'userId': 'mindnetworkcorp@gmail',
-      'profileUrl': 'no_profile_image'
-    });
-  }
 }
 
 Widget buildLoading() => Container(

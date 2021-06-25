@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 
 class BottomBar extends StatefulWidget {
-  BottomBar({this.navigatorKey, this.userId});
+  BottomBar({this.navigatorKey});
   final navigatorKey;
-  final userId;
-
   @override
   _BottomBarState createState() => _BottomBarState();
 }
@@ -94,11 +92,15 @@ class _BottomBarState extends State<BottomBar> {
           ),
           BottomNavigationBarItem(
             label: '실천친구',
-            icon: Icon(Icons.supervisor_account),
+            icon: Icon(Icons.people),
           ),
           BottomNavigationBarItem(
-            label: '실천랭킹',
-            icon: Icon(Icons.account_balance),
+            label: '응원함',
+            icon: Icon(Icons.favorite),
+          ),
+          BottomNavigationBarItem(
+            label: '설정',
+            icon: Icon(Icons.settings),
           ),
           BottomNavigationBarItem(
             label: '',

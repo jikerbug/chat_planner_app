@@ -1,4 +1,5 @@
 import 'package:chat_planner_app/models/chat_room.dart';
+import 'package:chat_planner_app/models_singleton/user.dart';
 import 'package:chat_planner_app/widgets/chat/chat_list_body.dart';
 import 'package:chat_planner_app/widgets/chat/chat_list_header.dart';
 import 'package:chat_planner_app/widgets/plan/info_panel.dart';
@@ -7,9 +8,8 @@ import 'package:flutter/material.dart';
 class ChatListScreen extends StatefulWidget {
   static const String id = 'rank_screen';
 
-  ChatListScreen({required this.fabCallback, required this.userId});
+  ChatListScreen({required this.fabCallback});
   final Function fabCallback;
-  final String userId;
 
   @override
   _ChatListScreenState createState() => _ChatListScreenState();
@@ -30,7 +30,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
   Widget build(BuildContext context) {
     final List<ChatRoom> chatRooms = [
       ChatRoom(
-        serverId: widget.userId,
+        serverId: User().userId,
         lastMessageTime: DateTime.now(),
         name: "나와의 채팅",
       ),

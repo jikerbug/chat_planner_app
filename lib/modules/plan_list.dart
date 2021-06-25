@@ -7,6 +7,7 @@ import 'package:chat_planner_app/functions/custom_dialog_function.dart';
 import 'package:chat_planner_app/functions/date_time_function.dart';
 import 'package:chat_planner_app/models_hive/plan_model.dart';
 import 'package:chat_planner_app/models_hive/record_model.dart';
+import 'package:chat_planner_app/models_singleton/user.dart';
 import 'package:chat_planner_app/providers/data.dart';
 import '../widgets/plan/plan_tile.dart';
 import 'package:flutter/cupertino.dart';
@@ -35,8 +36,6 @@ class _PlanListState extends State<PlanList> {
 
   @override
   Widget build(BuildContext context) {
-    final userId = Provider.of<Data>(context, listen: false).userId;
-
     return ValueListenableBuilder(
         valueListenable: Hive.box<PlanModel>('plan').listenable(),
         builder: (context, Box<PlanModel> box, child) {
@@ -257,11 +256,16 @@ class _PlanListState extends State<PlanList> {
             String chatRoomId = item.selectedChatRoomId;
             print('chatRoomId');
             print(chatRoomId);
-            FireStoreApi.sendDoneMessages(item.title, 'mindnetworkcorp@gmail',
-                chatRoomId, 'mindnetworkcorp@gmail');
+            if (chatRoomId != 'none') {
+              FireStoreApi.sendDoneMessages(
+                item.title,
+                User().userId,
+                chatRoomId,
+              );
 
-            ChatRoomEnterFunctions.chatRoomEnterProcess(
-                context, chatRoomId, '나와의 채팅');
+              ChatRoomEnterFunctions.chatRoomEnterProcess(
+                  context, chatRoomId, '나와의 채팅');
+            }
           }
         } else {
           CustomDialogFunction.dialog(

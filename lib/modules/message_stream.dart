@@ -139,11 +139,8 @@ class MessageStream extends StatelessWidget {
           ///index가 두번뜨는 경우 : 불러온 놈이 15아래일때만 발생하는 오류인듯
 
           String sender = data['sender'];
-          if (chatRoomId == 'mainWaitingRoom') {
-            sender = UtilFunction.userIdToWaitingRoomUserNickname(sender);
-          } else {
-            sender = (friendUserId == sender) ? friendNickname : sender;
-          }
+
+          sender = ('guide' != sender) ? friendNickname : sender;
 
           return Bubble(
               text: data['text'],

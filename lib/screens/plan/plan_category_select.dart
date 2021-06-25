@@ -1,13 +1,12 @@
+import 'package:chat_planner_app/models_singleton/user.dart';
 import 'package:chat_planner_app/providers/data.dart';
 import 'package:chat_planner_app/widgets/circle_border_box.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class PlanCategorySelect extends StatefulWidget {
-  PlanCategorySelect({required this.chatRoomCallback, required this.userId});
+  PlanCategorySelect({required this.chatRoomCallback});
   final String Function(String, String) chatRoomCallback;
-  final String userId;
 
   @override
   _PlanCategorySelectState createState() => _PlanCategorySelectState();
@@ -25,7 +24,7 @@ class _PlanCategorySelectState extends State<PlanCategorySelect> {
 
   @override
   Widget build(BuildContext context) {
-    final List chatRoomIdList = [widget.userId, 'none', 'test_friend'];
+    final List chatRoomIdList = [User().userId, 'none', 'test_friend'];
     return Container(
       height: MediaQuery.of(context).size.height * 3 / 5,
       child: Row(

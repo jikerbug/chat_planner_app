@@ -3,10 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 
 class Data extends ChangeNotifier {
-  Data({
-    required this.mainRouteContext,
-    required this.userId,
-  });
+  Data({required this.mainRouteContext, required this.userId});
   final BuildContext mainRouteContext;
   final String userId;
 

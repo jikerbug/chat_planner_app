@@ -1,8 +1,6 @@
 import 'package:chat_planner_app/functions/date_time_function.dart';
 import 'package:chat_planner_app/modules/plan_list.dart';
-import 'package:chat_planner_app/providers/data.dart';
 import 'package:chat_planner_app/widgets/plan/info_panel.dart';
-import 'package:provider/provider.dart';
 import 'plan_category_select.dart';
 import 'package:chat_planner_app/widgets/thin_button.dart';
 import 'package:flutter/material.dart';
@@ -10,9 +8,8 @@ import 'package:flutter/material.dart';
 class PlanScreen extends StatefulWidget {
   static const String id = 'plan_screen';
 
-  PlanScreen({required this.fabFunc, required this.userId});
+  PlanScreen({required this.fabFunc});
   final Function fabFunc;
-  final String userId;
 
   @override
   _PlanScreenState createState() => _PlanScreenState();
@@ -116,7 +113,6 @@ class _PlanScreenState extends State<PlanScreen> {
                               });
                               return 'success';
                             },
-                            userId: widget.userId,
                           ),
                         );
                       },

@@ -71,8 +71,8 @@ class _MessageSenderState extends State<MessageSender> {
                     DateTime sendTime = DateTime.now();
                     bool isFirstTimeline =
                         checkIfMsgIsFirstTimeline(sendTime, lastSentTime);
-                    FireStoreApi.sendMessage(text, widget.userId,
-                        widget.chatRoomId, widget.friendUserId, sendTime,
+                    FireStoreApi.sendMessage(
+                        text, widget.userId, widget.chatRoomId, sendTime,
                         isFirstTimeline: isFirstTimeline);
                     lastSentTime = sendTime;
                     widget.scrollDownCallback();

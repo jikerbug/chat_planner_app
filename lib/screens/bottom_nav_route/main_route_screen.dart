@@ -29,31 +29,27 @@ class _MainRouteScreenState extends State<MainRouteScreen> {
   @override
   void initState() {
     super.initState();
-    userId = widget.userInfo['userId'];
     User user = User();
+    userId = widget.userInfo['userId'];
     user.setUserId(userId);
   }
 
   @override
   Widget build(BuildContext context) {
-    providerData = Data(
-      mainRouteContext: context,
-      userId: widget.userInfo['userId'],
-    );
+    providerData = Data(mainRouteContext: context, userId: userId);
 
     //유저정보가져오기
     providerData.setUserInfo(widget.userInfo);
 
     return ChangeNotifierProvider<Data>(
       create: (context) => providerData,
-      child: Home(userId: userId),
+      child: Home(),
     );
   }
 }
 
 class Home extends StatefulWidget {
-  Home({this.userId});
-  final userId;
+  Home();
 
   @override
   _HomeState createState() => _HomeState();
@@ -82,8 +78,9 @@ class _HomeState extends State<Home> {
         totalHeartCount = getHeartCount;
       });
     };
-    print(widget.userId);
-    FireStoreHeartApi.heartCountListener(widget.userId, myHeartCallback);
+
+    print(User().userId);
+    FireStoreHeartApi.heartCountListener(User().userId, myHeartCallback);
   }
 
   @override
@@ -136,16 +133,13 @@ class _HomeState extends State<Home> {
             onGenerateRoute: (RouteSettings settings) {
               WidgetBuilder builder = (context) => PlanScreen(
                     fabFunc: changeFAB,
-                    userId: widget.userId,
                   );
               switch (settings.name) {
                 case '/':
-                  builder = (context) =>
-                      PlanScreen(fabFunc: changeFAB, userId: widget.userId);
+                  builder = (context) => PlanScreen(fabFunc: changeFAB);
                   break;
                 case '/chats':
-                  builder = (context) => ChatListScreen(
-                      fabCallback: changeFAB, userId: widget.userId);
+                  builder = (context) => ChatListScreen(fabCallback: changeFAB);
                   break;
               }
               return NoDelayPageRoute(
@@ -154,8 +148,7 @@ class _HomeState extends State<Home> {
               );
             },
           ),
-          bottomNavigationBar:
-              BottomBar(navigatorKey: navigatorKey, userId: widget.userId),
+          bottomNavigationBar: BottomBar(navigatorKey: navigatorKey),
         ),
       ),
     );
