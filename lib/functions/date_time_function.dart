@@ -73,7 +73,7 @@ class DateTimeFunction {
     return doneInfo;
   }
 
-  static String wholeDayOfWeekInfo = '전체 요일(실천 가능)';
+  static String wholeDayOfWeekInfo = '전체 요일(금일 실천)';
   static String todayDateString(selectedDay, nowWhenReloaded) {
     if (selectedDay == '전체') {
       return wholeDayOfWeekInfo;

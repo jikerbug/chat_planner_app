@@ -1,14 +1,15 @@
 import 'package:chat_planner_app/functions/chat_room_enter_function.dart';
 import 'package:chat_planner_app/models/chat_room.dart';
+import 'package:chat_planner_app/models_singleton/user.dart';
 import 'package:chat_planner_app/providers/data.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class ChatRoomsBody extends StatelessWidget {
+class ChatListBody extends StatelessWidget {
   final List<ChatRoom> chatRooms;
 
-  ChatRoomsBody({
+  ChatListBody({
     required this.chatRooms,
   });
 
@@ -18,10 +19,6 @@ class ChatRoomsBody extends StatelessWidget {
           padding: EdgeInsets.all(10),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(10),
-              topRight: Radius.circular(10),
-            ),
           ),
           child: buildChats(),
         ),
@@ -32,7 +29,7 @@ class ChatRoomsBody extends StatelessWidget {
         itemBuilder: (context, index) {
           late Widget circleAvatarChild;
           final chatRoom = chatRooms[index];
-          String userId = Provider.of<Data>(context).userId;
+          String userId = User().userId;
 
           if (chatRoom.serverId == userId) {
             circleAvatarChild = Icon(
@@ -47,6 +44,9 @@ class ChatRoomsBody extends StatelessWidget {
           }
 
           return Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(20.0)),
+            ),
             height: 70,
             child: ListTile(
               onTap: () {

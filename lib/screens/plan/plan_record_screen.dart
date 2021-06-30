@@ -1,6 +1,7 @@
 // Copyright 2019 Aleksander Woźniak
 // SPDX-License-Identifier: Apache-2.0
 
+import 'package:chat_planner_app/constants.dart';
 import 'package:chat_planner_app/functions/custom_dialog_function.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -110,7 +111,7 @@ class _PlanRecordScreenState extends State<PlanRecordScreen> {
         actions: [
           Icon(Icons.edit),
           SizedBox(
-            width: MediaQuery.of(context).size.width / 20,
+            width: kAppbarLeftMargin(context),
           ),
           GestureDetector(
             child: Icon(Icons.done),
@@ -118,9 +119,7 @@ class _PlanRecordScreenState extends State<PlanRecordScreen> {
               print('planEndDate를 오늘로 바꿔준다');
             },
           ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width / 20,
-          ),
+          SizedBox(width: kAppbarLeftMargin(context)),
           GestureDetector(
             child: Icon(Icons.delete),
             onTap: () {
@@ -138,7 +137,7 @@ class _PlanRecordScreenState extends State<PlanRecordScreen> {
             },
           ),
           SizedBox(
-            width: MediaQuery.of(context).size.width / 20,
+            width: kAppbarLeftMargin(context),
           )
         ],
       ),

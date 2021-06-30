@@ -61,7 +61,7 @@ class _MessageSenderState extends State<MessageSender> {
                   decoration: kMessageTextFieldDecoration,
                 ),
               ),
-              FlatButton(
+              MaterialButton(
                 minWidth: 50.0,
                 onPressed: () async {
                   textEditingController.clear();

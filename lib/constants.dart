@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+double kAppbarLeftMargin(context) {
+  return MediaQuery.of(context).size.width / 20;
+}
+
 const kSendButtonTextStyle = TextStyle(
   color: Colors.green,
   fontWeight: FontWeight.bold,
@@ -13,6 +17,7 @@ const kMessageTextFieldDecoration = InputDecoration(
     fillColor: Colors.teal);
 
 const kMessageContainerDecoration = BoxDecoration(
+  color: Colors.white,
   border: Border(
     top: BorderSide(color: Colors.green, width: 2.0),
   ),

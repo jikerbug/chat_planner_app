@@ -1,6 +1,6 @@
 import 'package:chat_planner_app/providers/data.dart';
 import 'package:flutter/material.dart';
-
+import 'package:percent_indicator/percent_indicator.dart';
 import 'package:provider/provider.dart';
 
 class SideNav extends StatefulWidget {
@@ -12,7 +12,6 @@ class _SideNavState extends State<SideNav> {
   String nickname = '지백';
   String birthday = '1998-03-26';
   int age = 24;
-  String profileImageUrl = '';
   void changeNicknameInSideNavCallback(value) {
     setState(() {
       nickname = value;
@@ -28,11 +27,6 @@ class _SideNavState extends State<SideNav> {
   Widget build(BuildContext context) {
     Data providerData = Provider.of<Data>(context, listen: false);
     Map userInfo = providerData.userInfo;
-    //profileImageUrl = providerData.profileImageUrl;
-
-    //nickname = userInfo['nickname'];
-    //birthday = userInfo['birthday'];
-    //age = UtilFunctions.birthdayToAge(birthday);
 
     return Column(
       children: [
@@ -51,50 +45,37 @@ class _SideNavState extends State<SideNav> {
             ),
           ),
           child: Padding(
-            padding: EdgeInsets.only(top: 40.0, bottom: 20.0, left: 20.0),
+            padding: EdgeInsets.only(top: 20.0, bottom: 20.0, left: 20.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                if (profileImageUrl != 'no_profile_image') ...[
-                  CircleAvatar(
-                      backgroundColor: Colors.green,
-                      radius: 40.0,
-                      backgroundImage: NetworkImage(profileImageUrl)),
-                ] else ...[
-                  CircleAvatar(
-                      backgroundColor: Colors.green,
-                      radius: 40.0,
-                      child: Icon(
-                        Icons.person,
-                        size: 45,
+                CircularPercentIndicator(
+                  radius: 80.0,
+                  animation: true,
+                  animationDuration: 800,
+                  lineWidth: 15.0,
+                  percent: 0.6,
+                  center: new Text(
+                    "60%",
+                    style: new TextStyle(
                         color: Colors.white,
-                      )),
-                ],
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20.0),
+                  ),
+                  circularStrokeCap: CircularStrokeCap.butt,
+                  backgroundColor: Colors.white,
+                  progressColor: Colors.orange,
+                ),
                 SizedBox(
                   width: 10.0,
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '$nickname',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 25.0,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(
-                      height: 4.0,
-                    ),
-                    Text(
-                      '$age살',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 15.0,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ],
+                Text(
+                  '$nickname',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 25.0,
+                      fontWeight: FontWeight.bold),
                 ),
               ],
             ),

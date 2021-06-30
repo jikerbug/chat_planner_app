@@ -35,6 +35,7 @@ class _PlanScreenState extends State<PlanScreen> {
   @override
   Widget build(BuildContext context) {
     nowSyncedAtReload = DateTime.now();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

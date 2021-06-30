@@ -48,7 +48,8 @@ class _PlanAddScreenState extends State<PlanAddScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * 9 / 10,
+      height: MediaQuery.of(context).size.height -
+          WidgetsBinding.instance!.window.padding.top,
       child: SafeArea(
         child: Padding(
           padding: EdgeInsets.only(top: 30.0),

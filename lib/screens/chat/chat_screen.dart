@@ -117,11 +117,13 @@ class _ChatScreenState extends State<ChatScreen> {
     chatRoomName = argument['chatRoomName'];
 
     return Scaffold(
+      backgroundColor: Colors.grey[100],
       appBar: AppBar(
+          elevation: 0.0,
           iconTheme: IconThemeData(
             color: Colors.black, //change your color here
           ),
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.grey[100],
           title: Text(
             chatRoomName,
             style: TextStyle(color: Colors.black),

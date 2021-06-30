@@ -168,7 +168,7 @@ class _BubbleState extends State<Bubble> {
                       child: Material(
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(22.0)),
-                        elevation: 4.0,
+                        elevation: 2.0,
                         color: chatColor,
                         child: InkWell(
                           borderRadius: BorderRadius.circular(22.0),
@@ -289,7 +289,7 @@ class _BubbleState extends State<Bubble> {
                         maxWidth: MediaQuery.of(context).size.width * 0.7,
                       ),
                       child: Material(
-                        elevation: 4.0,
+                        elevation: 2.0,
                         borderRadius: BorderRadius.only(
                           topLeft: widget.topLeftRadius,
                           topRight: widget.topRightRadius,

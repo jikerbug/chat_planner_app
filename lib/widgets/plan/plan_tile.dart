@@ -78,15 +78,19 @@ class _PlanTileState extends State<PlanTile> {
                 '${value.title}\n${DateTimeFunction.doneDateTimeString(value.doneTimestamp)}에 실천';
           }
           print(value.doneTimestamp);
-          if (dateKey == null) {
-            dateKey = DateTime.parse(value.doneTimestamp);
-          }
+
+          dateKey = DateTime.parse(value.doneTimestamp);
 
           if (eventSource.containsKey(dateKey)) {
             eventSource[dateKey]!.add(Event(description));
           } else {
             eventSource[dateKey!] = [Event(description)];
           }
+        });
+        print('start');
+        eventSource.forEach((key, value) {
+          print(key);
+          print(value);
         });
 
         Navigator.push(

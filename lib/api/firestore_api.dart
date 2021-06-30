@@ -107,18 +107,18 @@ class FireStoreApi {
   //// 메세지 관련 ---------------------------------------------------------------////
 
   static Query getMessagesQuery(chatRoomId) {
-    DateTime limitDateTime = DateTime.now().subtract(Duration(days: 3));
-    String expiredDay = DateFormat('yyyy-MM-dd').format(limitDateTime);
-    limitDateTime = DateTime.parse(expiredDay);
+    //DateTime limitDateTime = DateTime.now().subtract(Duration(days: 3));
+    //String expiredDay = DateFormat('yyyy-MM-dd').format(limitDateTime);
+    //limitDateTime = DateTime.parse(expiredDay);
 
-    Timestamp limitTime = Timestamp.fromDate(limitDateTime);
+    //Timestamp limitTime = Timestamp.fromDate(limitDateTime);
 
     return _fireStore
         .collection('chatRooms')
         .doc(chatRoomId)
         .collection('messages')
-        .orderBy('time', descending: true)
-        .endAt([limitTime]);
+        .orderBy('time', descending: true);
+    // .endAt([limitTime]);
 
     ///sendMessageDateBubble을 보낼때, OneDaysAgoTimeStamp를 체크, 갱신 (대기단체챗)
     ///sendMessageDateBubble을 보낼때, ThreeDaysAgoTimeStamp를 : 해당을 Timestamp로!!

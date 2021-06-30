@@ -1,3 +1,5 @@
+import 'package:chat_planner_app/screens/chat/chat_search_screen.dart';
+
 import '../../models_singleton/user.dart';
 import 'package:chat_planner_app/providers/data.dart';
 import 'package:chat_planner_app/screens/chat/chat_list_sceen.dart';
@@ -109,23 +111,33 @@ class _HomeState extends State<Home> {
       ),
       child: SafeArea(
         child: Scaffold(
-          //앱바 없어도 이거 사용가능...!!!
           drawer: Drawer(
             child: SideNav(),
           ),
           resizeToAvoidBottomInset: false,
           floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
           floatingActionButton: FloatingActionButton(
-            backgroundColor: Colors.teal,
-            child: fabIcon,
-            onPressed: () {
-              showModalBottomSheet(
-                isScrollControlled: true, //full screen으로 modal 쓸 수 있게 해준다.
-                context: context,
-                builder: (context) => PlanAddScreen(),
-              );
-            },
-          ),
+              backgroundColor: Colors.teal,
+              child: fabType == ChatListScreen.id
+                  ? Icon(Icons.search)
+                  : Icon(Icons.add),
+              onPressed: fabType == ChatListScreen.id
+                  ? () {
+                      Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                          builder: (BuildContext context) => ChatSearchScreen(),
+                        ),
+                      );
+                    }
+                  : () {
+                      showModalBottomSheet(
+                        isScrollControlled:
+                            true, //full screen으로 modal 쓸 수 있게 해준다.
+                        context: context,
+                        builder: (context) => PlanAddScreen(),
+                      );
+                    }),
           backgroundColor: Colors.transparent,
           body: Navigator(
             key: navigatorKey,

@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 
-class FriendsHeader extends StatefulWidget {
+class ChatListHeader extends StatefulWidget {
   final List<String> texts;
-  const FriendsHeader({
-    required this.texts,
-  });
+  final Color color;
+  const ChatListHeader({required this.texts, this.color = Colors.white});
 
   @override
-  _FriendsHeaderState createState() => _FriendsHeaderState();
+  _ChatListHeaderState createState() => _ChatListHeaderState();
 }
 
-class _FriendsHeaderState extends State<FriendsHeader> {
+class _ChatListHeaderState extends State<ChatListHeader> {
   late String selectedGroup;
 
   @override
@@ -28,7 +27,7 @@ class _FriendsHeaderState extends State<FriendsHeader> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            height: 40,
+            height: MediaQuery.of(context).size.width / 9,
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
               itemCount: widget.texts.length,
@@ -40,7 +39,7 @@ class _FriendsHeaderState extends State<FriendsHeader> {
                     top: Radius.circular(10.0),
                   ),
                   color: (selectedGroup == text)
-                      ? Colors.white
+                      ? widget.color
                       : Colors.transparent,
                   child: GestureDetector(
                     onTap: () {
@@ -48,14 +47,19 @@ class _FriendsHeaderState extends State<FriendsHeader> {
                         selectedGroup = text;
                       });
                     },
-                    child: CircleAvatar(
-                      backgroundColor: Colors.transparent,
-                      child: Text(
-                        text,
-                        style: TextStyle(
-                            color: (selectedGroup == text)
-                                ? Colors.black
-                                : Colors.white),
+                    child: Container(
+                      constraints: BoxConstraints(
+                        minWidth: MediaQuery.of(context).size.width / 9,
+                      ),
+                      padding: EdgeInsets.symmetric(horizontal: 5.0),
+                      child: Center(
+                        child: Text(
+                          text,
+                          style: TextStyle(
+                              color: (selectedGroup == text)
+                                  ? Colors.black
+                                  : Colors.white),
+                        ),
                       ),
                     ),
                   ),
@@ -65,7 +69,7 @@ class _FriendsHeaderState extends State<FriendsHeader> {
                 width: 10.0,
               ),
             ),
-          )
+          ),
         ],
       ),
     );

@@ -99,10 +99,6 @@ class _BottomBarState extends State<BottomBar> {
             icon: Icon(Icons.favorite),
           ),
           BottomNavigationBarItem(
-            label: '설정',
-            icon: Icon(Icons.settings),
-          ),
-          BottomNavigationBarItem(
             label: '',
             icon: Icon(
               Icons.arrow_drop_down,
