@@ -9,6 +9,7 @@
 // 그것 이외에도 7시기상, 6시기상 같은 것들에 대해 전체 사용자가 얼마나 해당 습관을
 // 채택하고 있는지 보는 것도 좋을 것 같다.
 
+import 'package:chat_planner_app/api/firestore_api.dart';
 import 'package:chat_planner_app/api_in_local/hive_plan_api.dart';
 import 'package:chat_planner_app/functions/custom_dialog_function.dart';
 import 'package:chat_planner_app/functions/date_time_function.dart';
@@ -36,7 +37,7 @@ class _ChatAddScreenState extends State<ChatAddScreen> {
         height: 20.0,
       );
 
-  String title = '';
+  String chatRoomTitle = '';
   String category = '';
   String maxNum = '';
   String password = '';
@@ -50,59 +51,54 @@ class _ChatAddScreenState extends State<ChatAddScreen> {
         child: Row(
           children: [
             Text(title),
-            if (type == 'textInput')
-              Expanded(
-                child: TextFormField(
-                  style: TextStyle(
-                    fontSize: 14.0,
-                  ),
-                  textAlign: TextAlign.center,
-                  controller: TextEditingController(),
-                  onChanged: (value) {
-                    if (title == cardTitleList[0]) {
-                      title = value;
-                    } else if (title == cardTitleList[3]) {
-                      password = value;
-                    } else if (title == cardTitleList[4]) {
-                      description = value;
-                    }
-                  },
-                  decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: hint,
-                      isDense: true,
-                      hintStyle: TextStyle(color: Colors.grey)),
+            Expanded(
+              child: TextFormField(
+                key: (type == 'textInput')
+                    ? null
+                    : (type == 'category')
+                        ? Key(category)
+                        : Key(maxNum),
+                initialValue: (type == 'textInput')
+                    ? ''
+                    : (type == 'category')
+                        ? category
+                        : maxNum,
+                style: TextStyle(
+                  fontSize: 14.0,
                 ),
-              ),
-            if (type != 'textInput')
-              Expanded(
-                child: TextFormField(
-                  key: (type == 'category') ? Key(category) : Key(maxNum),
-                  initialValue: (type == 'category') ? category : maxNum,
-                  onTap: () {
-                    CustomDialogFunction.selectChatSettingDialog(context, type,
-                        (value) {
-                      setState(() {
-                        if (type == 'category') {
-                          category = value;
-                        } else if (type == 'maxNum') {
-                          maxNum = value;
-                        }
-                      });
-                    });
-                  },
-                  readOnly: true,
-                  style: TextStyle(
-                    fontSize: 14.0,
-                  ),
-                  textAlign: TextAlign.center,
-                  decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: hint,
-                      isDense: true,
-                      hintStyle: TextStyle(color: Colors.grey)),
+                textAlign: TextAlign.center,
+                onChanged: (value) {
+                  if (title == cardTitleList[0]) {
+                    chatRoomTitle = value;
+                  } else if (title == cardTitleList[3]) {
+                    password = value;
+                  } else if (title == cardTitleList[4]) {
+                    description = value;
+                  }
+                },
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  hintText: hint,
+                  isDense: true,
+                  hintStyle: TextStyle(color: Colors.grey),
                 ),
+                readOnly: (type == 'textInput') ? false : true,
+                onTap: (type == 'textInput')
+                    ? () {}
+                    : () {
+                        CustomDialogFunction.selectChatSettingDialog(
+                            context, type, (value) {
+                          setState(() {
+                            if (type == 'category') {
+                              category = value;
+                            } else if (type == 'maxNum') {
+                              maxNum = value;
+                            }
+                          });
+                        });
+                      },
               ),
+            ),
           ],
         ),
       );
@@ -169,7 +165,7 @@ class _ChatAddScreenState extends State<ChatAddScreen> {
                       ),
                       controller: TextEditingController(),
                       onChanged: (value) {
-                        title = value;
+                        description = value;
                       },
                       maxLines: null,
                       minLines: 5,
@@ -193,10 +189,47 @@ class _ChatAddScreenState extends State<ChatAddScreen> {
                       RoundedButton(
                           minWidth: 100.0,
                           color: Colors.teal,
-                          onPressed: () {
-                            if (title != '') {
-                              Navigator.pop(context);
+                          onPressed: () async {
+                            String chatRoomId;
+                            String popupTitle = '';
+                            String popupText = '';
+                            if (chatRoomTitle.length > 1) {
+                              if (category != '') {
+                                if (maxNum != '') {
+                                  Navigator.pop(context);
+                                  popupTitle = '실천채팅 생성 완료!';
+                                  popupText = '생성한 채팅방에 입장하였습니다';
+                                  chatRoomId =
+                                      await FireStoreApi.createChatRoom(
+                                          chatRoomTitle,
+                                          category,
+                                          maxNum,
+                                          password,
+                                          description);
+                                  // FirebaseChatApi.createChatRoomMemberLastDoneInfo();
+                                  // FirebaseChatApi.createUserStateAboutChatRoomInfo();
+                                  // HiveChatApi.addChatRoomToList();
+                                } else {
+                                  popupTitle = '최대인원 지정';
+                                  popupText = '채팅방 최대 입장인원을 선택해주세요';
+                                }
+                              } else {
+                                popupTitle = '카테고리 지정';
+                                popupText = '카테고리를 선택해주세요';
+                              }
+                            } else {
+                              popupTitle = '채팅방 이름';
+                              popupText = '채팅방 이름은 두글자 이상이어야 합니다';
                             }
+
+                            CustomDialogFunction.dialog(
+                                context: context,
+                                isTwoButton: false,
+                                isLeftAlign: false,
+                                onPressed: () {},
+                                title: popupTitle,
+                                text: popupText,
+                                size: 'small');
                           },
                           title: '추가'),
                     ],

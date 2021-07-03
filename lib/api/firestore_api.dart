@@ -1,3 +1,4 @@
+import 'package:chat_planner_app/models_singleton/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:chat_planner_app/api/firestore_send_prebuilt_msg_api.dart';
 import 'package:chat_planner_app/functions/util_function.dart';
@@ -7,6 +8,27 @@ import 'firebase_chat_api.dart';
 
 class FireStoreApi {
   static final _fireStore = FirebaseFirestore.instance;
+
+  static Future<String> createChatRoom(
+      chatRoomTitle, category, maxNum, password, description) async {
+    DateTime now = DateTime.now();
+    String sendDateFormatted =
+        DateFormat('yyyy-MM-dd').format(now.subtract(Duration(days: 1)));
+
+    DocumentReference dr = await _fireStore.collection('chatRooms').add({
+      "createdTime": now,
+      "lastSentDate": sendDateFormatted,
+      "createUser": User().userId,
+      "category": category,
+      "maxNum": maxNum,
+      "password": password,
+      "description": description,
+      "lastDoneTime": DateTime.now(),
+      //"lastSentDate는 sendDateBubbleIfLastSentDateIsNotToday함수에서 set해준다"
+    });
+
+    return dr.id;
+  }
 
   static Future<void> createChatRoomWhenFirstRegistered(userId) async {
     //가입시, defaultUserInfo에서 isChatRoomStateChanged를 true로 설정했기 때문에 여기에서 뭔가 할 것은 없다.

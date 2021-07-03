@@ -100,10 +100,11 @@ class CustomDialogFunction {
   static void selectChatSettingDialog(context, type, onPressed) {
     late List<String> texts;
     if (type == 'category') {
-      texts = ['없음', '공부', '운동', '독서', '생활습관', '음악/미술', '코딩'];
+      texts = ['자유', '공부', '운동', '독서', '생활습관', '음악/미술', '코딩'];
     } else if (type == 'maxNum') {
       texts = ['2명', '5명', '10명', '15명', '20명', '25명', '30명'];
     }
+    String title = (type == 'category') ? '카테고리' : '최대 인원';
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -115,7 +116,7 @@ class CustomDialogFunction {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15.0)),
               title: Text(
-                'title',
+                title,
                 textAlign: TextAlign.center,
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
