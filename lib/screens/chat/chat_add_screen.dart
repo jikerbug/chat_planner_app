@@ -27,40 +27,82 @@ class ChatAddScreen extends StatefulWidget {
 }
 
 class _ChatAddScreenState extends State<ChatAddScreen> {
-  String title = '';
-  var textEditingController = TextEditingController();
-
   Widget sameGroupGapBox() => Divider(
         height: 25.0,
-        color: Colors.grey[400],
+        color: Colors.grey,
         thickness: 0.1,
       );
   Widget otherGroupGapBox() => SizedBox(
         height: 20.0,
       );
 
-  String category = '선택안함';
-  String memberNum = '선택안함';
+  String title = '';
+  String category = '';
+  String maxNum = '';
+  String password = '';
+  String description = '';
+  bool isCategorySelected = false;
+  bool isMaxNumSelected = false;
+  List<String> cardTitleList = ['채팅방명', '카테고리', '최대인원', '비밀번호', '채팅방 소개'];
 
-  Widget inputLineCard(title, hint) => Container(
+  Widget inputLineCard(title, hint, {type = 'textInput'}) => Container(
         padding: EdgeInsets.symmetric(horizontal: 20.0),
         child: Row(
           children: [
             Text(title),
-            Expanded(
-              child: TextFormField(
-                style: TextStyle(
-                  fontSize: 14.0,
+            if (type == 'textInput')
+              Expanded(
+                child: TextFormField(
+                  style: TextStyle(
+                    fontSize: 14.0,
+                  ),
+                  textAlign: TextAlign.center,
+                  controller: TextEditingController(),
+                  onChanged: (value) {
+                    if (title == cardTitleList[0]) {
+                      title = value;
+                    } else if (title == cardTitleList[3]) {
+                      password = value;
+                    } else if (title == cardTitleList[4]) {
+                      description = value;
+                    }
+                  },
+                  decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: hint,
+                      isDense: true,
+                      hintStyle: TextStyle(color: Colors.grey)),
                 ),
-                textAlign: TextAlign.center,
-                controller: textEditingController,
-                onChanged: (value) {
-                  title = value;
-                },
-                decoration: InputDecoration(
-                    border: InputBorder.none, hintText: hint, isDense: true),
               ),
-            ),
+            if (type != 'textInput')
+              Expanded(
+                child: TextFormField(
+                  key: (type == 'category') ? Key(category) : Key(maxNum),
+                  initialValue: (type == 'category') ? category : maxNum,
+                  onTap: () {
+                    CustomDialogFunction.selectChatSettingDialog(context, type,
+                        (value) {
+                      setState(() {
+                        if (type == 'category') {
+                          category = value;
+                        } else if (type == 'maxNum') {
+                          maxNum = value;
+                        }
+                      });
+                    });
+                  },
+                  readOnly: true,
+                  style: TextStyle(
+                    fontSize: 14.0,
+                  ),
+                  textAlign: TextAlign.center,
+                  decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: hint,
+                      isDense: true,
+                      hintStyle: TextStyle(color: Colors.grey)),
+                ),
+              ),
           ],
         ),
       );
@@ -81,82 +123,86 @@ class _ChatAddScreenState extends State<ChatAddScreen> {
         ),
       ),
       child: Scaffold(
-        body: Container(
-          color: Colors.white,
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(20.0),
-                    child: Text(
-                      '채팅방 생성',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+        body: SafeArea(
+          child: Container(
+            height: MediaQuery.of(context).size.height,
+            padding: EdgeInsets.only(top: 30.0),
+            color: Colors.white,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(20.0),
+                      child: Text(
+                        '실천채팅방 만들기',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ),
-                ),
-
-                inputLineCard('채팅방명', '채팅방 이름을 정해주세요'),
-                sameGroupGapBox(),
-                inputLineCard('카테고리', '채팅방 카테고리를 정해주세요'),
-                sameGroupGapBox(),
-                inputLineCard('최대인원', '입장가능한 최대 인원 수를 정해주세요'),
-                sameGroupGapBox(),
-                inputLineCard('비밀번호', '(선택사항)'),
-                sameGroupGapBox(),
-                //     items: ['선택안함', '공부', '운동', '독서', '생활습관', '음악/미술', '코딩'],
-                //     items: ['선택안함', '5명', '10명', '15명', '20명', '25명', '30명'],
-                Row(
-                  children: [
-                    SizedBox(
-                      width: 20.0,
-                    ),
-                    Text('채팅방 소개'),
-                  ],
-                ),
-                otherGroupGapBox(),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 20.0),
-                  child: TextFormField(
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 14.0,
-                    ),
-                    controller: textEditingController,
-                    onChanged: (value) {
-                      title = value;
-                    },
-                    maxLines: 5,
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: ' 채팅방을 간단하게 소개해주세요',
-                        isDense: true),
+                  inputLineCard(cardTitleList[0], '채팅방 이름을 정해주세요'),
+                  sameGroupGapBox(),
+                  inputLineCard(cardTitleList[1], '채팅방 카테고리를 정해주세요',
+                      type: 'category'),
+                  sameGroupGapBox(),
+                  inputLineCard(cardTitleList[2], '최대 입장 인원 수를 정해주세요',
+                      type: 'maxNum'),
+                  sameGroupGapBox(),
+                  inputLineCard(cardTitleList[3], '(선택사항)'),
+                  sameGroupGapBox(),
+                  Row(
+                    children: [
+                      SizedBox(
+                        width: 20.0,
+                      ),
+                      Text(cardTitleList[4]),
+                    ],
                   ),
-                ),
-                otherGroupGapBox(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    RoundedButton(
-                        minWidth: 100.0,
-                        color: Colors.orangeAccent,
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        title: '닫기'),
-                    RoundedButton(
-                        minWidth: 100.0,
-                        color: Colors.teal,
-                        onPressed: () {
-                          if (title != '') {
+                  otherGroupGapBox(),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 20.0),
+                    child: TextFormField(
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 14.0,
+                      ),
+                      controller: TextEditingController(),
+                      onChanged: (value) {
+                        title = value;
+                      },
+                      maxLines: null,
+                      minLines: 5,
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          hintText: ' 채팅방을 간단하게 소개해주세요',
+                          isDense: true),
+                    ),
+                  ),
+                  otherGroupGapBox(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      RoundedButton(
+                          minWidth: 100.0,
+                          color: Colors.orangeAccent,
+                          onPressed: () {
                             Navigator.pop(context);
-                          }
-                        },
-                        title: '추가'),
-                  ],
-                ),
-              ],
+                          },
+                          title: '닫기'),
+                      RoundedButton(
+                          minWidth: 100.0,
+                          color: Colors.teal,
+                          onPressed: () {
+                            if (title != '') {
+                              Navigator.pop(context);
+                            }
+                          },
+                          title: '추가'),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),

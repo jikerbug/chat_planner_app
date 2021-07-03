@@ -11,7 +11,7 @@ class CustomDialogFunction {
       required String size}) {
     double height;
     if (size == 'max') {
-      height = 320.0;
+      height = 350.0;
     } else if (size == 'big') {
       height = 180.0;
     } else if (size == 'middle') {
@@ -95,5 +95,53 @@ class CustomDialogFunction {
         title: '요일 선택',
         text: '습관을 실천할 요일을 선택해 주세요',
         size: 'small');
+  }
+
+  static void selectChatSettingDialog(context, type, onPressed) {
+    late List<String> texts;
+    if (type == 'category') {
+      texts = ['없음', '공부', '운동', '독서', '생활습관', '음악/미술', '코딩'];
+    } else if (type == 'maxNum') {
+      texts = ['2명', '5명', '10명', '15명', '20명', '25명', '30명'];
+    }
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              insetPadding: EdgeInsets.all(10),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15.0)),
+              title: Text(
+                'title',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              content: Container(
+                height: 350,
+                width: MediaQuery.of(context).size.width * 2 / 3,
+                alignment: Alignment.center,
+                child: ListView.builder(
+                  itemBuilder: (context, index) {
+                    return InkWell(
+                      onTap: () {
+                        onPressed(texts[index]);
+                        Navigator.pop(context);
+                      },
+                      child: ListTile(
+                        title: Text(texts[index]),
+                      ),
+                    );
+                  },
+                  itemCount: texts.length,
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 }
