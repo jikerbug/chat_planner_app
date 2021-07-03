@@ -131,12 +131,19 @@ class _HomeState extends State<Home> {
                       );
                     }
                   : () {
-                      showModalBottomSheet(
-                        isScrollControlled:
-                            true, //full screen으로 modal 쓸 수 있게 해준다.
-                        context: context,
-                        builder: (context) => PlanAddScreen(),
+                      Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                          builder: (BuildContext context) => PlanAddScreen(),
+                        ),
                       );
+
+                      // showModalBottomSheet(
+                      //   isScrollControlled:
+                      //       true, //full screen으로 modal 쓸 수 있게 해준다.
+                      //   context: context,
+                      //   builder: (context) => PlanAddScreen(),
+                      // );
                     }),
           backgroundColor: Colors.transparent,
           body: Navigator(

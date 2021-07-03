@@ -10,6 +10,7 @@
 // 채택하고 있는지 보는 것도 좋을 것 같다.
 
 import 'package:chat_planner_app/api_in_local/hive_plan_api.dart';
+import 'package:chat_planner_app/constants.dart';
 import 'package:chat_planner_app/functions/custom_dialog_function.dart';
 import 'package:chat_planner_app/functions/date_time_function.dart';
 import 'plan_category_select.dart';
@@ -48,144 +49,162 @@ class _PlanAddScreenState extends State<PlanAddScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height -
-          WidgetsBinding.instance!.window.padding.top,
-      child: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.only(top: 30.0),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Container(
-                  width: 200.0,
-                  child: TextField(
-                    textAlign: TextAlign.start,
-                    controller: textEditingController,
-                    autofocus: true,
-                    onChanged: (value) {
-                      title = value;
-                    },
-                    decoration: InputDecoration(
-                        hintText: '실천할 계획을 입력해주세요',
-                        contentPadding: EdgeInsets.only(
-                            bottom: 5,
-                            top: 20), //  <- you can it to 0.0 for no space
-                        isDense: true),
-                  ),
-                ),
-                otherGroupGapBox(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Checkbox(
-                        value: isHabit,
-                        onChanged: (value) {
-                          if (value == true) {
-                            setState(() {
-                              isHabit = true;
-                            });
-                          }
-                        }),
-                    Text('습관'),
-                    Checkbox(
-                        value: !isHabit,
-                        onChanged: (value) {
-                          if (value == true) {
-                            setState(() {
-                              isHabit = false;
-                            });
-                          }
-                        }),
-                    Text('할일'),
-                  ],
-                ),
-                otherGroupGapBox(),
-                if (isHabit) habitDayOfWeekSelector(),
-                if (!isHabit)
-                  Text('할일을 실천할 날짜를 선택해주세요',
-                      style: TextStyle(fontWeight: FontWeight.bold)),
-                sameGroupGapBox(),
-                TextButton(
-                    onPressed: () async {
-                      if (planEndDateInfo == noLimitNotation) {
-                        planEndDateInfo = await DateTimeFunction.selectDate(
-                            planEndDateInfo, context);
-                      } else {
-                        planEndDateInfo = noLimitNotation;
-                      }
-                      setState(() {});
-                    },
-                    child: Text(
-                      planEndDateInfo,
-                      style: TextStyle(color: Colors.teal),
-                    )),
-                otherGroupGapBox(),
-                Text('계획을 공유할 채팅방과 카테고리를 선택해주세요',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
-                sameGroupGapBox(),
-                ThinButton(
-                    onPressed: () {
-                      showModalBottomSheet(
-                        isScrollControlled:
-                            true, //full screen으로 modal 쓸 수 있게 해준다.
-                        context: context,
-                        builder: (context) => PlanCategorySelect(
-                          chatRoomCallback: (chatRoomId, chatRoomName) {
-                            setState(() {
-                              selectedChatRoomId = chatRoomId;
-                              selectedChatRoomName = chatRoomName;
-                            });
-                            return 'success';
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          stops: [0.1, 0.4, 0.5],
+          colors: [
+            Colors.green[300]!,
+            Colors.green[700]!,
+            Colors.green[800]!,
+          ],
+        ),
+      ),
+      child: Scaffold(
+        body: SafeArea(
+          child: Container(
+            height: MediaQuery.of(context).size.height,
+            padding: EdgeInsets.only(top: 30.0),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 200.0,
+                        child: TextField(
+                          textAlign: TextAlign.center,
+                          controller: textEditingController,
+                          onChanged: (value) {
+                            title = value;
                           },
+                          decoration: InputDecoration(
+                              hintText: '실천할 계획 이름',
+                              contentPadding: EdgeInsets.only(
+                                  bottom: 5,
+                                  top:
+                                      20), //  <- you can it to 0.0 for no space
+                              isDense: true),
                         ),
-                      );
-                    },
-                    title: '카테고리 - 전체 / 채팅방 - $selectedChatRoomName',
-                    color: Colors.teal),
-                otherGroupGapBox(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    RoundedButton(
-                        minWidth: 100.0,
-                        color: Colors.orangeAccent,
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        title: '닫기'),
-                    RoundedButton(
-                        minWidth: 100.0,
-                        color: Colors.teal,
-                        onPressed: () {
-                          if (title != '') {
-                            List<String> aimDaysOfWeek = [];
-                            if (isHabit) {
-                              for (Day day in dayList) {
-                                if (day.isSelected) {
-                                  aimDaysOfWeek.add(day.name);
+                      ),
+                    ],
+                  ),
+                  otherGroupGapBox(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Checkbox(
+                          value: isHabit,
+                          onChanged: (value) {
+                            if (value == true) {
+                              setState(() {
+                                isHabit = true;
+                              });
+                            }
+                          }),
+                      Text('습관'),
+                      Checkbox(
+                          value: !isHabit,
+                          onChanged: (value) {
+                            if (value == true) {
+                              setState(() {
+                                isHabit = false;
+                              });
+                            }
+                          }),
+                      Text('할일'),
+                    ],
+                  ),
+                  otherGroupGapBox(),
+                  if (isHabit) habitDayOfWeekSelector(),
+                  if (!isHabit)
+                    Text('할일을 실천할 날짜를 선택해주세요',
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                  sameGroupGapBox(),
+                  TextButton(
+                      onPressed: () async {
+                        if (planEndDateInfo == noLimitNotation) {
+                          planEndDateInfo = await DateTimeFunction.selectDate(
+                              planEndDateInfo, context);
+                        } else {
+                          planEndDateInfo = noLimitNotation;
+                        }
+                        setState(() {});
+                      },
+                      child: Text(
+                        planEndDateInfo,
+                        style: TextStyle(color: Colors.teal),
+                      )),
+                  otherGroupGapBox(),
+                  Text('채팅방 카테고리를 선택해주세요',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  sameGroupGapBox(),
+                  ThinButton(
+                      onPressed: () {
+                        showModalBottomSheet(
+                          isScrollControlled:
+                              true, //full screen으로 modal 쓸 수 있게 해준다.
+                          context: context,
+                          builder: (context) => PlanCategorySelect(
+                            chatRoomCallback: (chatRoomId, chatRoomName) {
+                              setState(() {
+                                selectedChatRoomId = chatRoomId;
+                                selectedChatRoomName = chatRoomName;
+                              });
+                              return 'success';
+                            },
+                          ),
+                        );
+                      },
+                      title: '카테고리 - 전체 / 채팅방 - $selectedChatRoomName',
+                      color: Colors.teal),
+                  otherGroupGapBox(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      RoundedButton(
+                          minWidth: 100.0,
+                          color: Colors.orangeAccent,
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          title: '닫기'),
+                      RoundedButton(
+                          minWidth: 100.0,
+                          color: Colors.teal,
+                          onPressed: () {
+                            if (title != '') {
+                              List<String> aimDaysOfWeek = [];
+                              if (isHabit) {
+                                for (Day day in dayList) {
+                                  if (day.isSelected) {
+                                    aimDaysOfWeek.add(day.name);
+                                  }
+                                }
+
+                                if (aimDaysOfWeek.length == 0) {
+                                  CustomDialogFunction.dayOfWeekNotSelected(
+                                      context);
+                                  return;
                                 }
                               }
-
-                              if (aimDaysOfWeek.length == 0) {
-                                CustomDialogFunction.dayOfWeekNotSelected(
-                                    context);
-                                return;
-                              }
+                              HivePlanApi.addPlan(
+                                title: title,
+                                isHabit: isHabit,
+                                aimDaysOfWeek: aimDaysOfWeek,
+                                planEndDateInfo: planEndDateInfo,
+                                selectedChatRoomId: selectedChatRoomId,
+                              );
+                              Navigator.pop(context);
                             }
-                            HivePlanApi.addPlan(
-                              title: title,
-                              isHabit: isHabit,
-                              aimDaysOfWeek: aimDaysOfWeek,
-                              planEndDateInfo: planEndDateInfo,
-                              selectedChatRoomId: selectedChatRoomId,
-                            );
-                            Navigator.pop(context);
-                          }
-                        },
-                        title: '추가'),
-                  ],
-                ),
-              ],
+                          },
+                          title: '추가'),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),

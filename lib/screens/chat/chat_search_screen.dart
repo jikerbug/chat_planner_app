@@ -8,6 +8,8 @@ import 'package:chat_planner_app/widgets/chat/search_panel.dart';
 import 'package:chat_planner_app/constants.dart';
 import 'package:flutter/material.dart';
 
+import 'chat_add_screen.dart';
+
 class ChatSearchScreen extends StatefulWidget {
   static const String id = 'chat_search_screen';
 
@@ -54,21 +56,24 @@ class _ChatSearchScreenState extends State<ChatSearchScreen> {
           backgroundColor: Colors.transparent,
           appBar: AppBar(
             title: TabBar(
-              indicatorColor: Colors.teal,
               tabs: [
                 Tab(
-                  icon: Text(
-                    '최근실천',
-                  ),
-                ),
+                    icon: Text(
+                  '최근실천',
+                  style: TextStyle(fontSize: 12.0),
+                )),
                 Tab(
+                  iconMargin: EdgeInsets.all(0.0),
                   icon: Text(
                     '개설일',
+                    style: TextStyle(fontSize: 12.0),
                   ),
                 ),
                 Tab(
+                  iconMargin: EdgeInsets.all(0.0),
                   icon: Text(
                     '총실천수',
+                    style: TextStyle(fontSize: 12.0),
                   ),
                 ),
               ],
@@ -78,7 +83,13 @@ class _ChatSearchScreenState extends State<ChatSearchScreen> {
             backgroundColor: Colors.transparent,
           ),
           floatingActionButton: FloatingActionButton(
-            onPressed: () {},
+            onPressed: () {
+              showModalBottomSheet(
+                isScrollControlled: true, //full screen으로 modal 쓸 수 있게 해준다.
+                context: context,
+                builder: (context) => ChatAddScreen(),
+              );
+            },
             backgroundColor: Colors.teal,
             child: Icon(
               Icons.add,
