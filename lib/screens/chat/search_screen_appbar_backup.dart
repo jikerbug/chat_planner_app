@@ -1,6 +1,6 @@
 // import 'package:chat_planner_app/models/chat_room.dart';
 // import 'package:chat_planner_app/models_singleton/user.dart';
-// import 'package:chat_planner_app/widgets/chat/chat_list_header.dart';
+// import 'package:chat_planner_app/widgets/chat/chat_category_header.dart';
 // import 'package:chat_planner_app/widgets/chat/chat_search_body.dart';
 // import 'package:chat_planner_app/widgets/chat/search_panel.dart';
 // import 'package:flutter/material.dart';

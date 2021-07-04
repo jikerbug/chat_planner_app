@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:chat_planner_app/models/chat_room.dart';
 import 'package:chat_planner_app/models_singleton/user.dart';
-import 'package:chat_planner_app/widgets/chat/chat_list_header.dart';
+import 'package:chat_planner_app/widgets/chat/chat_category_header.dart';
 import 'package:chat_planner_app/widgets/chat/chat_search_body.dart';
 import 'package:chat_planner_app/widgets/chat/search_panel.dart';
 import 'package:chat_planner_app/constants.dart';
@@ -99,7 +99,7 @@ class _ChatSearchScreenState extends State<ChatSearchScreen> {
             children: [
               Column(
                 children: [
-                  ChatListHeader(texts: texts),
+                  ChatCategoryHeader(texts: texts),
                   ChatSearchBody(chatRooms: []),
                 ],
               ),
@@ -109,7 +109,7 @@ class _ChatSearchScreenState extends State<ChatSearchScreen> {
                     if (snapshot.hasData) {
                       return Column(
                         children: [
-                          ChatListHeader(texts: texts),
+                          ChatCategoryHeader(texts: texts),
                           ChatSearchBody(chatRooms: chatRooms),
                         ],
                       );
@@ -119,7 +119,7 @@ class _ChatSearchScreenState extends State<ChatSearchScreen> {
                   }),
               Column(
                 children: [
-                  ChatListHeader(texts: texts),
+                  ChatCategoryHeader(texts: texts),
                   ChatSearchBody(chatRooms: chatRooms),
                 ],
               ),

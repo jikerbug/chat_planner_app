@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-class ChatListHeader extends StatefulWidget {
+class ChatCategoryHeader extends StatefulWidget {
   final List<String> texts;
   final Color color;
-  const ChatListHeader({required this.texts, this.color = Colors.white});
+  const ChatCategoryHeader({required this.texts, this.color = Colors.white});
 
   @override
-  _ChatListHeaderState createState() => _ChatListHeaderState();
+  _ChatCategoryHeaderState createState() => _ChatCategoryHeaderState();
 }
 
-class _ChatListHeaderState extends State<ChatListHeader> {
+class _ChatCategoryHeaderState extends State<ChatCategoryHeader> {
   late String selectedGroup;
 
   @override
