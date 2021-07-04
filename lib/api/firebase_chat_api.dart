@@ -7,6 +7,15 @@ class FirebaseChatApi {
   static final DatabaseReference chatInfoRef =
       database.reference().child("chatInfo");
 
+  static void createUserStateAboutChatRoomInfo(chatRoomId) {
+    //       "lastDoneTime":
+    // null, //"lastSentDate는 sendDateBubbleIfLastSentDateIsNotToday함수에서 set해준다"
+    // "lastDoneMessage": null,
+    ///위의 것 + 각 사람마다의 데이터가 필요...!? ,,, not MVP 일수 있다,,,
+    ///자동 강제 퇴장은 not MVP이다.
+    ///MVP는 응원감사 + 플래너 + 채팅이다.
+  }
+
   static void chatRoomIdAndFriendInfoListener(userId, context) {}
 
   static void isChatRoomStateChangedListener(userId, callback) {}

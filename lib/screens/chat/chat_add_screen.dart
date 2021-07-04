@@ -9,7 +9,9 @@
 // 그것 이외에도 7시기상, 6시기상 같은 것들에 대해 전체 사용자가 얼마나 해당 습관을
 // 채택하고 있는지 보는 것도 좋을 것 같다.
 
+import 'package:chat_planner_app/api/firebase_chat_api.dart';
 import 'package:chat_planner_app/api/firestore_api.dart';
+import 'package:chat_planner_app/api_in_local/hive_chat_api.dart';
 import 'package:chat_planner_app/api_in_local/hive_plan_api.dart';
 import 'package:chat_planner_app/functions/custom_dialog_function.dart';
 import 'package:chat_planner_app/functions/date_time_function.dart';
@@ -199,16 +201,26 @@ class _ChatAddScreenState extends State<ChatAddScreen> {
                                   Navigator.pop(context);
                                   popupTitle = '실천채팅 생성 완료!';
                                   popupText = '생성한 채팅방에 입장하였습니다';
-                                  chatRoomId =
-                                      await FireStoreApi.createChatRoom(
-                                          chatRoomTitle,
-                                          category,
-                                          maxNum,
-                                          password,
-                                          description);
-                                  // FirebaseChatApi.createChatRoomMemberLastDoneInfo();
-                                  // FirebaseChatApi.createUserStateAboutChatRoomInfo();
-                                  // HiveChatApi.addChatRoomToList();
+
+                                  DateTime now = DateTime.now();
+                                  // chatRoomId =
+                                  //     await FireStoreApi.createChatRoom(
+                                  //         chatRoomTitle,
+                                  //         category,
+                                  //         maxNum,
+                                  //         password,
+                                  //         description,
+                                  //         now);
+                                  // FirebaseChatApi.createChatRoomLastDoneInfo();
+
+                                  // FirebaseChatApi
+                                  //     .createUserStateAboutChatRoomInfo();
+                                  HiveChatApi.addChatRoom(
+                                      chatRoomId: chatRoomTitle,
+                                      title: chatRoomTitle,
+                                      category: category,
+                                      lastDoneTime: now,
+                                      lastDoneMessage: '채팅방 생성 실천');
                                 } else {
                                   popupTitle = '최대인원 지정';
                                   popupText = '채팅방 최대 입장인원을 선택해주세요';

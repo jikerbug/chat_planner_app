@@ -1,6 +1,8 @@
 import 'package:chat_planner_app/constants.dart';
+import 'package:chat_planner_app/models_hive/chat_room_model.dart';
 import 'package:chat_planner_app/screens/bottom_nav_route/main_route_screen.dart';
 import 'package:chat_planner_app/screens/chat/chat_screen.dart';
+import 'package:chat_planner_app/screens/test.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -21,10 +23,24 @@ void main() async {
   Hive.registerAdapter(RecordModelAdapter());
   Hive.registerAdapter(TodoRecordModelAdapter());
   Hive.registerAdapter(UserModelAdapter());
+  Hive.registerAdapter(ChatRoomModelAdapter());
   await Hive.openBox<PlanModel>('plan');
   await Hive.openBox<RecordModel>('record');
-  await Hive.openBox<UserModel>('user');
   await Hive.openBox<TodoRecordModel>(kTodoRecordBoxName);
+  await Hive.openBox<UserModel>('user');
+
+  int reverseOrder(k1, k2) {
+    if (k1 > k2) {
+      return -1;
+    } else if (k1 < k2) {
+      return 1;
+    } else {
+      return 0;
+    }
+  }
+
+  await Hive.openBox<ChatRoomModel>('chatRoom', keyComparator: reverseOrder);
+
   final planBox = Hive.box<PlanModel>('plan');
   planBox.values.forEach((PlanModel element) async {
     //TODO:planEndDate가 지나고 1주일이 지난 놈들은 안불러온다.

@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class CoinFAB extends StatefulWidget {
-  CoinFAB(
+class DoneCountFAB extends StatefulWidget {
+  DoneCountFAB(
       {required this.coinCount,
       required this.myCoinCount,
       required this.friendCoinCount});
@@ -11,10 +11,11 @@ class CoinFAB extends StatefulWidget {
   final int friendCoinCount;
 
   @override
-  _CoinFABState createState() => _CoinFABState();
+  _DoneCountFABState createState() => _DoneCountFABState();
 }
 
-class _CoinFABState extends State<CoinFAB> with SingleTickerProviderStateMixin {
+class _DoneCountFABState extends State<DoneCountFAB>
+    with SingleTickerProviderStateMixin {
   late AnimationController animationController;
   late Animation unfoldAnimation;
   late Animation rotationAnimation;
@@ -58,7 +59,7 @@ class _CoinFABState extends State<CoinFAB> with SingleTickerProviderStateMixin {
                   },
                   backgroundColor: Colors.white,
                   label: Text(
-                    "총 42002개 실천",
+                    "총 42002회 실천",
                     style: TextStyle(color: Colors.black),
                   ),
                 ),
@@ -84,7 +85,7 @@ class _CoinFABState extends State<CoinFAB> with SingleTickerProviderStateMixin {
                     alignment: Alignment.center,
                     child: Icon(Icons.people)),
                 backgroundColor: Colors.teal,
-                label: Text("금일 32개 실천"),
+                label: Text("금일 32회 실천"),
               ),
             ],
           ),

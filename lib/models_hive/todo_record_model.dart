@@ -2,7 +2,7 @@ import 'package:hive/hive.dart';
 
 part 'todo_record_model.g.dart';
 
-@HiveType(typeId: 4)
+@HiveType(typeId: 3)
 class TodoRecordModel extends HiveObject {
   @HiveField(0)
   final int id;

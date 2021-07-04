@@ -64,6 +64,20 @@ class DateTimeFunction {
     }
   }
 
+  static String lastDoneTimeFormatter(DateTime lastDoneTime) {
+    if (isSameDate(lastDoneTime.toString(), DateTime.now().toString())) {
+      if (lastDoneTime.hour > 12) {
+        return '오후 ${lastDoneTime.hour - 12}:${lastDoneTime.minute}';
+      } else if (lastDoneTime.hour == 12) {
+        return '오후 ${lastDoneTime.hour}:${lastDoneTime.minute}';
+      } else {
+        return '오전 ${lastDoneTime.hour}:${lastDoneTime.minute}';
+      }
+    }
+
+    return '${lastDoneTime.month}월 ${lastDoneTime.day}일';
+  }
+
   static String doneDateTimeString(String doneTimestamp) {
     DateTime doneDateTime = DateTime.parse(doneTimestamp);
     String doneInfo =

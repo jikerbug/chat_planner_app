@@ -40,4 +40,4 @@ const kInputDecoration = InputDecoration(
   ),
 );
 
-const String kTodoRecordBoxName = 'todo_record';
+const String kTodoRecordBoxName = 'todoRecord';

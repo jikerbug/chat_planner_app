@@ -1,5 +1,6 @@
 import 'package:chat_planner_app/models/chat_room.dart';
 import 'package:chat_planner_app/models_singleton/user.dart';
+import 'package:chat_planner_app/modules/chat_list.dart';
 import 'package:chat_planner_app/widgets/chat/chat_list_body.dart';
 import 'package:chat_planner_app/widgets/chat/chat_list_header.dart';
 import 'package:chat_planner_app/widgets/plan/info_panel.dart';
@@ -46,7 +47,15 @@ class _ChatListScreenState extends State<ChatListScreen> {
       children: [
         InfoPanel('reward'),
         ChatListHeader(texts: texts),
-        ChatListBody(chatRooms: chatRooms),
+        Expanded(
+          child: Container(
+            padding: EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: Colors.white,
+            ),
+            child: ChatList(),
+          ),
+        ),
       ],
     ));
   }

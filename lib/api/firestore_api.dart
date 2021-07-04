@@ -1,3 +1,4 @@
+import 'package:chat_planner_app/functions/date_time_function.dart';
 import 'package:chat_planner_app/models_singleton/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:chat_planner_app/api/firestore_send_prebuilt_msg_api.dart';
@@ -10,22 +11,25 @@ class FireStoreApi {
   static final _fireStore = FirebaseFirestore.instance;
 
   static Future<String> createChatRoom(
-      chatRoomTitle, category, maxNum, password, description) async {
-    DateTime now = DateTime.now();
+      chatRoomTitle, category, maxNum, password, description, now) async {
     String sendDateFormatted =
         DateFormat('yyyy-MM-dd').format(now.subtract(Duration(days: 1)));
 
     DocumentReference dr = await _fireStore.collection('chatRooms').add({
-      "createdTime": now,
-      "lastSentDate": sendDateFormatted,
-      "createUser": User().userId,
+      "chatRoomTitle": chatRoomTitle,
       "category": category,
       "maxNum": maxNum,
       "password": password,
       "description": description,
-      "lastDoneTime": DateTime.now(),
-      //"lastSentDate는 sendDateBubbleIfLastSentDateIsNotToday함수에서 set해준다"
+      "createdTime": now,
+      "lastSentDate": sendDateFormatted,
+      "createUser": User().userId,
     });
+
+    ///주의!!!! lastSentDate는 메시지 버블을 위한 것이다
+    ///따라서 lastSentDateTime이 있더라도, 그것은 RTDB에 있을 것이다.
+    ///왜냐? 쓰는 횟수가 많은 정보이기 때문이다. 어차피 네트워크에 연결하여 불러올때만 lastSentDateTime이 필요하다.
+    ///하지만 이 정보는 채팅방 사용자가 채팅을 입력할때마다 업데이트된다
 
     return dr.id;
   }

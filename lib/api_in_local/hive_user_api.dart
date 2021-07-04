@@ -24,7 +24,7 @@ class HiveUserApi {
             ),
           );
           HivePlanApi.unCheckEveryPlan(planBox);
-          print('uncheck!!');
+          print('unchecked!!');
         }
       });
     }

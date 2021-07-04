@@ -1,3 +1,4 @@
+import 'package:badges/badges.dart';
 import 'package:chat_planner_app/functions/chat_room_enter_function.dart';
 import 'package:chat_planner_app/models/chat_room.dart';
 import 'package:chat_planner_app/models_singleton/user.dart';
@@ -27,22 +28,7 @@ class ChatListBody extends StatelessWidget {
   Widget buildChats() => ListView.builder(
         physics: BouncingScrollPhysics(),
         itemBuilder: (context, index) {
-          late Widget circleAvatarChild;
           final chatRoom = chatRooms[index];
-          String userId = User().userId;
-
-          if (chatRoom.serverId == userId) {
-            circleAvatarChild = Icon(
-              Icons.person,
-              color: Colors.black,
-            );
-          } else {
-            circleAvatarChild = Icon(
-              Icons.people_rounded,
-              color: Colors.black,
-            );
-          }
-
           return Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(20.0)),
@@ -53,18 +39,52 @@ class ChatListBody extends StatelessWidget {
                 ChatRoomEnterFunctions.chatRoomEnterProcess(
                     context, chatRoom.serverId, chatRoom.name);
               },
-              leading: Material(
-                shape: CircleBorder(),
-                elevation: 3.0,
-                child: CircleAvatar(
-                  backgroundColor: Colors.white,
-                  child: circleAvatarChild,
-                  radius: 25,
+              leading: Badge(
+                animationType: BadgeAnimationType.scale,
+                position: BadgePosition.bottomEnd(),
+                badgeColor: Colors.teal,
+                badgeContent: Text(
+                  '1',
+                  style: TextStyle(color: Colors.white),
+                ),
+                child: Badge(
+                  animationType: BadgeAnimationType.scale,
+                  badgeContent: Text(
+                    '3',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(50.0)),
+                      border: Border.all(
+                        color: Colors.teal,
+                        width: 1.5,
+                      ),
+                    ),
+                    child: CircleAvatar(
+                      backgroundColor: Colors.white,
+                      child: Text(
+                        '0회',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.teal),
+                      ),
+                      radius: 25,
+                    ),
+                  ),
                 ),
               ),
-              title: Text(
-                chatRoom.name,
-                style: TextStyle(fontWeight: FontWeight.bold),
+              title: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    chatRoom.name,
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    '스플릿스트레칭 실천 / 오전 12:21      ',
+                    style: TextStyle(fontSize: 13.0),
+                  ),
+                ],
               ),
             ),
           );

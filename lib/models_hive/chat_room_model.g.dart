@@ -1,41 +1,47 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'todo_record_model.dart';
+part of 'chat_room_model.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class TodoRecordModelAdapter extends TypeAdapter<TodoRecordModel> {
+class ChatRoomModelAdapter extends TypeAdapter<ChatRoomModel> {
   @override
-  final int typeId = 3;
+  final int typeId = 5;
 
   @override
-  TodoRecordModel read(BinaryReader reader) {
+  ChatRoomModel read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return TodoRecordModel(
+    return ChatRoomModel(
       id: fields[0] as int,
-      doneTimestamp: fields[1] as String,
-      planCreatedTime: fields[2] as String,
-      title: fields[3] as String,
+      chatRoomId: fields[1] as String,
+      title: fields[2] as String,
+      category: fields[3] as String,
+      lastDoneTime: fields[4] as DateTime,
+      lastDoneMessage: fields[5] as String,
     );
   }
 
   @override
-  void write(BinaryWriter writer, TodoRecordModel obj) {
+  void write(BinaryWriter writer, ChatRoomModel obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.doneTimestamp)
+      ..write(obj.chatRoomId)
       ..writeByte(2)
-      ..write(obj.planCreatedTime)
+      ..write(obj.title)
       ..writeByte(3)
-      ..write(obj.title);
+      ..write(obj.category)
+      ..writeByte(4)
+      ..write(obj.lastDoneTime)
+      ..writeByte(5)
+      ..write(obj.lastDoneMessage);
   }
 
   @override
@@ -44,7 +50,7 @@ class TodoRecordModelAdapter extends TypeAdapter<TodoRecordModel> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is TodoRecordModelAdapter &&
+      other is ChatRoomModelAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
