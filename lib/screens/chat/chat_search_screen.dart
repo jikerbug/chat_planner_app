@@ -59,20 +59,20 @@ class _ChatSearchScreenState extends State<ChatSearchScreen> {
               tabs: [
                 Tab(
                     icon: Text(
-                  '최근실천',
+                  '개설일',
                   style: TextStyle(fontSize: 12.0),
                 )),
                 Tab(
                   iconMargin: EdgeInsets.all(0.0),
                   icon: Text(
-                    '개설일',
+                    '오늘실천',
                     style: TextStyle(fontSize: 12.0),
                   ),
                 ),
                 Tab(
                   iconMargin: EdgeInsets.all(0.0),
                   icon: Text(
-                    '총실천수',
+                    '총실천',
                     style: TextStyle(fontSize: 12.0),
                   ),
                 ),

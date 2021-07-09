@@ -50,7 +50,7 @@ class _ChatListState extends State<ChatList> {
         },
         leading: Badge(
           animationType: BadgeAnimationType.scale,
-          position: BadgePosition.bottomEnd(),
+          position: BadgePosition.topStart(),
           badgeColor: Colors.teal,
           badgeContent: Text(
             '1',

@@ -27,6 +27,8 @@ class DateTimeFunction {
     ];
   }
 
+  static DateTime noLastDoneTimeNotation = DateTime(2099);
+
   static String getTodayOfWeek(DateTime nowSyncedAtReload) {
     //weekday는 1부터 7까지, 월요일부터, 일요일까지임!! -> 전체는 index 0이니까 포함될 일 없다.
     return dayListForPlanScreen[nowSyncedAtReload.weekday];
@@ -66,12 +68,20 @@ class DateTimeFunction {
 
   static String lastDoneTimeFormatter(DateTime lastDoneTime) {
     if (isSameDate(lastDoneTime.toString(), DateTime.now().toString())) {
-      if (lastDoneTime.hour > 12) {
-        return '오후 ${lastDoneTime.hour - 12}:${lastDoneTime.minute}';
-      } else if (lastDoneTime.hour == 12) {
-        return '오후 ${lastDoneTime.hour}:${lastDoneTime.minute}';
+      int minute = lastDoneTime.minute;
+      String minuteString = '';
+      if (minute < 10) {
+        minuteString = '0' + minute.toString();
       } else {
-        return '오전 ${lastDoneTime.hour}:${lastDoneTime.minute}';
+        minuteString = minute.toString();
+      }
+
+      if (lastDoneTime.hour > 12) {
+        return '오후 ${lastDoneTime.hour - 12}:$minuteString';
+      } else if (lastDoneTime.hour == 12) {
+        return '오후 ${lastDoneTime.hour}:$minuteString';
+      } else {
+        return '오전 ${lastDoneTime.hour}:$minuteString';
       }
     }
 

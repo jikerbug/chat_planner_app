@@ -138,7 +138,7 @@ class _PlanAddScreenState extends State<PlanAddScreen> {
                         style: TextStyle(color: Colors.teal),
                       )),
                   otherGroupGapBox(),
-                  Text('채팅방 카테고리를 선택해주세요',
+                  Text('계획을 공유할 채팅방을 선택해주세요',
                       style: TextStyle(fontWeight: FontWeight.bold)),
                   sameGroupGapBox(),
                   ThinButton(
@@ -158,7 +158,7 @@ class _PlanAddScreenState extends State<PlanAddScreen> {
                           ),
                         );
                       },
-                      title: '카테고리 - 전체 / 채팅방 - $selectedChatRoomName',
+                      title: '공유할 채팅방 - $selectedChatRoomName',
                       color: Colors.teal),
                   otherGroupGapBox(),
                   Row(

@@ -33,37 +33,6 @@ class _PlanCategorySelectState extends State<PlanCategorySelect> {
             child: Column(
               children: [
                 categoryHeaderTile(
-                    title: '계획 카테고리',
-                    color: Colors.teal,
-                    onPressed: () {},
-                    isAddButtonExist: true),
-                Expanded(
-                  child: ListView.separated(
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      return categoryTile(
-                          title: planCategoryList[index],
-                          planCount: 1,
-                          index: index);
-                    },
-                    itemCount: planCategoryList.length,
-                    separatorBuilder: (context, index) {
-                      return Divider(
-                        height: 0.0,
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-          VerticalDivider(
-            width: 0.0,
-          ),
-          Flexible(
-            child: Column(
-              children: [
-                categoryHeaderTile(
                     title: '공유되는 채팅방',
                     color: Colors.green,
                     onPressed: () {},

@@ -1,3 +1,4 @@
+import 'package:chat_planner_app/functions/date_time_function.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 class FirebaseChatApi {
@@ -7,7 +8,19 @@ class FirebaseChatApi {
   static final DatabaseReference chatInfoRef =
       database.reference().child("chatInfo");
 
-  static void createUserStateAboutChatRoomInfo(chatRoomId) {
+  static final DatabaseReference chatUserInfoRef =
+      database.reference().child("chatUserInfo");
+
+  static void createChatRoomInfo(chatRoomId) {
+    //어차피 today랑 다르면 todayDoneCount를 0으로 초기화시켜줘야한다
+    chatInfoRef.child(chatRoomId).set({
+      'lastSentTime': DateTime.now(),
+      'lastMessage': '',
+      'currentMemberNum': 0,
+    });
+  }
+
+  static void createChatRoomUserInfo(chatRoomId, userId) {
     //       "lastDoneTime":
     // null, //"lastSentDate는 sendDateBubbleIfLastSentDateIsNotToday함수에서 set해준다"
     // "lastDoneMessage": null,

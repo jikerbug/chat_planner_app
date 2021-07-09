@@ -117,7 +117,7 @@ class _PlanScreenState extends State<PlanScreen> {
                           ),
                         );
                       },
-                      title: '카테고리 - 전체',
+                      title: '채팅방 - 전체',
                       color: Colors.green,
                     ),
                     Center(

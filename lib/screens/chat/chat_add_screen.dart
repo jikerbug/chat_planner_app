@@ -41,11 +41,11 @@ class _ChatAddScreenState extends State<ChatAddScreen> {
 
   String chatRoomTitle = '';
   String category = '';
-  String maxNum = '';
+  String maxMemberNum = '';
   String password = '';
   String description = '';
   bool isCategorySelected = false;
-  bool isMaxNumSelected = false;
+  bool isMaxMemberNumSelected = false;
   List<String> cardTitleList = ['채팅방명', '카테고리', '최대인원', '비밀번호', '채팅방 소개'];
 
   Widget inputLineCard(title, hint, {type = 'textInput'}) => Container(
@@ -59,12 +59,12 @@ class _ChatAddScreenState extends State<ChatAddScreen> {
                     ? null
                     : (type == 'category')
                         ? Key(category)
-                        : Key(maxNum),
+                        : Key(maxMemberNum),
                 initialValue: (type == 'textInput')
                     ? ''
                     : (type == 'category')
                         ? category
-                        : maxNum,
+                        : maxMemberNum,
                 style: TextStyle(
                   fontSize: 14.0,
                 ),
@@ -94,7 +94,7 @@ class _ChatAddScreenState extends State<ChatAddScreen> {
                             if (type == 'category') {
                               category = value;
                             } else if (type == 'maxNum') {
-                              maxNum = value;
+                              maxMemberNum = value;
                             }
                           });
                         });
@@ -197,30 +197,31 @@ class _ChatAddScreenState extends State<ChatAddScreen> {
                             String popupText = '';
                             if (chatRoomTitle.length > 1) {
                               if (category != '') {
-                                if (maxNum != '') {
+                                if (maxMemberNum != '') {
                                   Navigator.pop(context);
                                   popupTitle = '실천채팅 생성 완료!';
                                   popupText = '생성한 채팅방에 입장하였습니다';
 
                                   DateTime now = DateTime.now();
-                                  // chatRoomId =
-                                  //     await FireStoreApi.createChatRoom(
-                                  //         chatRoomTitle,
-                                  //         category,
-                                  //         maxNum,
-                                  //         password,
-                                  //         description,
-                                  //         now);
-                                  // FirebaseChatApi.createChatRoomLastDoneInfo();
+                                  chatRoomId =
+                                      await FireStoreApi.createChatRoom(
+                                          chatRoomTitle,
+                                          category,
+                                          maxMemberNum,
+                                          password,
+                                          description,
+                                          now);
+                                  FirebaseChatApi.createChatRoomInfo(
+                                      chatRoomId);
 
                                   // FirebaseChatApi
-                                  //     .createUserStateAboutChatRoomInfo();
+                                  //     .createUserStateAboutChatRoomInfo(chatRoomTitle);
                                   HiveChatApi.addChatRoom(
                                       chatRoomId: chatRoomTitle,
                                       title: chatRoomTitle,
                                       category: category,
                                       lastDoneTime: now,
-                                      lastDoneMessage: '채팅방 생성 실천');
+                                      lastDoneMessage: '채팅방 생성');
                                 } else {
                                   popupTitle = '최대인원 지정';
                                   popupText = '채팅방 최대 입장인원을 선택해주세요';

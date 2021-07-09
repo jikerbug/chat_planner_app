@@ -22,11 +22,23 @@ class ChatRoomModel {
   @HiveField(5)
   final String lastDoneMessage;
 
-  // @HiveField(5)
-  // final int unSeenMessageCount;
+  // @HiveField(6)
+  // final String readMessageCount;
+  //
+  // @HiveField(7)
+  // final String initialMessageCount;
   //
   // @HiveField(6)
-  // final int unSeenDoneMessageCount;
+  // final String readDoneMessageCount;
+  //
+  // @HiveField(7)
+  // final String initialDoneMessageCount;
+  //
+  // @HiveField(8)
+  // final String todayDoneCount;
+  //
+  // @HiveField(9)
+  // final String totalDoneCount;
 
   ChatRoomModel({
     required this.id,
@@ -36,4 +48,17 @@ class ChatRoomModel {
     required this.lastDoneTime,
     required this.lastDoneMessage,
   });
+  //
+  // ChatRoomModel({
+  //   required this.id,
+  //   required this.chatRoomId,
+  //   required this.title,
+  //   required this.category,
+  //   required this.lastSentTime,
+  //   required this.lastMessage,
+  //   required this.readMessageCount,
+  //   required this.initialMessageCount,
+  //   required this.todayDoneCount,
+  //   required this.totalDoneCount
+  // });
 }

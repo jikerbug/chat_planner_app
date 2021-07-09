@@ -56,6 +56,7 @@ class _PlanListState extends State<PlanList> {
               ],
             ));
           }
+
           return ReorderableListView.builder(
             buildDefaultDragHandles: false,
             onReorder: (oldIndex, newIndex) {
