@@ -18,7 +18,7 @@ class ChatSearchScreen extends StatefulWidget {
 }
 
 class _ChatSearchScreenState extends State<ChatSearchScreen> {
-  final List<String> texts = ['전체', '공부', '운동', '독서', '생활습관', '음악/미술', '코딩'];
+  final List<String> texts = ['공부', '운동', '독서', '취미', '생활습관', '커스텀'];
   bool isDoneSort = true;
   bool isCreatedTimeSort = false;
 
@@ -56,24 +56,23 @@ class _ChatSearchScreenState extends State<ChatSearchScreen> {
           backgroundColor: Colors.transparent,
           appBar: AppBar(
             title: TabBar(
+              labelPadding: EdgeInsets.all(0),
               tabs: [
                 Tab(
                     icon: Text(
                   '개설일',
-                  style: TextStyle(fontSize: 12.0),
+                  style: TextStyle(fontSize: 13.0),
                 )),
                 Tab(
-                  iconMargin: EdgeInsets.all(0.0),
                   icon: Text(
-                    '오늘실천',
-                    style: TextStyle(fontSize: 12.0),
+                    '주간실천',
+                    style: TextStyle(fontSize: 13.0),
                   ),
                 ),
                 Tab(
-                  iconMargin: EdgeInsets.all(0.0),
                   icon: Text(
                     '총실천',
-                    style: TextStyle(fontSize: 12.0),
+                    style: TextStyle(fontSize: 13.0),
                   ),
                 ),
               ],

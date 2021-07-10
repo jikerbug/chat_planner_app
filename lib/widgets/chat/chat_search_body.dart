@@ -18,7 +18,7 @@ class ChatSearchBody extends StatefulWidget {
 }
 
 class _ChatSearchBodyState extends State<ChatSearchBody> {
-  bool isSearch = false;
+  // bool isSearch = false; 서비스 커지면 검색기능 추가하기
   bool isEmptySeat = false;
   bool isNotLocked = false;
   bool isCountCriteria = false;
@@ -41,16 +41,16 @@ class _ChatSearchBodyState extends State<ChatSearchBody> {
                       bottom: 16.0,
                     ),
                   ),
-                  Text(
-                    '직접검색',
-                  ),
-                  Checkbox(
-                      value: isSearch,
-                      onChanged: (value) {
-                        setState(() {
-                          isSearch = value!;
-                        });
-                      }),
+                  // Text(
+                  //   '직접검색',
+                  // ),
+                  // Checkbox(
+                  //     value: isSearch,
+                  //     onChanged: (value) {
+                  //       setState(() {
+                  //         isSearch = value!;
+                  //       });
+                  //     }),
                   Text(
                     '빈자리',
                   ),
@@ -73,32 +73,32 @@ class _ChatSearchBodyState extends State<ChatSearchBody> {
                       }),
                 ],
               ),
-              if (isSearch)
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        keyboardType: TextInputType.text,
-                        onChanged: (text) {},
-                        decoration: InputDecoration(
-                            border: InputBorder.none,
-                            icon: Padding(
-                                padding: EdgeInsets.only(left: 13),
-                                child: Icon(
-                                  Icons.search,
-                                ))),
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        setState(() {
-                          text = '';
-                        });
-                      },
-                      child: Text('검색'),
-                    ),
-                  ],
-                ),
+              // if (isSearch)
+              //   Row(
+              //     children: [
+              //       Expanded(
+              //         child: TextField(
+              //           keyboardType: TextInputType.text,
+              //           onChanged: (text) {},
+              //           decoration: InputDecoration(
+              //               border: InputBorder.none,
+              //               icon: Padding(
+              //                   padding: EdgeInsets.only(left: 13),
+              //                   child: Icon(
+              //                     Icons.search,
+              //                   ))),
+              //         ),
+              //       ),
+              //       TextButton(
+              //         onPressed: () {
+              //           setState(() {
+              //             text = '';
+              //           });
+              //         },
+              //         child: Text('검색'),
+              //       ),
+              //     ],
+              //   ),
               buildChats(),
             ],
           ),

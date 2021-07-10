@@ -3,7 +3,7 @@ import 'package:chat_planner_app/api_in_local/hive_chat_api.dart';
 import 'package:flutter/material.dart';
 import 'package:chat_planner_app/functions/custom_dialog_function.dart';
 import 'package:chat_planner_app/modules/message_stream.dart';
-import 'package:chat_planner_app/widgets/chat/chat_screen/coin_fab.dart';
+import 'package:chat_planner_app/widgets/chat/chat_screen/done_count_fab.dart';
 import 'package:chat_planner_app/widgets/chat/chat_screen/message_sender.dart';
 
 class ChatScreen extends StatefulWidget {

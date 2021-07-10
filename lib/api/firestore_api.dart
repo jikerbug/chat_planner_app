@@ -18,17 +18,11 @@ class FireStoreApi {
     DocumentReference dr = await _fireStore.collection('chatRooms').add({
       "chatRoomTitle": chatRoomTitle,
       "description": description,
-      "createdTime": now,
       "lastSentDate": sendDateFormatted,
       "createUser": User().userId,
       "category": category,
       "password": password,
       "maxMemberNum": maxMemberNum,
-      'currentMemberNum': 0,
-      'todayContainsDawn': DateTime.now(),
-      'todayDoneCount': 0, //리스너 필요
-      'totalDoneCount': 0, //리스너
-      'totalMessageCount': 0,
     });
 
     ///주의!!!! lastSentDate는 메시지 버블을 위한 것이다

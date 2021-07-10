@@ -33,7 +33,7 @@ class _PlanCategorySelectState extends State<PlanCategorySelect> {
             child: Column(
               children: [
                 categoryHeaderTile(
-                    title: '공유되는 채팅방',
+                    title: '공유 채팅방',
                     color: Colors.green,
                     onPressed: () {},
                     isAddButtonExist: false),

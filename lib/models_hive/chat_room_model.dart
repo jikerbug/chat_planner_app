@@ -28,11 +28,6 @@ class ChatRoomModel {
   // @HiveField(7)
   // final String initialMessageCount;
   //
-  // @HiveField(6)
-  // final String readDoneMessageCount;
-  //
-  // @HiveField(7)
-  // final String initialDoneMessageCount;
   //
   // @HiveField(8)
   // final String todayDoneCount;

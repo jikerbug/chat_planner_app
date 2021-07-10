@@ -212,7 +212,7 @@ class _ChatAddScreenState extends State<ChatAddScreen> {
                                           description,
                                           now);
                                   FirebaseChatApi.createChatRoomInfo(
-                                      chatRoomId);
+                                      chatRoomId, now, category);
 
                                   // FirebaseChatApi
                                   //     .createUserStateAboutChatRoomInfo(chatRoomTitle);

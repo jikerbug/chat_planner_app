@@ -1,3 +1,4 @@
+import 'package:chat_planner_app/api/firebase_chat_api.dart';
 import 'package:chat_planner_app/constants.dart';
 import 'package:chat_planner_app/models_hive/chat_room_model.dart';
 import 'package:chat_planner_app/screens/bottom_nav_route/main_route_screen.dart';
@@ -47,7 +48,7 @@ void main() async {
     await HiveRecordApi.openHabitRecordBox(
         element.createdTime, element.isHabit);
   });
-
+  // FirebaseChatApi.test();
   runApp(MaterialApp(
     localizationsDelegates: [
       GlobalMaterialLocalizations.delegate,

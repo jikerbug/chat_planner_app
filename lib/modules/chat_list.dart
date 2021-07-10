@@ -5,6 +5,7 @@ import 'package:chat_planner_app/functions/date_time_function.dart';
 import 'package:chat_planner_app/models_hive/chat_room_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -33,8 +34,7 @@ class _ChatListState extends State<ChatList> {
   }
 
   Widget getChatRoomTile(box, index, ChatRoomModel item) {
-    String lastSentInfo =
-        '${item.lastDoneMessage} / ${DateTimeFunction.lastDoneTimeFormatter(item.lastDoneTime)}';
+    String lastSentInfo = '${item.lastDoneMessage}';
 
     return Container(
       decoration: BoxDecoration(
@@ -44,54 +44,67 @@ class _ChatListState extends State<ChatList> {
       child: ListTile(
         onTap: () {
           //TODO:이 부분 다시 변경해놓기
-          HiveChatApi.setChatRoomAtLatestListOrder(item.chatRoomId);
-          // ChatRoomEnterFunctions.chatRoomEnterProcess(
-          //     context, item.chatRoomId, item.title);
+          //HiveChatApi.setChatRoomAtLatestListOrder(item.chatRoomId);
+          ChatRoomEnterFunctions.chatRoomEnterProcess(
+              context, item.chatRoomId, item.title);
         },
-        leading: Badge(
-          animationType: BadgeAnimationType.scale,
-          position: BadgePosition.topStart(),
-          badgeColor: Colors.teal,
-          badgeContent: Text(
-            '1',
-            style: TextStyle(color: Colors.white),
+        leading: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(50.0)),
+            border: Border.all(
+              color: Colors.teal,
+              width: 1.5,
+            ),
           ),
-          child: Badge(
-            animationType: BadgeAnimationType.scale,
-            badgeContent: Text(
-              '3',
-              style: TextStyle(color: Colors.white),
+          child: CircleAvatar(
+            backgroundColor: Colors.white,
+            child: Text(
+              '0회',
+              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.teal),
             ),
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(50.0)),
-                border: Border.all(
-                  color: Colors.teal,
-                  width: 1.5,
-                ),
-              ),
-              child: CircleAvatar(
-                backgroundColor: Colors.white,
-                child: Text(
-                  '0회',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold, color: Colors.teal),
-                ),
-                radius: 25,
-              ),
-            ),
+            radius: 25,
           ),
         ),
         title: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              item.title,
-              style: TextStyle(fontWeight: FontWeight.bold),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  item.title,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  DateTimeFunction.lastDoneTimeFormatter(item.lastDoneTime),
+                  style: TextStyle(fontSize: 12.0),
+                ),
+              ],
             ),
-            Text(
-              lastSentInfo,
-              style: TextStyle(fontSize: 13.0),
+            SizedBox(
+              height: 3.0,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  lastSentInfo,
+                  style: TextStyle(fontSize: 13.0),
+                ),
+                Badge(
+                  toAnimate: false,
+                  position: BadgePosition.topStart(),
+                  badgeContent: Text(
+                    '3',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  child: Text(
+                    '    ',
+                    style: TextStyle(fontSize: 13.0),
+                  ),
+                ),
+              ],
             ),
           ],
         ),

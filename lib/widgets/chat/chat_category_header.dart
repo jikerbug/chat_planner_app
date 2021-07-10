@@ -26,6 +26,52 @@ class _ChatCategoryHeaderState extends State<ChatCategoryHeader> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          //   children: [
+          //     SizedBox(
+          //       width: 5,
+          //     ),
+          //     for (String text in widget.texts) ...{
+          //       Container(
+          //         height: MediaQuery.of(context).size.width / 9,
+          //         child: Material(
+          //           borderRadius: BorderRadius.vertical(
+          //             top: Radius.circular(10.0),
+          //           ),
+          //           color: (selectedGroup == text)
+          //               ? widget.color
+          //               : Colors.transparent,
+          //           child: GestureDetector(
+          //             onTap: () {
+          //               setState(() {
+          //                 selectedGroup = text;
+          //               });
+          //             },
+          //             child: Container(
+          //               constraints: BoxConstraints(
+          //                 minWidth: MediaQuery.of(context).size.width / 9,
+          //               ),
+          //               padding: EdgeInsets.symmetric(horizontal: 5.0),
+          //               child: Center(
+          //                 child: Text(
+          //                   text,
+          //                   style: TextStyle(
+          //                       color: (selectedGroup == text)
+          //                           ? Colors.black
+          //                           : Colors.white),
+          //                 ),
+          //               ),
+          //             ),
+          //           ),
+          //         ),
+          //       ),
+          //     },
+          //     SizedBox(
+          //       width: 5,
+          //     ),
+          //   ],
+          // ),
           Container(
             height: MediaQuery.of(context).size.width / 9,
             child: ListView.separated(

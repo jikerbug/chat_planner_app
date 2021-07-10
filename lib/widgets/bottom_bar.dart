@@ -37,10 +37,7 @@ class _BottomBarState extends State<BottomBar> {
         widget.navigatorKey.currentState.pushNamed('/chats');
         break;
       case 2:
-        widget.navigatorKey.currentState.pushNamed('/friends');
-        break;
-      case 3:
-        widget.navigatorKey.currentState.pushNamed('/ranks');
+        widget.navigatorKey.currentState.pushNamed('/hearts');
         break;
     }
     // widget.navigatorKey.currentState
@@ -90,10 +87,10 @@ class _BottomBarState extends State<BottomBar> {
                   ])
                 : Icon(Icons.chat),
           ),
-          BottomNavigationBarItem(
-            label: '실천친구',
-            icon: Icon(Icons.people),
-          ),
+          // BottomNavigationBarItem(
+          //   label: '실천친구',
+          //   icon: Icon(Icons.people),
+          // ),
           BottomNavigationBarItem(
             label: '응원함',
             icon: Icon(Icons.favorite),
