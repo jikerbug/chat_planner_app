@@ -13,7 +13,7 @@ class HivePlanApi {
     int id = 0;
 
     if (box.isNotEmpty) {
-      final prevItem = box.getAt(box.length - 1);
+      final prevItem = box.get(box.length - 1);
 
       if (prevItem != null) {
         id = prevItem.id + 1;
@@ -81,7 +81,7 @@ class HivePlanApi {
   }
 
   static void deletePlanData(Box<PlanModel> box, index) {
-    box.deleteAt(index);
+    box.delete(index);
     //기본원리 : 중간에 지워진 key를 매운다.
     //삭제시, index와 key가 동일하게 유지되지 않기 때문에 get으로 통일하여 로직작성
     if (index == box.length) {
@@ -101,13 +101,14 @@ class HivePlanApi {
   static void reorderPlanData(Box<PlanModel> box, oldIndex, newIndex) {
     //그냥 그대로 두는 경우(old = new)는 애초에 reorder호출이 안된다.
     //index와 key를 동일하게 유지하기 때문에 getAt을 쓰든, get을 쓰든 노상관
-    var item = box.getAt(oldIndex);
+    //그냥 get으로 통일하자. 그게 리오더 버그를 최대한 줄일듯!!
+    var item = box.get(oldIndex);
     var alterItem;
     var insertModel = getOneFieldValueChangedPlanModel(item!,
         fieldName: 'id', value: newIndex);
     if (newIndex < oldIndex) {
       for (int i = newIndex; i <= oldIndex; i++) {
-        alterItem = box.getAt(i);
+        alterItem = box.get(i);
         box.put(
           i,
           insertModel,
@@ -119,7 +120,7 @@ class HivePlanApi {
       //아! 이것은 실질적인 newIndex가, 앞에서 뒤로 이동하는 경우에는 +1되기 때문 -> newIndex - 1부터 시작
       //final index = newIndex > oldIndex ? newIndex - 1 : newIndex;
       for (int i = newIndex - 1; i >= oldIndex; i--) {
-        alterItem = box.getAt(i);
+        alterItem = box.get(i);
         box.put(
           i,
           insertModel,

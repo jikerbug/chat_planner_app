@@ -13,14 +13,14 @@ import 'package:chat_planner_app/api_in_local/hive_plan_api.dart';
 import 'package:chat_planner_app/constants.dart';
 import 'package:chat_planner_app/functions/custom_dialog_function.dart';
 import 'package:chat_planner_app/functions/date_time_function.dart';
-import 'plan_category_select.dart';
+import 'plan_chat_room_select.dart';
 import 'package:chat_planner_app/widgets/circle_border_box.dart';
 import 'package:chat_planner_app/widgets/rounded_button.dart';
 import 'package:chat_planner_app/widgets/thin_button.dart';
 import 'package:flutter/material.dart';
 
 class PlanAddScreen extends StatefulWidget {
-  static String id = 'PlanAddScreen';
+  static String id = 'plan_add_screen';
   @override
   _PlanAddScreenState createState() => _PlanAddScreenState();
 }
@@ -147,14 +147,15 @@ class _PlanAddScreenState extends State<PlanAddScreen> {
                           isScrollControlled:
                               true, //full screen으로 modal 쓸 수 있게 해준다.
                           context: context,
-                          builder: (context) => PlanCategorySelect(
-                            chatRoomCallback: (chatRoomId, chatRoomName) {
+                          builder: (context) => PlanChatRoomSelect(
+                            chatRoomSelectCallback: (chatRoomId, chatRoomName) {
                               setState(() {
                                 selectedChatRoomId = chatRoomId;
                                 selectedChatRoomName = chatRoomName;
                               });
                               return 'success';
                             },
+                            callerScreen: PlanAddScreen.id,
                           ),
                         );
                       },

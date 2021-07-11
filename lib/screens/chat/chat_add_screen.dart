@@ -15,7 +15,7 @@ import 'package:chat_planner_app/api_in_local/hive_chat_api.dart';
 import 'package:chat_planner_app/api_in_local/hive_plan_api.dart';
 import 'package:chat_planner_app/functions/custom_dialog_function.dart';
 import 'package:chat_planner_app/functions/date_time_function.dart';
-import 'package:chat_planner_app/screens/plan/plan_category_select.dart';
+import 'package:chat_planner_app/screens/plan/plan_chat_room_select.dart';
 import 'package:chat_planner_app/widgets/circle_border_box.dart';
 import 'package:chat_planner_app/widgets/rounded_button.dart';
 import 'package:chat_planner_app/widgets/thin_button.dart';
@@ -213,15 +213,16 @@ class _ChatAddScreenState extends State<ChatAddScreen> {
                                           now);
                                   FirebaseChatApi.createChatRoomInfo(
                                       chatRoomId, now, category);
-
-                                  // FirebaseChatApi
-                                  //     .createUserStateAboutChatRoomInfo(chatRoomTitle);
                                   HiveChatApi.addChatRoom(
-                                      chatRoomId: chatRoomTitle,
-                                      title: chatRoomTitle,
-                                      category: category,
-                                      lastDoneTime: now,
-                                      lastDoneMessage: '채팅방 생성');
+                                    chatRoomId: chatRoomTitle,
+                                    title: chatRoomTitle,
+                                    category: category,
+                                    lastSentTime: now,
+                                    lastMessage: '채팅방 생성',
+                                    totalMessageCount: 0,
+                                    todayDoneCount: 0,
+                                    today: now,
+                                  );
                                 } else {
                                   popupTitle = '최대인원 지정';
                                   popupText = '채팅방 최대 입장인원을 선택해주세요';

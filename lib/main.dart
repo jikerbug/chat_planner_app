@@ -10,6 +10,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'api_in_local/hive_record_api.dart';
+import 'api_in_local/hive_user_api.dart';
 import 'models_hive/plan_model.dart';
 import 'models_hive/record_model.dart';
 import 'models_hive/todo_record_model.dart';
@@ -42,6 +43,9 @@ void main() async {
 
   await Hive.openBox<ChatRoomModel>('chatRoom', keyComparator: reverseOrder);
 
+  String userId = 'mindnetworkcorp@gmail';
+  HiveUserApi.addUserDataIfNoUserData(userId);
+
   final planBox = Hive.box<PlanModel>('plan');
   planBox.values.forEach((PlanModel element) async {
     //TODO:planEndDate가 지나고 1주일이 지난 놈들은 안불러온다.
@@ -68,7 +72,7 @@ void main() async {
     initialRoute: MainRouteScreen.id,
     routes: {
       MainRouteScreen.id: (context) => MainRouteScreen(userInfo: {
-            'userId': 'mindnetworkcorp@gmail',
+            'userId': userId,
           }),
       //mainRoute end
       ChatScreen.id: (context) => ChatScreen(),

@@ -3,31 +3,37 @@ import 'package:chat_planner_app/functions/date_time_function.dart';
 import 'package:chat_planner_app/models_hive/user_model.dart';
 import 'package:hive/hive.dart';
 
+import 'hive_chat_api.dart';
+
 class HiveUserApi {
   static final _box = Hive.box<UserModel>('user');
-  static void refreshPlanByLastCheckInDate(userId, nowSyncedAtReload, planBox) {
+
+  static addUserDataIfNoUserData(userId) {
     if (_box.values.isEmpty) {
       HiveUserApi.addUser(box: _box, userId: userId);
       print('addUserFirst');
-    } else {
-      _box.values
-          .where((element) => (element.userId == userId))
-          .forEach((element) {
-        if (!DateTimeFunction.isSameDate(
-            nowSyncedAtReload.toString(), element.lastCheckInDate)) {
-          _box.put(
-            element.id,
-            UserModel(
-              id: element.id,
-              userId: userId,
-              lastCheckInDate: DateTime.now().toString(),
-            ),
-          );
-          HivePlanApi.unCheckEveryPlan(planBox);
-          print('unchecked!!');
-        }
-      });
+      HiveChatApi.addUserSelfChat(userId);
     }
+  }
+
+  static void refreshPlanByLastCheckInDate(userId, nowSyncedAtReload, planBox) {
+    _box.values
+        .where((element) => (element.userId == userId))
+        .forEach((element) {
+      if (!DateTimeFunction.isSameDate(
+          nowSyncedAtReload.toString(), element.lastCheckInDate)) {
+        _box.put(
+          element.id,
+          UserModel(
+            id: element.id,
+            userId: userId,
+            lastCheckInDate: DateTime.now().toString(),
+          ),
+        );
+        HivePlanApi.unCheckEveryPlan(planBox);
+        print('unchecked!!');
+      }
+    });
   }
 
   static void addUser({

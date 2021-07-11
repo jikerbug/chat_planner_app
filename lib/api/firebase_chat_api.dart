@@ -12,15 +12,18 @@ class FirebaseChatApi {
       database.reference().child("chatListInfo");
 
   static void createChatRoomInfo(chatRoomId, now, category) {
+    String nowString = now.toString();
     //어차피 today랑 다르면 todayDoneCount를 0으로 초기화시켜줘야한다
     chatMessageInfoRef.child(chatRoomId).child('messageInfo').set({
-      'lastSentTime': now,
+      'lastSentTime': nowString,
       'lastMessage': '',
-      'todayDoneCount':
-          0, //리스너 필요 //이게 있으니까, 굳이 뱃지로 또 새로운 Done을 보여줄 필요는 없다고 보여짐 (한번에 3개의 정보는 너무함. 하루에 몇개 했는지만 보여줘도 충분)
-      'todayContainsDawn': now,
+      'todayDoneCount': 0, //리스너 필요
+      //todayDoneCount 있으니까, 굳이 뱃지로 또 새로운 Done을 보여줄 필요는 없다고 보여짐 (한번에 3개의 정보는 너무함. 하루에 몇개 했는지만 보여줘도 충분)
+      'today': nowString, //그냥 자정되면 리셋되는게맞다... 어차피 주간정보도 있으니
       'totalMessageCount': 0, //for badge
     });
+
+    ///아래의 생각정리를 통해, 위의 내용은 변함없이 유지하기로 함
     //위의 4가지가, 채팅방 업데이트에 필요한 정보
     //이중 todayDoneCount는 검색을 위한 조건,,,,?
     //아! today 대신에 weekly로 좀더 의미있는 정보를 만들자
@@ -30,7 +33,6 @@ class FirebaseChatApi {
     //채팅방 리스트 불러올때마다 두곳에서 불러와야한다.
     //너무나 비효율적이다
     //채팅방리스트 불러올때 한번에 이놈들로만으로도 업데이트된 정보를 다 가져올 수 있다
-
     //여기서 문제는, 동시에 카운트가 증가하는 경우가 발생할 수 있다는 것인데,,,
     //그것은 사실 칭찬할때도 마찬가지 아닌가?
     //그렇다고 칭찬을 현재로서 firestore에 옮길수는 없으니,,,
@@ -39,7 +41,6 @@ class FirebaseChatApi {
     //계속 쌓이는 데이터일때 firestore를 쓴다
     //20000번 쓸때 무료,,,
     //10만번 쓸때
-
     //치명적이지 않은 약간의 버그는 허용하도록 하자
 
     chatSearchInfoRef.child(category).child(chatRoomId).set({
@@ -47,14 +48,19 @@ class FirebaseChatApi {
       'isPassword': false,
       'currentMemberNum': 0,
       'totalDoneCount': 0, //리스너
-      'thisWeek': now,
-      "createdTime": now,
+      'thisWeek': nowString,
+      "createdTime": nowString,
       'weeklyDoneCount': 0,
     });
+
+    ///아래의 생각정리를 통해, 위의 내용은 추후에 firestore로 통합될 수도 있음
     //위의 6가지는 검색 정렬을 위한 조건
     //동시에, 채팅방 입장시 필요한 조건 (totalDoneCount, weeklyDoneCount) but! 클릭할때 각각에 리스너 달아주면 되니까 엄밀히 말하면 필요없다
     //즉, 위의 6가지는 firestore에 있는 것들과 합쳐져도 된다...? NO! => 필요한 것은 count뿐이니 그것에 대해서만 리스너,,,, 못단다...!!!!
     //즉 어차피 firestore로 위의 두 그룹이 옮겨져도 분리되어있는게 더 효율적이다...? No => 사실 읽은 횟수로 치기 때문에 그냥 합치는게 더 좋다
+    //그냥 얘네만 firestore의 정보란으로 옮기는 것도 방법
+    //그런데 여기서,,,!! 채팅방의 카테고리가 변경불가능해진다. 업데이트를 위해서는 plan쪽에서 chatRoom의 category를 알아야한다...
+    //하지만 얘네들은 확실히, 쓰는 경우가 더 많다,,,, 일단 그대로 가자
   }
 
   static void test() async {

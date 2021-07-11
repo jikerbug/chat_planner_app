@@ -1,7 +1,7 @@
 import 'package:chat_planner_app/functions/date_time_function.dart';
 import 'package:chat_planner_app/modules/plan_list.dart';
 import 'package:chat_planner_app/widgets/plan/info_panel.dart';
-import 'plan_category_select.dart';
+import 'plan_chat_room_select.dart';
 import 'package:chat_planner_app/widgets/thin_button.dart';
 import 'package:flutter/material.dart';
 
@@ -106,18 +106,19 @@ class _PlanScreenState extends State<PlanScreen> {
                         showModalBottomSheet(
                           isScrollControlled: true,
                           context: context,
-                          builder: (context) => PlanCategorySelect(
-                            chatRoomCallback: (chatRoomId, chatRoomName) {
-                              setState(() {
-                                selectedChatRoomId = chatRoomId;
-                                selectedChatRoomName = chatRoomName;
-                              });
-                              return 'success';
-                            },
-                          ),
+                          builder: (context) => PlanChatRoomSelect(
+                              chatRoomSelectCallback:
+                                  (chatRoomId, chatRoomName) {
+                                setState(() {
+                                  selectedChatRoomId = chatRoomId;
+                                  selectedChatRoomName = chatRoomName;
+                                });
+                                return 'success';
+                              },
+                              callerScreen: PlanScreen.id),
                         );
                       },
-                      title: '채팅방 - 전체',
+                      title: '채팅방 - $selectedChatRoomName',
                       color: Colors.green,
                     ),
                     Center(

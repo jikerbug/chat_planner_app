@@ -29,6 +29,7 @@ class _ChatSearchBodyState extends State<ChatSearchBody> {
           padding: EdgeInsets.symmetric(horizontal: 10),
           decoration: BoxDecoration(
             color: Colors.white,
+            borderRadius: BorderRadius.all(Radius.circular(10.0)),
           ),
           child: Column(
             children: [

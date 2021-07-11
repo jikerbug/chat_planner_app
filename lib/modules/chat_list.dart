@@ -10,6 +10,10 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class ChatList extends StatefulWidget {
+  //type is chat or plan
+  ChatList({required this.chatRoomSelectCallback, this.type = 'chat'});
+  final Function(String, String) chatRoomSelectCallback;
+  final String type;
   @override
   _ChatListState createState() => _ChatListState();
 }
@@ -34,79 +38,87 @@ class _ChatListState extends State<ChatList> {
   }
 
   Widget getChatRoomTile(box, index, ChatRoomModel item) {
-    String lastSentInfo = '${item.lastDoneMessage}';
+    String lastSentInfo = '${item.lastMessage}';
 
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(20.0)),
-      ),
-      height: 70,
-      child: ListTile(
-        onTap: () {
+    return InkWell(
+      onTap: () {
+        if (widget.type == 'chat') {
           //TODO:이 부분 다시 변경해놓기
           //HiveChatApi.setChatRoomAtLatestListOrder(item.chatRoomId);
           ChatRoomEnterFunctions.chatRoomEnterProcess(
               context, item.chatRoomId, item.title);
-        },
-        leading: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(50.0)),
-            border: Border.all(
-              color: Colors.teal,
-              width: 1.5,
+        } else if (widget.type == 'plan') {
+          widget.chatRoomSelectCallback(item.chatRoomId, item.title);
+          Navigator.pop(context);
+        }
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 10),
+        child: ListTile(
+          leading: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(50.0)),
+              border: Border.all(
+                color: Colors.teal,
+                width: 1.5,
+              ),
+            ),
+            child: CircleAvatar(
+              backgroundColor: Colors.white,
+              child: Text(
+                '${item.todayDoneCount}회',
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.teal),
+              ),
+              radius: 25,
             ),
           ),
-          child: CircleAvatar(
-            backgroundColor: Colors.white,
-            child: Text(
-              '0회',
-              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.teal),
-            ),
-            radius: 25,
-          ),
-        ),
-        title: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  item.title,
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  DateTimeFunction.lastDoneTimeFormatter(item.lastDoneTime),
-                  style: TextStyle(fontSize: 12.0),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 3.0,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  lastSentInfo,
-                  style: TextStyle(fontSize: 13.0),
-                ),
-                Badge(
-                  toAnimate: false,
-                  position: BadgePosition.topStart(),
-                  badgeContent: Text(
-                    '3',
-                    style: TextStyle(color: Colors.white),
+          title: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    item.title,
+                    style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  child: Text(
-                    '    ',
+                  Text(
+                    DateTimeFunction.lastDoneTimeFormatter(item.lastSentTime),
+                    style: TextStyle(fontSize: 12.0),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 3.0,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    lastSentInfo,
                     style: TextStyle(fontSize: 13.0),
                   ),
-                ),
-              ],
-            ),
-          ],
+                  Badge(
+                    showBadge: (item.totalMessageCount == item.readMessageCount)
+                        ? false
+                        : true,
+                    toAnimate: false,
+                    position: BadgePosition.topStart(),
+                    badgeContent: Text(
+                      '${item.totalMessageCount - item.readMessageCount}',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    child: Text(
+                      '    ',
+                      style: TextStyle(fontSize: 13.0),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -36,11 +36,9 @@ class _InfoPanelState extends State<InfoPanel> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Padding(
-              padding: EdgeInsets.only(
-                top: 16.0,
-                bottom: 16.0,
-              ),
+            Container(
+              height: AppBar().preferredSize.height,
+              alignment: Alignment.center,
               child: (isRewardDisplaySetting)
                   ? Text(
                       '보상에 76% 도달',

@@ -16,7 +16,7 @@ class ChatListScreen extends StatefulWidget {
 }
 
 class _ChatListScreenState extends State<ChatListScreen> {
-  final List<String> texts = ['전체', '공부', '운동', '독서', '생활습관'];
+  final List<String> texts = ['전체', '공부', '운동', '독서', '생활습관', '생활습관'];
 
   @override
   void initState() {
@@ -47,12 +47,14 @@ class _ChatListScreenState extends State<ChatListScreen> {
         InfoPanel('reward'),
         ChatCategoryHeader(texts: texts),
         Expanded(
-          child: Container(
-            padding: EdgeInsets.all(10),
+          child: Ink(
             decoration: BoxDecoration(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(10.0)),
               color: Colors.white,
             ),
-            child: ChatList(),
+            child: ChatList(
+              chatRoomSelectCallback: (no, meaning) {},
+            ),
           ),
         ),
       ],

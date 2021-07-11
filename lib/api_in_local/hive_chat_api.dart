@@ -5,17 +5,34 @@ import 'package:hive/hive.dart';
 class HiveChatApi {
   //  static final _box = Hive.box<ChatRoomModel>('chatRoom' + User().userId);
   static final _box = Hive.box<ChatRoomModel>('chatRoom');
+
+  static void addUserSelfChat(userId) {
+    DateTime now = DateTime.now();
+    addChatRoom(
+        chatRoomId: userId,
+        title: '나와의 채팅',
+        category: '나',
+        lastSentTime: now,
+        lastMessage: '채팅방 생성',
+        totalMessageCount: 0,
+        todayDoneCount: 0,
+        today: now);
+  }
+
   static Future<void> addChatRoom({
     required chatRoomId,
     required title,
     required category,
-    required lastDoneTime,
-    required lastDoneMessage,
+    required lastSentTime,
+    required lastMessage,
+    required totalMessageCount,
+    required todayDoneCount,
+    required today,
   }) async {
     int id = 0;
 
     if (_box.isNotEmpty) {
-      final prevItem = _box.getAt(_box.length - 1);
+      final prevItem = _box.get(_box.length - 1);
 
       if (prevItem != null) {
         id = prevItem.id + 1;
@@ -28,16 +45,22 @@ class HiveChatApi {
         chatRoomId: chatRoomId,
         title: title,
         category: category,
-        lastDoneTime: lastDoneTime,
-        lastDoneMessage: lastDoneMessage));
+        lastSentTime: lastSentTime,
+        lastMessage: lastMessage,
+        totalMessageCount: totalMessageCount,
+        readMessageCount: totalMessageCount,
+        todayDoneCount: todayDoneCount,
+        today: today,
+        createUser: User().userId));
   }
 
   static void exitChatRoom(chatRoomId) {
     bool controller = true;
+    //TODO 이거 삭제할때 좀 문제 있는듯,,,,
     int index = 0;
     _box.values.forEach((ChatRoomModel element) {
       if (element.chatRoomId == chatRoomId && controller) {
-        _box.deleteAt(index);
+        _box.delete(index);
         controller = false;
       }
       index++;
@@ -91,8 +114,13 @@ class HiveChatApi {
         chatRoomId: (fieldName == 'chatRoomId') ? value : item.chatRoomId,
         title: (fieldName == 'title') ? value : item.title,
         category: (fieldName == 'category') ? value : item.category,
-        lastDoneTime: (fieldName == 'lastDoneTime') ? value : item.lastDoneTime,
-        lastDoneMessage:
-            (fieldName == 'lastDoneMessage') ? value : item.lastDoneMessage);
+        lastSentTime: (fieldName == 'lastDoneTime') ? value : item.lastSentTime,
+        lastMessage:
+            (fieldName == 'lastDoneMessage') ? value : item.lastMessage,
+        totalMessageCount: item.totalMessageCount,
+        readMessageCount: item.readMessageCount,
+        todayDoneCount: item.todayDoneCount,
+        today: item.today,
+        createUser: item.createUser);
   }
 }
