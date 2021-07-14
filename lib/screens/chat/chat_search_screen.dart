@@ -7,6 +7,7 @@ import 'package:chat_planner_app/widgets/chat/chat_category_header.dart';
 import 'package:chat_planner_app/widgets/chat/chat_search_body.dart';
 import 'package:chat_planner_app/widgets/chat/search_panel.dart';
 import 'package:chat_planner_app/constants.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import 'chat_add_screen.dart';
@@ -18,26 +19,16 @@ class ChatSearchScreen extends StatefulWidget {
   _ChatSearchScreenState createState() => _ChatSearchScreenState();
 }
 
-class _ChatSearchScreenState extends State<ChatSearchScreen> {
+class _ChatSearchScreenState extends State<ChatSearchScreen>
+    with TickerProviderStateMixin {
   final List<String> texts = ['공부', '운동', '독서', '취미', '생활습관', '커스텀'];
   bool isDoneSort = true;
   bool isCreatedTimeSort = false;
+  String selectedCategory = '공부';
+  String selectedRankCriteria = '';
 
   @override
   Widget build(BuildContext context) {
-    final List<ChatRoom> chatRooms = [
-      ChatRoom(
-        serverId: User().userId,
-        lastMessageTime: DateTime.now(),
-        name: "기상인증 모여라",
-      ),
-      ChatRoom(
-        serverId: 'test_friend',
-        lastMessageTime: DateTime.now(),
-        name: "친구방",
-      ),
-    ];
-
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -97,38 +88,31 @@ class _ChatSearchScreenState extends State<ChatSearchScreen> {
           ),
           body: TabBarView(
             children: [
-              FutureBuilder(
-                  future: FirebaseChatApi.test('공부'),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return Column(
-                        children: [
-                          ChatCategoryHeader(texts: texts),
-                          ChatSearchBody(chatRooms: chatRooms),
-                        ],
-                      );
-                    } else {
-                      return buildLoading();
-                    }
-                  }),
-              FutureBuilder(
-                  future: test(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return Column(
-                        children: [
-                          ChatCategoryHeader(texts: texts),
-                          ChatSearchBody(chatRooms: chatRooms),
-                        ],
-                      );
-                    } else {
-                      return buildLoading();
-                    }
-                  }),
               Column(
                 children: [
-                  ChatCategoryHeader(texts: texts),
-                  ChatSearchBody(chatRooms: chatRooms),
+                  ChatCategoryHeader(
+                    texts: texts,
+                    selectCategoryCallback: (selectedCategory) {
+                      setState(() {
+                        this.selectedCategory = selectedCategory;
+                      });
+                    },
+                  ),
+                  getDifferentCriteriaList(selectedCategory, 'createdTime'),
+                ],
+              ),
+              Column(
+                children: [
+                  ChatCategoryHeader(
+                      texts: texts, selectCategoryCallback: () {}),
+                  getDifferentCriteriaList(selectedCategory, 'weeklyDoneCount'),
+                ],
+              ),
+              Column(
+                children: [
+                  ChatCategoryHeader(
+                      texts: texts, selectCategoryCallback: () {}),
+                  getDifferentCriteriaList(selectedCategory, 'totalDoneCount'),
                 ],
               ),
             ],
@@ -144,7 +128,34 @@ class _ChatSearchScreenState extends State<ChatSearchScreen> {
   }
 }
 
-Widget buildLoading() => Container(
-      color: Colors.white,
-      child: Center(child: CircularProgressIndicator()),
+Widget getDifferentCriteriaList(selectedCategory, criteria) => FutureBuilder(
+    future: FirebaseChatApi.getChatInfoList(selectedCategory, criteria),
+    builder: (context, snapshot) {
+      if (snapshot.hasData) {
+        List chatInfoList = snapshot.data as List;
+        final List<ChatRoom> chatRooms = [];
+        for (Map chatInfo in chatInfoList) {
+          chatRooms.add(ChatRoom(
+            chatRoomId: chatInfo['chatRoomId'],
+            chatRoomTitle: chatInfo['chatRoomTitle'],
+            weeklyDoneCount: chatInfo['weeklyDoneCount'],
+            totalDoneCount: chatInfo['totalDoneCount'],
+            createdTime: chatInfo['createdTime'],
+            createUser: chatInfo['createUser'],
+            description: chatInfo['description'],
+            currentMemberNum: 1,
+            maxMemberNum: 15,
+            password: chatInfo['password'],
+          ));
+        }
+        return ChatSearchBody(chatRooms: chatRooms);
+      } else {
+        return buildLoading();
+      }
+    });
+Widget buildLoading() => Expanded(
+      child: Container(
+        color: Colors.white,
+        child: Center(child: CircularProgressIndicator()),
+      ),
     );

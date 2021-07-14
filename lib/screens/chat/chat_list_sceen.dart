@@ -28,24 +28,14 @@ class _ChatListScreenState extends State<ChatListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final List<ChatRoom> chatRooms = [
-      ChatRoom(
-        serverId: User().userId,
-        lastMessageTime: DateTime.now(),
-        name: "나와의 채팅",
-      ),
-      ChatRoom(
-        serverId: 'test_friend',
-        lastMessageTime: DateTime.now(),
-        name: "친구방",
-      ),
-    ];
-
     return SafeArea(
         child: Column(
       children: [
         InfoPanel('reward'),
-        ChatCategoryHeader(texts: texts),
+        ChatCategoryHeader(
+          texts: texts,
+          selectCategoryCallback: () {},
+        ),
         Expanded(
           child: Ink(
             decoration: BoxDecoration(

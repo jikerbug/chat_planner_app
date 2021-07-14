@@ -3,7 +3,11 @@ import 'package:flutter/material.dart';
 class ChatCategoryHeader extends StatefulWidget {
   final List<String> texts;
   final Color color;
-  const ChatCategoryHeader({required this.texts, this.color = Colors.white});
+  final Function selectCategoryCallback;
+  const ChatCategoryHeader(
+      {required this.texts,
+      required this.selectCategoryCallback,
+      this.color = Colors.white});
 
   @override
   _ChatCategoryHeaderState createState() => _ChatCategoryHeaderState();
@@ -42,6 +46,7 @@ class _ChatCategoryHeaderState extends State<ChatCategoryHeader> {
                   setState(() {
                     selectedGroup = text;
                   });
+                  widget.selectCategoryCallback(text);
                 },
                 child: Container(
                   constraints: BoxConstraints(

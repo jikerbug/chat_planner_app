@@ -16,9 +16,9 @@ class FireStoreApi {
         DateFormat('yyyy-MM-dd').format(now.subtract(Duration(days: 1)));
 
     DocumentReference dr = await _fireStore.collection('chatRooms').add({
-      "chatRoomTitle": chatRoomTitle,
+      "chatRoomTitle": chatRoomTitle, //검색할때는 어쨌든 Firestore로 해야한다
       "description": description,
-      // "lastSentDate": sendDateFormatted, 이거 어차피 lastSentTime으로 대체가능
+      "lastSentDate": sendDateFormatted, //이거 어차피 lastSentTime으로 대체가능
       "createUser": User().userId,
       "category": category,
       "password": password,
@@ -47,6 +47,12 @@ class FireStoreApi {
 
     FireStoreSendPrebuiltMsgApi.createChatRoomWhenFirstRegistered(
         userId, sendDate, sendDateFormatted);
+  }
+
+  static Future<Map> getChatRoomDetailInfoMap(String chatRoomId) async {
+    DocumentSnapshot ds =
+        await _fireStore.collection('chatRooms').doc(chatRoomId).get();
+    return ds.data() as Map;
   }
 
   static Future<void> sendDateBubbleIfLastSentDateIsNotToday(

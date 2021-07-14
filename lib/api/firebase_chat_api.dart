@@ -1,6 +1,8 @@
 import 'package:chat_planner_app/functions/date_time_function.dart';
 import 'package:firebase_database/firebase_database.dart';
 
+import 'firestore_api.dart';
+
 class FirebaseChatApi {
   //리스너를 단 놈들은 어차피 따로 fetch가 되기 때문에, userInfo와 따로 구성함
 
@@ -63,26 +65,44 @@ class FirebaseChatApi {
     //하지만 얘네들은 확실히, 쓰는 경우가 더 많다,,,, 일단 그대로 가자
   }
 
-  static Future<void> test(category) async {
-    List<int> rankList = [];
+  static Future<List> getChatInfoList(category, criteria) async {
+    List<Map> chatInfoList = [];
 
     final rankHashMap = (await chatSearchInfoRef
             .child(category)
-            .orderByChild('totalDoneCount')
+            .orderByChild(criteria)
             .limitToLast(2)
             .once())
         .value;
 
+    if (rankHashMap == null) {
+      return [];
+    }
+
     final convertedMap = Map<String, dynamic>.from(rankHashMap);
-    convertedMap.forEach((key, value) {
-      FirebaseChatApi.
+    // print(convertedMap);
+
+    List<String> chatRoomIdList = [];
+    List<Map> chatRoomIdRankInfoList = [];
+    convertedMap.forEach((key, value) async {
+      chatRoomIdList.add(key);
+      chatRoomIdRankInfoList.add(value);
     });
 
-    rankList.sort();
-    rankList = List.from(rankList.reversed);
+    for (int i = 0; i < chatRoomIdList.length; i++) {
+      Map chatRoomDetailInfoMap =
+          await FireStoreApi.getChatRoomDetailInfoMap(chatRoomIdList[i]);
+      print(chatRoomDetailInfoMap);
 
-    print(rankHashMap);
-    return rankHashMap;
+      chatRoomIdRankInfoList[i].addAll(chatRoomDetailInfoMap);
+      chatRoomIdRankInfoList[i].addAll({
+        'chatRoomId': chatRoomIdList[i],
+      });
+      chatInfoList.add(chatRoomIdRankInfoList[i]);
+    }
+
+    print(chatInfoList);
+    return chatInfoList;
   }
 
   static void createChatRoomUserInfo(chatRoomId, userId) {
