@@ -16,13 +16,21 @@ class FireStoreApi {
         DateFormat('yyyy-MM-dd').format(now.subtract(Duration(days: 1)));
 
     DocumentReference dr = await _fireStore.collection('chatRooms').add({
+      'category': category,
+      "password": password,
+      'totalDoneCount': 0, //리스너
+      'thisWeek': now, //리스너
+      "createdTime": now,
+      'weeklyDoneCount': 0,
+      "maxMemberNum": maxMemberNum,
+      "memberList": [User().userId],
+      "isFull": false,
+      "lastSentDate": sendDateFormatted, //이거 어차피 lastSentTime으로 대체가능
+      //아래의 3가지 빼고는 전부 채팅방 입장시 항상 활용하는 것들이다
+      //사실 chatRoomTitle빼고 다네,,,, 그냥 합치는게 좋겠다
       "chatRoomTitle": chatRoomTitle, //검색할때는 어쨌든 Firestore로 해야한다
       "description": description,
-      "lastSentDate": sendDateFormatted, //이거 어차피 lastSentTime으로 대체가능
-      "createUser": User().userId,
-      "category": category,
-      "password": password,
-      "maxMemberNum": maxMemberNum,
+      "createUser": User().nickname,
     });
 
     ///주의!!!! lastSentDate는 메시지 버블을 위한 것이다
@@ -53,6 +61,14 @@ class FireStoreApi {
     DocumentSnapshot ds =
         await _fireStore.collection('chatRooms').doc(chatRoomId).get();
     return ds.data() as Map;
+  }
+
+  static Query getChatRoomsQuery(String category, String criteria) {
+    criteria = 'chatRoomTitle';
+    return _fireStore
+        .collection('chatRooms')
+        // .orderBy(criteria)
+        .where('category', isEqualTo: category);
   }
 
   static Future<void> sendDateBubbleIfLastSentDateIsNotToday(

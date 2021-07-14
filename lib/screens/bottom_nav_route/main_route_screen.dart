@@ -34,6 +34,7 @@ class _MainRouteScreenState extends State<MainRouteScreen> {
     User user = User();
     userId = widget.userInfo['userId'];
     user.setUserId(userId);
+    user.setNickname('열공지백');
   }
 
   @override

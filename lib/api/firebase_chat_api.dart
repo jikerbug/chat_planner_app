@@ -23,7 +23,7 @@ class FirebaseChatApi {
       //todayDoneCount 있으니까, 굳이 뱃지로 또 새로운 Done을 보여줄 필요는 없다고 보여짐 (한번에 3개의 정보는 너무함. 하루에 몇개 했는지만 보여줘도 충분)
       'today': nowString, //그냥 자정되면 리셋되는게맞다... 어차피 주간정보도 있으니
       'totalMessageCount': 0, //for badge
-      'currentMemberNum': 0,
+      'currentMemberNum': 1,
     });
 
     ///아래의 생각정리를 통해, 위의 내용은 변함없이 유지하기로 함
@@ -45,15 +45,6 @@ class FirebaseChatApi {
     //20000번 쓸때 무료,,,
     //10만번 쓸때
     //치명적이지 않은 약간의 버그는 허용하도록 하자
-
-    chatSearchInfoRef.child(category).child(chatRoomId).set({
-      'isPassword': false,
-      'isFull': false,
-      'totalDoneCount': 0, //리스너
-      'thisWeek': nowString, //리스너
-      "createdTime": nowString,
-      'weeklyDoneCount': 0,
-    });
 
     ///아래의 생각정리를 통해, 위의 내용은 추후에 firestore로 통합될 수도 있음
     //위의 6가지는 검색 정렬을 위한 조건

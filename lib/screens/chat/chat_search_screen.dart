@@ -1,14 +1,18 @@
 import 'dart:io';
 
 import 'package:chat_planner_app/api/firebase_chat_api.dart';
+import 'package:chat_planner_app/api/firestore_api.dart';
+import 'package:chat_planner_app/functions/date_time_function.dart';
 import 'package:chat_planner_app/models/chat_room.dart';
 import 'package:chat_planner_app/models_singleton/user.dart';
 import 'package:chat_planner_app/widgets/chat/chat_category_header.dart';
+import 'package:chat_planner_app/widgets/chat/chat_room_tile.dart';
 import 'package:chat_planner_app/widgets/chat/chat_search_body.dart';
 import 'package:chat_planner_app/widgets/chat/search_panel.dart';
 import 'package:chat_planner_app/constants.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:paginate_firestore/paginate_firestore.dart';
 
 import 'chat_add_screen.dart';
 
@@ -98,21 +102,19 @@ class _ChatSearchScreenState extends State<ChatSearchScreen>
                       });
                     },
                   ),
-                  getDifferentCriteriaList(selectedCategory, 'createdTime'),
+                  getChatRoomList(selectedCategory, 'createdTime')
                 ],
               ),
               Column(
                 children: [
                   ChatCategoryHeader(
                       texts: texts, selectCategoryCallback: () {}),
-                  getDifferentCriteriaList(selectedCategory, 'weeklyDoneCount'),
                 ],
               ),
               Column(
                 children: [
                   ChatCategoryHeader(
                       texts: texts, selectCategoryCallback: () {}),
-                  getDifferentCriteriaList(selectedCategory, 'totalDoneCount'),
                 ],
               ),
             ],
@@ -121,38 +123,38 @@ class _ChatSearchScreenState extends State<ChatSearchScreen>
       ),
     );
   }
-
-  Future<String> test() async {
-    await Future.delayed(Duration(seconds: 3));
-    return 'good';
-  }
 }
 
-Widget getDifferentCriteriaList(selectedCategory, criteria) => FutureBuilder(
-    future: FirebaseChatApi.getChatInfoList(selectedCategory, criteria),
-    builder: (context, snapshot) {
-      if (snapshot.hasData) {
-        List chatInfoList = snapshot.data as List;
-        final List<ChatRoom> chatRooms = [];
-        for (Map chatInfo in chatInfoList) {
-          chatRooms.add(ChatRoom(
-            chatRoomId: chatInfo['chatRoomId'],
-            chatRoomTitle: chatInfo['chatRoomTitle'],
-            weeklyDoneCount: chatInfo['weeklyDoneCount'],
-            totalDoneCount: chatInfo['totalDoneCount'],
-            createdTime: chatInfo['createdTime'],
-            createUser: chatInfo['createUser'],
-            description: chatInfo['description'],
-            currentMemberNum: 1,
-            maxMemberNum: 15,
-            password: chatInfo['password'],
-          ));
-        }
-        return ChatSearchBody(chatRooms: chatRooms);
-      } else {
-        return buildLoading();
-      }
-    });
+Widget getChatRoomList(selectedCategory, criteria) => PaginateFirestore(
+      key: Key(selectedCategory),
+      physics: BouncingScrollPhysics(),
+      itemsPerPage: 7,
+      shrinkWrap: true,
+      reverse: true,
+      //item builder type is compulsory.
+      itemBuilderType: PaginateBuilderType.listView, //Change types accordingly
+      itemBuilder: (index, context, documentSnapshot) {
+        Map chatInfo = documentSnapshot.data() as Map;
+
+        return Text(chatInfo['chatRoomTitle']);
+        return ChatRoomTile(ChatRoom(
+          chatRoomId: chatInfo['chatRoomId'],
+          chatRoomTitle: chatInfo['chatRoomTitle'],
+          weeklyDoneCount: chatInfo['weeklyDoneCount'],
+          totalDoneCount: chatInfo['totalDoneCount'],
+          createdTime: chatInfo['createdTime'],
+          createUser: chatInfo['createUser'],
+          description: chatInfo['description'],
+          currentMemberNum: chatInfo['memberList'].length,
+          maxMemberNum: chatInfo['maxMemberNum'],
+          password: chatInfo['password'],
+        ));
+      },
+// orderBy is compulsory to enable pagination
+      query: FireStoreApi.getChatRoomsQuery(selectedCategory, criteria),
+// to fetch real-time data
+      isLive: true,
+    );
 Widget buildLoading() => Expanded(
       child: Container(
         color: Colors.white,
