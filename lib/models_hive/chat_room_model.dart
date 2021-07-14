@@ -37,17 +37,20 @@ class ChatRoomModel {
   @HiveField(10)
   final String createUser;
 
-  ChatRoomModel({
-    required this.id,
-    required this.chatRoomId,
-    required this.title,
-    required this.category,
-    required this.lastSentTime,
-    required this.lastMessage,
-    required this.readMessageCount,
-    required this.totalMessageCount,
-    required this.todayDoneCount,
-    required this.today,
-    required this.createUser,
-  });
+  @HiveField(11)
+  final int currentMemberNum;
+
+  ChatRoomModel(
+      {required this.id,
+      required this.chatRoomId,
+      required this.title,
+      required this.category,
+      required this.lastSentTime,
+      required this.lastMessage,
+      required this.readMessageCount,
+      required this.totalMessageCount,
+      required this.todayDoneCount,
+      required this.today,
+      required this.createUser,
+      required this.currentMemberNum});
 }

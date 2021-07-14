@@ -66,7 +66,7 @@ class DateTimeFunction {
     }
   }
 
-  static String lastDoneTimeFormatter(DateTime lastDoneTime) {
+  static String lastSentTimeFormatter(DateTime lastDoneTime) {
     if (isSameDate(lastDoneTime.toString(), DateTime.now().toString())) {
       int minute = lastDoneTime.minute;
       String minuteString = '';

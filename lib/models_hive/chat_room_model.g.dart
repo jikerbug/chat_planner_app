@@ -28,13 +28,14 @@ class ChatRoomModelAdapter extends TypeAdapter<ChatRoomModel> {
       todayDoneCount: fields[8] as int,
       today: fields[9] as DateTime,
       createUser: fields[10] as String,
+      currentMemberNum: fields[11] as int,
     );
   }
 
   @override
   void write(BinaryWriter writer, ChatRoomModel obj) {
     writer
-      ..writeByte(11)
+      ..writeByte(12)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -56,7 +57,9 @@ class ChatRoomModelAdapter extends TypeAdapter<ChatRoomModel> {
       ..writeByte(9)
       ..write(obj.today)
       ..writeByte(10)
-      ..write(obj.createUser);
+      ..write(obj.createUser)
+      ..writeByte(11)
+      ..write(obj.currentMemberNum);
   }
 
   @override

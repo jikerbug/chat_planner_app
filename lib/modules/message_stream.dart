@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:chat_planner_app/api/firestore_api.dart';
-import 'package:chat_planner_app/functions/util_function.dart';
 import 'package:chat_planner_app/widgets/chat/chat_screen/bubble.dart';
 import 'package:paginate_firestore/paginate_firestore.dart';
 
@@ -140,20 +139,18 @@ class MessageStream extends StatelessWidget {
 
           String sender = data['sender'];
 
-          sender = ('guide' != sender) ? friendNickname : sender;
-
           return Bubble(
-              text: data['text'],
-              sender: sender,
-              type: data['type'],
-              isMe: isMe,
-              time: timeline,
-              topLeftRadius: Radius.circular(19.0),
-              topRightRadius: Radius.circular(19.0),
-              isFirstTimeline: isFirstTimeline,
-              isLastTimeline: isLastTimeline,
-              isLastMessage: isLastMessage,
-              friendProfileUrl: friendProfileUrl);
+            text: data['text'],
+            sender: sender,
+            type: data['type'],
+            isMe: isMe,
+            time: timeline,
+            topLeftRadius: Radius.circular(19.0),
+            topRightRadius: Radius.circular(19.0),
+            isFirstTimeline: isFirstTimeline,
+            isLastTimeline: isLastTimeline,
+            isLastMessage: isLastMessage,
+          );
         },
 // orderBy is compulsory to enable pagination
         query: FireStoreApi.getMessagesQuery(chatRoomId),

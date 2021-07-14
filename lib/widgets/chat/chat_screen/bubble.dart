@@ -14,8 +14,7 @@ class Bubble extends StatefulWidget {
       required this.topRightRadius,
       required this.isFirstTimeline,
       required this.isLastTimeline,
-      required this.isLastMessage,
-      required this.friendProfileUrl});
+      required this.isLastMessage});
 
   final String text;
   final String sender;
@@ -27,7 +26,6 @@ class Bubble extends StatefulWidget {
   final bool isFirstTimeline;
   final bool isLastTimeline;
   final bool isLastMessage;
-  final String friendProfileUrl;
 
   @override
   _BubbleState createState() => _BubbleState();
@@ -45,8 +43,7 @@ class _BubbleState extends State<Bubble> {
 
     if (widget.type == 'guide' ||
         widget.type == 'add' ||
-        widget.type == 'chat' ||
-        widget.type == 'gift') {
+        widget.type == 'chat') {
       Color chatColor;
       Color fontColor;
       if (widget.type == 'add') {
@@ -84,41 +81,14 @@ class _BubbleState extends State<Bubble> {
                             style: TextStyle(fontSize: 12.0),
                           ),
                         ]
-                      : (widget.friendProfileUrl == '' ||
-                              widget.friendProfileUrl == "no_profile_image")
-                          ? [
-                              Icon(Icons.accessibility,
-                                  size: 24.0, color: Colors.black),
-                              Text(
-                                widget.sender,
-                                style: TextStyle(fontSize: 12.0),
-                              ),
-                            ]
-                          : [
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  GestureDetector(
-                                      child: CircleAvatar(
-                                          radius: 20.0,
-                                          backgroundColor: Colors.white,
-                                          backgroundImage: NetworkImage(
-                                              widget.friendProfileUrl)),
-                                      onTap: () {
-                                        Navigator.pushNamed(
-                                            context, ProfileViewScreen.id,
-                                            arguments: {
-                                              'profileUrl':
-                                                  widget.friendProfileUrl
-                                            });
-                                      }),
-                                  Text(
-                                    widget.sender,
-                                    style: TextStyle(fontSize: 12.0),
-                                  ),
-                                ],
-                              )
-                            ],
+                      : [
+                          Icon(Icons.accessibility,
+                              size: 24.0, color: Colors.black),
+                          Text(
+                            widget.sender,
+                            style: TextStyle(fontSize: 12.0),
+                          )
+                        ],
             ),
             if (widget.type == 'add') ...[
               Material(
@@ -130,15 +100,6 @@ class _BubbleState extends State<Bubble> {
                   //해당 이미지는 저작권 문제 없기는 하지만 약간의 조건이 있는듯하다
                   //참고링크 : https://www.freepik.com/free-vector/hand-drawn-pinky-promise-concept_2721746.htm#page=2&query=promise&position=34
                 ),
-              ),
-            ] else if (widget.type == 'gift') ...[
-              Material(
-                child: Image.asset(
-                  "images/gift_1.png",
-                  scale: 2.0,
-                ),
-                //해당 이미지는 저작권 문제 없기는 하지만 약간의 조건이 있는듯하다
-                //참고링크 : https://www.freepik.com/free-vector/hand-drawn-pinky-promise-concept_2721746.htm#page=2&query=promise&position=34
               ),
             ],
             Padding(
@@ -195,11 +156,6 @@ class _BubbleState extends State<Bubble> {
                     ),
                   ]),
             ),
-            if (widget.isLastMessage) ...[
-              SizedBox(
-                height: 5.5,
-              ),
-            ]
           ],
         ),
       );
@@ -232,40 +188,14 @@ class _BubbleState extends State<Bubble> {
             Row(
               children: widget.isMe || !widget.isFirstTimeline
                   ? []
-                  : (widget.friendProfileUrl == '' ||
-                          widget.friendProfileUrl == "no_profile_image")
-                      ? [
-                          Icon(Icons.accessibility,
-                              size: 24.0, color: Colors.black),
-                          Text(
-                            widget.sender,
-                            style: TextStyle(fontSize: 12.0),
-                          ),
-                        ]
-                      : [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              GestureDetector(
-                                  child: CircleAvatar(
-                                      radius: 20.0,
-                                      backgroundColor: Colors.white,
-                                      backgroundImage: NetworkImage(
-                                          widget.friendProfileUrl)),
-                                  onTap: () {
-                                    Navigator.pushNamed(
-                                        context, ProfileViewScreen.id,
-                                        arguments: {
-                                          'profileUrl': widget.friendProfileUrl
-                                        });
-                                  }),
-                              Text(
-                                widget.sender,
-                                style: TextStyle(fontSize: 12.0),
-                              ),
-                            ],
-                          )
-                        ],
+                  : [
+                      Icon(Icons.accessibility,
+                          size: 24.0, color: Colors.black),
+                      Text(
+                        widget.sender,
+                        style: TextStyle(fontSize: 12.0),
+                      ),
+                    ],
             ),
             Padding(
               padding: EdgeInsets.symmetric(
@@ -365,44 +295,16 @@ class _BubbleState extends State<Bubble> {
               Padding(
                 padding: EdgeInsets.all(10.0),
                 child: Row(
-                  children: widget.isMe
-                      ? []
-                      : (widget.friendProfileUrl == '' ||
-                              widget.friendProfileUrl == "no_profile_image")
-                          ? [
-                              Icon(Icons.accessibility,
-                                  size: 24.0, color: Colors.black),
-                              Text(
-                                widget.sender,
-                                style: TextStyle(fontSize: 12.0),
-                              ),
-                            ]
-                          : [
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  GestureDetector(
-                                      child: CircleAvatar(
-                                          radius: 20.0,
-                                          backgroundColor: Colors.white,
-                                          backgroundImage: NetworkImage(
-                                              widget.friendProfileUrl)),
-                                      onTap: () {
-                                        Navigator.pushNamed(
-                                            context, ProfileViewScreen.id,
-                                            arguments: {
-                                              'profileUrl':
-                                                  widget.friendProfileUrl
-                                            });
-                                      }),
-                                  Text(
-                                    widget.sender,
-                                    style: TextStyle(fontSize: 12.0),
-                                  ),
-                                ],
-                              )
-                            ],
-                ),
+                    children: widget.isMe
+                        ? []
+                        : [
+                            Icon(Icons.accessibility,
+                                size: 24.0, color: Colors.black),
+                            Text(
+                              widget.sender,
+                              style: TextStyle(fontSize: 12.0),
+                            ),
+                          ]),
               ),
               Column(
                 children: [

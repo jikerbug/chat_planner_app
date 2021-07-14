@@ -16,7 +16,7 @@ class ChatListScreen extends StatefulWidget {
 }
 
 class _ChatListScreenState extends State<ChatListScreen> {
-  final List<String> texts = ['전체', '공부', '운동', '독서', '생활습관', '생활습관'];
+  final List<String> texts = ['전체', '공부', '운동', '독서', '생활습관', '커스텀'];
 
   @override
   void initState() {

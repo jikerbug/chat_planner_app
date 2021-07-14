@@ -129,6 +129,9 @@ class _ChatScreenState extends State<ChatScreen> {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: <Widget>[
             messageStream,
+            SizedBox(
+              height: 5.5,
+            ),
             MessageSender(
               userId: userId,
               friendUserId: friendUserId,
@@ -136,7 +139,7 @@ class _ChatScreenState extends State<ChatScreen> {
               scrollDownCallback: () {
                 messageStream.scrollDown();
               },
-            )
+            ),
           ],
         ),
       ),

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:chat_planner_app/api/firebase_chat_api.dart';
 import 'package:chat_planner_app/models/chat_room.dart';
 import 'package:chat_planner_app/models_singleton/user.dart';
 import 'package:chat_planner_app/widgets/chat/chat_category_header.dart';
@@ -96,12 +97,20 @@ class _ChatSearchScreenState extends State<ChatSearchScreen> {
           ),
           body: TabBarView(
             children: [
-              Column(
-                children: [
-                  ChatCategoryHeader(texts: texts),
-                  ChatSearchBody(chatRooms: []),
-                ],
-              ),
+              FutureBuilder(
+                  future: FirebaseChatApi.test('공부'),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Column(
+                        children: [
+                          ChatCategoryHeader(texts: texts),
+                          ChatSearchBody(chatRooms: chatRooms),
+                        ],
+                      );
+                    } else {
+                      return buildLoading();
+                    }
+                  }),
               FutureBuilder(
                   future: test(),
                   builder: (context, snapshot) {

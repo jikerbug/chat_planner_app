@@ -214,7 +214,7 @@ class _ChatAddScreenState extends State<ChatAddScreen> {
                                   FirebaseChatApi.createChatRoomInfo(
                                       chatRoomId, now, category);
                                   HiveChatApi.addChatRoom(
-                                    chatRoomId: chatRoomTitle,
+                                    chatRoomId: chatRoomId,
                                     title: chatRoomTitle,
                                     category: category,
                                     lastSentTime: now,

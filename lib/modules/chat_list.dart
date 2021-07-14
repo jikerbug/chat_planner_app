@@ -38,8 +38,6 @@ class _ChatListState extends State<ChatList> {
   }
 
   Widget getChatRoomTile(box, index, ChatRoomModel item) {
-    String lastSentInfo = '${item.lastMessage}';
-
     return InkWell(
       onTap: () {
         if (widget.type == 'chat') {
@@ -78,15 +76,34 @@ class _ChatListState extends State<ChatList> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    item.title,
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Flexible(
+                          child: Text(
+                            item.title,
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 3.0,
+                        ),
+                        Text(
+                          item.currentMemberNum.toString(),
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: Colors.grey[600],
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13.0),
+                        ),
+                      ],
+                    ),
                   ),
                   Text(
-                    DateTimeFunction.lastDoneTimeFormatter(item.lastSentTime),
-                    style: TextStyle(fontSize: 12.0),
+                    DateTimeFunction.lastSentTimeFormatter(item.lastSentTime),
+                    style: TextStyle(fontSize: 13.0),
                   ),
                 ],
               ),
@@ -97,7 +114,7 @@ class _ChatListState extends State<ChatList> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    lastSentInfo,
+                    item.lastMessage,
                     style: TextStyle(fontSize: 13.0),
                   ),
                   Badge(

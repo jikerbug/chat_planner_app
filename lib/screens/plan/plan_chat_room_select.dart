@@ -1,11 +1,9 @@
-import 'package:chat_planner_app/models_singleton/user.dart';
 import 'package:chat_planner_app/modules/chat_list.dart';
-import 'package:chat_planner_app/modules/chat_list_for_plan.dart';
 import 'package:chat_planner_app/providers/data.dart';
+import 'package:chat_planner_app/screens/chat/chat_add_screen.dart';
 import 'package:chat_planner_app/screens/chat/chat_search_screen.dart';
 import 'package:chat_planner_app/screens/plan/plan_add_screen.dart';
 import 'package:chat_planner_app/screens/plan/plan_screen.dart';
-import 'package:chat_planner_app/widgets/circle_border_box.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -33,24 +31,47 @@ class _PlanChatRoomSelectState extends State<PlanChatRoomSelect> {
                 categoryHeaderTile(
                   title: '공유 채팅방',
                   color: Colors.green,
-                  onPressed: () {
-                    if (widget.callerScreen == PlanScreen.id) {
-                      BuildContext mainRouteContext =
-                          Provider.of<Data>(context, listen: false)
-                              .mainRouteContext;
-                      Navigator.push(
-                        mainRouteContext,
-                        CupertinoPageRoute(
-                          builder: (BuildContext context) => ChatSearchScreen(),
-                        ),
-                      );
-                    } else if (widget.callerScreen == PlanAddScreen.id) {
-                      Navigator.push(
-                        context,
-                        CupertinoPageRoute(
-                          builder: (BuildContext context) => ChatSearchScreen(),
-                        ),
-                      );
+                  onPressed: (type) {
+                    if (type == 'search') {
+                      if (widget.callerScreen == PlanScreen.id) {
+                        BuildContext mainRouteContext =
+                            Provider.of<Data>(context, listen: false)
+                                .mainRouteContext;
+                        Navigator.push(
+                          mainRouteContext,
+                          CupertinoPageRoute(
+                            builder: (BuildContext context) =>
+                                ChatSearchScreen(),
+                          ),
+                        );
+                      } else if (widget.callerScreen == PlanAddScreen.id) {
+                        Navigator.push(
+                          context,
+                          CupertinoPageRoute(
+                            builder: (BuildContext context) =>
+                                ChatSearchScreen(),
+                          ),
+                        );
+                      }
+                    } else if (type == 'add') {
+                      if (widget.callerScreen == PlanScreen.id) {
+                        BuildContext mainRouteContext =
+                            Provider.of<Data>(context, listen: false)
+                                .mainRouteContext;
+                        Navigator.push(
+                          mainRouteContext,
+                          CupertinoPageRoute(
+                            builder: (BuildContext context) => ChatAddScreen(),
+                          ),
+                        );
+                      } else if (widget.callerScreen == PlanAddScreen.id) {
+                        Navigator.push(
+                          context,
+                          CupertinoPageRoute(
+                            builder: (BuildContext context) => ChatAddScreen(),
+                          ),
+                        );
+                      }
                     }
                   },
                 ),
@@ -99,16 +120,32 @@ class _PlanChatRoomSelectState extends State<PlanChatRoomSelect> {
             style: TextStyle(fontWeight: FontWeight.bold, color: color),
           ),
           SizedBox(
-            width: 10.0,
+            width: 20.0,
           ),
           MaterialButton(
             color: color,
-            minWidth: 80.0,
+            minWidth: 60.0,
+            child: Icon(
+              Icons.search,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              onPressed('search');
+            },
+          ),
+          SizedBox(
+            width: 20.0,
+          ),
+          MaterialButton(
+            color: color,
+            minWidth: 60.0,
             child: Icon(
               Icons.add,
               color: Colors.white,
             ),
-            onPressed: onPressed,
+            onPressed: () {
+              onPressed('add');
+            },
           ),
         ],
       ),

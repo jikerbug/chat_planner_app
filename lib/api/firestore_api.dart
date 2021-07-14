@@ -18,7 +18,7 @@ class FireStoreApi {
     DocumentReference dr = await _fireStore.collection('chatRooms').add({
       "chatRoomTitle": chatRoomTitle,
       "description": description,
-      "lastSentDate": sendDateFormatted,
+      // "lastSentDate": sendDateFormatted, 이거 어차피 lastSentTime으로 대체가능
       "createUser": User().userId,
       "category": category,
       "password": password,
@@ -51,64 +51,25 @@ class FireStoreApi {
 
   static Future<void> sendDateBubbleIfLastSentDateIsNotToday(
       String chatRoomId) async {
-    // DateTime sendDate = DateTime.now();
-    // String sendDateFormatted = DateFormat('yyyy-MM-dd').format(sendDate);
-    //
-    // DocumentSnapshot ds =
-    //     await _fireStore.collection('chatRooms').doc(chatRoomId).get();
-    //
-    // Map data = ds.data() as Map;
-    // String lastSentDate = data['lastSentDate'];
-    // if (lastSentDate != sendDateFormatted) {
-    //   await _fireStore
-    //       .collection('chatRooms')
-    //       .doc(chatRoomId)
-    //       .update({"lastSentDate": sendDateFormatted});
-    //   await _fireStore
-    //       .collection('chatRooms')
-    //       .doc(chatRoomId)
-    //       .collection('messages')
-    //       .add({'time': sendDate, 'type': 'date', 'date': sendDateFormatted});
-    // }
-  }
+    DateTime sendDate = DateTime.now();
+    String sendDateFormatted = DateFormat('yyyy-MM-dd').format(sendDate);
 
-  static Future<Map> createChatRoomDocAndGetInfo(now, userId, friendId) async {
-    String sendDateFormatted = DateFormat('yyyy-MM-dd').format(now);
-    DateTime expireTime = UtilFunction.getExpireTime(now);
+    DocumentSnapshot ds =
+        await _fireStore.collection('chatRooms').doc(chatRoomId).get();
 
-    DocumentReference dr = await _fireStore.collection('chatRooms').add({
-      "createdTime": now,
-      "expireTime": expireTime,
-      "extendCount": 0,
-      "lastSentDate": sendDateFormatted,
-      "createUser": userId,
-      "habitGroup": 'study',
-      "userCount": 2,
-      "mostHighAchievement": 1,
-      "isAutoExitActivated": true,
-      "isHabitReminderActivated": true,
-      "lastDoneTime": DateTime.now(),
-      //"lastSentDate는 sendDateBubbleIfLastSentDateIsNotToday함수에서 set해준다"
-    });
-    await _fireStore
-        .collection('chatRooms')
-        .doc(dr.id)
-        .collection('chatRoomInfo')
-        .doc('LastDoneInfo')
-        .set({
-      "userProfileList": {userId: 'none', userId: 'none'},
-      "userList": [userId, friendId],
-      userId + 'LDD': DateTime.now(),
-      friendId + 'LDD': DateTime.now(),
-      userId + 'LDH': DateTime.now(),
-      friendId + 'LDH': DateTime.now(),
-      //"lastSentDate는 sendDateBubbleIfLastSentDateIsNotToday함수에서 set해준다"
-    });
-    return {
-      'chatRoomId': dr.id,
-      'sendDateFormatted': sendDateFormatted,
-      'expireTime': expireTime,
-    };
+    Map data = ds.data() as Map;
+    String lastSentDate = data['lastSentDate'];
+    if (lastSentDate != sendDateFormatted) {
+      await _fireStore
+          .collection('chatRooms')
+          .doc(chatRoomId)
+          .update({"lastSentDate": sendDateFormatted});
+      await _fireStore
+          .collection('chatRooms')
+          .doc(chatRoomId)
+          .collection('messages')
+          .add({'time': sendDate, 'type': 'date', 'date': sendDateFormatted});
+    }
   }
 
   static void sendExitChatRoomMessageToEachOther(

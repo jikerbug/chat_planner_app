@@ -21,6 +21,7 @@ class FirebaseChatApi {
       //todayDoneCount 있으니까, 굳이 뱃지로 또 새로운 Done을 보여줄 필요는 없다고 보여짐 (한번에 3개의 정보는 너무함. 하루에 몇개 했는지만 보여줘도 충분)
       'today': nowString, //그냥 자정되면 리셋되는게맞다... 어차피 주간정보도 있으니
       'totalMessageCount': 0, //for badge
+      'currentMemberNum': 0,
     });
 
     ///아래의 생각정리를 통해, 위의 내용은 변함없이 유지하기로 함
@@ -44,11 +45,10 @@ class FirebaseChatApi {
     //치명적이지 않은 약간의 버그는 허용하도록 하자
 
     chatSearchInfoRef.child(category).child(chatRoomId).set({
-      'maxMemberNum': 0,
       'isPassword': false,
-      'currentMemberNum': 0,
+      'isFull': false,
       'totalDoneCount': 0, //리스너
-      'thisWeek': nowString,
+      'thisWeek': nowString, //리스너
       "createdTime": nowString,
       'weeklyDoneCount': 0,
     });
@@ -63,18 +63,26 @@ class FirebaseChatApi {
     //하지만 얘네들은 확실히, 쓰는 경우가 더 많다,,,, 일단 그대로 가자
   }
 
-  static void test() async {
+  static Future<void> test(category) async {
     List<int> rankList = [];
 
-    final rankHashMap = (await database
-            .reference()
-            .child("tests")
-            .orderByChild('num')
-            .limitToLast(10)
+    final rankHashMap = (await chatSearchInfoRef
+            .child(category)
+            .orderByChild('totalDoneCount')
+            .limitToLast(2)
             .once())
         .value;
 
+    final convertedMap = Map<String, dynamic>.from(rankHashMap);
+    convertedMap.forEach((key, value) {
+      FirebaseChatApi.
+    });
+
+    rankList.sort();
+    rankList = List.from(rankList.reversed);
+
     print(rankHashMap);
+    return rankHashMap;
   }
 
   static void createChatRoomUserInfo(chatRoomId, userId) {
