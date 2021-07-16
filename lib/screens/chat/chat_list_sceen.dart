@@ -1,5 +1,3 @@
-import 'package:chat_planner_app/models/chat_room.dart';
-import 'package:chat_planner_app/models_singleton/user.dart';
 import 'package:chat_planner_app/modules/chat_list.dart';
 import 'package:chat_planner_app/widgets/chat/chat_category_header.dart';
 import 'package:chat_planner_app/widgets/plan/info_panel.dart';
@@ -16,7 +14,7 @@ class ChatListScreen extends StatefulWidget {
 }
 
 class _ChatListScreenState extends State<ChatListScreen> {
-  final List<String> texts = ['전체', '공부', '운동', '독서', '생활습관', '커스텀'];
+  final List<String> texts = ['전체', '공부', '운동', '독서', '취미', '건강', '커스텀'];
 
   @override
   void initState() {

@@ -56,7 +56,6 @@ class HiveChatApi {
   }
 
   static void exitChatRoom(chatRoomId) {
-    //TODO 이거 삭제할때 좀 문제 있는듯,,,,
     int index = 0;
     _box.values.forEach((ChatRoomModel element) {
       if (element.chatRoomId == chatRoomId) {

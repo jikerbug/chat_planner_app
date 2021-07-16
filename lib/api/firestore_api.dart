@@ -25,18 +25,15 @@ class FireStoreApi {
       "maxMemberNum": maxMemberNum,
       "memberList": [User().userId],
       "isFull": false,
-      "lastSentDate": sendDateFormatted, //이거 어차피 lastSentTime으로 대체가능
+      "lastSentDate": sendDateFormatted,
+      //이거 어차피 lastSentTime으로 대체가능? 하지만 어차피 여기있는 정보들 다 채팅방입장할때 불러오니까 그냥 이걸로 쓰자?
+      //TODO:아니다. 애초에, message에 있는 마지막 sentTime이, 지금 보내려는 시간이랑 다르면 dateBubble을 보내면 되잖아?...
       //아래의 3가지 빼고는 전부 채팅방 입장시 항상 활용하는 것들이다
       //사실 chatRoomTitle빼고 다네,,,, 그냥 합치는게 좋겠다
-      "chatRoomTitle": chatRoomTitle, //검색할때는 어쨌든 Firestore로 해야한다
+      "chatRoomTitle": chatRoomTitle,
       "description": description,
       "createUser": User().nickname,
     });
-
-    ///주의!!!! lastSentDate는 메시지 버블을 위한 것이다
-    ///따라서 lastSentDateTime이 있더라도, 그것은 RTDB에 있을 것이다.
-    ///왜냐? 쓰는 횟수가 많은 정보이기 때문이다. 어차피 네트워크에 연결하여 불러올때만 lastSentDateTime이 필요하다.
-    ///하지만 이 정보는 채팅방 사용자가 채팅을 입력할때마다 업데이트된다
 
     return dr.id;
   }
@@ -46,7 +43,7 @@ class FireStoreApi {
     DateTime sendDate = DateTime.now();
     String sendDateFormatted = DateFormat('yyyy-MM-dd').format(sendDate);
 
-    await _fireStore.collection('chatRooms').doc(userId).set({
+    await _fireStore.collection('selfChatRooms').doc(userId).set({
       'lastSentDate': sendDateFormatted,
       'isDeletedAccount': false,
       //1주일마다 주기적으로 탈퇴회원 갠톡 삭제를 진행할 것이다
@@ -63,12 +60,25 @@ class FireStoreApi {
     return ds.data() as Map;
   }
 
-  static Query getChatRoomsQuery(String category, String criteria) {
-    criteria = 'chatRoomTitle';
-    return _fireStore
-        .collection('chatRooms')
-        // .orderBy(criteria)
-        .where('category', isEqualTo: category);
+  static Query getChatRoomsQuery(String category, String criteria,
+      {noFull = false, noPassword = false}) {
+    ///주의!!! 사용하는 핗드요소조합만으로 구성된 각각의 색인이 필요하다!!!
+    ///사용하는 조합 순서까지도 똑같아야한다!!!!
+    Query chatRoomsQuery;
+    if (category == '전체') {
+      chatRoomsQuery = _fireStore.collection('chatRooms');
+    } else {
+      chatRoomsQuery = _fireStore
+          .collection('chatRooms')
+          .where('category', isEqualTo: category);
+    }
+    // if (noFull) {
+    //   chatRoomsQuery = chatRoomsQuery.where('isFull', isEqualTo: false);
+    // }
+    // if (noPassword) {
+    //   chatRoomsQuery = chatRoomsQuery.where('password', isEqualTo: '');
+    // }
+    return chatRoomsQuery.orderBy(criteria, descending: true);
   }
 
   static Future<void> sendDateBubbleIfLastSentDateIsNotToday(

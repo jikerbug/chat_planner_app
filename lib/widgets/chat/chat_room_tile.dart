@@ -82,6 +82,7 @@ class ChatRoomTile extends StatelessWidget {
                   ],
                 ),
                 Divider(
+                  thickness: 0.5,
                   height: 10.0,
                   color: Colors.grey[600],
                 ),
