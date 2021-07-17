@@ -81,7 +81,7 @@ class FireStoreApi {
     return chatRoomsQuery.orderBy(criteria, descending: true);
   }
 
-  static Future<void> sendDateBubbleIfLastSentDateIsNotToday(
+  static Future<void> sendDateBubbleIfLastSentDateIsNotTodayAndLastSentUpdate(
       String chatRoomId) async {
     DateTime sendDate = DateTime.now();
     String sendDateFormatted = DateFormat('yyyy-MM-dd').format(sendDate);
@@ -112,13 +112,13 @@ class FireStoreApi {
     } else {
       exitChatRoomMsg = '실천친구가 채팅방을 떠났습니다.';
     }
-    await sendDateBubbleIfLastSentDateIsNotToday(friendUserId);
+    await sendDateBubbleIfLastSentDateIsNotTodayAndLastSentUpdate(friendUserId);
     FireStoreSendPrebuiltMsgApi.exitChatRoom(friendUserId, exitChatRoomMsg);
 
     if (!isCausedByExpire) {
       exitChatRoomMsg = '실천친구와의 채팅방을 떠났습니다.';
     }
-    await sendDateBubbleIfLastSentDateIsNotToday(userId);
+    await sendDateBubbleIfLastSentDateIsNotTodayAndLastSentUpdate(userId);
     FireStoreSendPrebuiltMsgApi.exitChatRoom(userId, exitChatRoomMsg);
   }
 
@@ -144,8 +144,8 @@ class FireStoreApi {
 
   static void sendMessage(text, userId, chatRoomId, time,
       {isFirstTimeline = true}) async {
-    FirebaseChatApi.changeChatRoomStateOfFriendIfMatched(
-        chatRoomId, userId, 'friendUserId');
+    FirebaseChatApi.updateLastSentInfoAndMsgCount(
+        chatRoomId: chatRoomId, now: time, lastMessage: text);
 
     //await sendDateBubbleIfLastSentDateIsNotToday(chatRoomId);
     //얘는 firstTimeLine 체크를 위해 밖에서 메세지를 보낸다. 따라서 밖에서 해당 프로세스를 진행할 것이다.
@@ -162,98 +162,56 @@ class FireStoreApi {
     });
   }
 
-  static void sendAddAgainMessages(
-      title, userId, chatRoomId, checkCount) async {
-    FirebaseChatApi.changeChatRoomStateOfFriendIfMatched(
-        chatRoomId, userId, 'friendUserId');
-    await sendDateBubbleIfLastSentDateIsNotToday(chatRoomId);
-    final messagesCollection = _fireStore
-        .collection('chatRooms')
-        .doc(chatRoomId)
-        .collection('messages');
-
-    String userMsg = '$title 한번 더 실천해볼게\n(현재까지 총 $checkCount회 실천)';
-    messagesCollection.add({
-      'text': userMsg,
-      'sender': userId,
-      'time': DateTime.now(),
-      'type': 'add'
-    });
-  }
-
   static void sendAddMessages(
       title, selectedCategory, userId, chatRoomId) async {
-    FirebaseChatApi.changeChatRoomStateOfFriendIfMatched(
-        chatRoomId, userId, 'friendUserId');
-    await sendDateBubbleIfLastSentDateIsNotToday(chatRoomId);
+    DateTime now = DateTime.now();
+    String userMsg = '$title $selectedCategory 해볼게';
+
+    FirebaseChatApi.updateLastSentInfoAndMsgCount(
+        chatRoomId: chatRoomId, now: now, lastMessage: userMsg);
+
+    await sendDateBubbleIfLastSentDateIsNotTodayAndLastSentUpdate(chatRoomId);
     final messagesCollection = _fireStore
         .collection('chatRooms')
         .doc(chatRoomId)
         .collection('messages');
 
-    String userMsg = '$title $selectedCategory해볼게';
-    messagesCollection.add({
-      'text': userMsg,
-      'sender': userId,
-      'time': DateTime.now(),
-      'type': 'add'
-    });
+    messagesCollection
+        .add({'text': userMsg, 'sender': userId, 'time': now, 'type': 'add'});
   }
 
   static void sendDoneMessages(title, userId, chatRoomId) async {
-    FirebaseChatApi.changeChatRoomStateOfFriendIfMatched(
-        chatRoomId, userId, 'friendUserId');
-    await sendDateBubbleIfLastSentDateIsNotToday(chatRoomId);
+    await sendDateBubbleIfLastSentDateIsNotTodayAndLastSentUpdate(chatRoomId);
+
+    DateTime now = DateTime.now();
     String userMsg = '$title 완료!';
 
+    FirebaseChatApi.updateLastSentInfoAndMsgCount(
+        chatRoomId: chatRoomId, now: now, lastMessage: userMsg);
     final messagesCollection = _fireStore
         .collection('chatRooms')
         .doc(chatRoomId)
         .collection('messages');
 
-    messagesCollection.add({
-      'text': userMsg,
-      'sender': userId,
-      'time': DateTime.now(),
-      'type': 'done'
-    });
+    messagesCollection
+        .add({'text': userMsg, 'sender': userId, 'time': now, 'type': 'done'});
   }
 
   static void sendTimerMessages(title, userId, chatRoomId, minuteCount) async {
-    FirebaseChatApi.changeChatRoomStateOfFriendIfMatched(
-        chatRoomId, userId, 'friendUserId');
-    await sendDateBubbleIfLastSentDateIsNotToday(chatRoomId);
+    await sendDateBubbleIfLastSentDateIsNotTodayAndLastSentUpdate(chatRoomId);
     String userMsg = '$title 실천하기\n$minuteCount분 완료!';
 
-    final messagesCollection = _fireStore
-        .collection('chatRooms')
-        .doc(chatRoomId)
-        .collection('messages');
-
-    messagesCollection.add({
-      'text': userMsg,
-      'sender': userId,
-      'time': DateTime.now(),
-      'type': 'done'
-    });
-  }
-
-  static void sendHeartGiftMessage(userId, chatRoomId) async {
-    FirebaseChatApi.changeChatRoomStateOfFriendIfMatched(
-        chatRoomId, userId, 'friendUserId');
-    await sendDateBubbleIfLastSentDateIsNotToday(chatRoomId);
+    DateTime now = DateTime.now();
+    FirebaseChatApi.updateLastSentInfoAndMsgCount(
+        chatRoomId: chatRoomId, now: now, lastMessage: userMsg);
 
     final messagesCollection = _fireStore
         .collection('chatRooms')
         .doc(chatRoomId)
         .collection('messages');
 
-    messagesCollection.add({
-      'text': '하트 1개를 선물했습니다.',
-      'sender': userId,
-      'time': DateTime.now(),
-      'type': 'gift'
-    });
+    messagesCollection
+        .add({'text': userMsg, 'sender': userId, 'time': now, 'type': 'done'});
   }
 
   //--------------------------------getter ----------------------------//

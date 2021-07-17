@@ -1,26 +1,16 @@
 import 'package:flutter/material.dart';
 
-class ChatCategoryHeader extends StatefulWidget {
-  final List<String> texts;
-  final Color color;
-  final Function selectCategoryCallback;
+class ChatCategoryHeader extends StatelessWidget {
   const ChatCategoryHeader(
       {required this.texts,
       required this.selectCategoryCallback,
+      required this.category,
       this.color = Colors.white});
 
-  @override
-  _ChatCategoryHeaderState createState() => _ChatCategoryHeaderState();
-}
-
-class _ChatCategoryHeaderState extends State<ChatCategoryHeader> {
-  late String selectedGroup;
-
-  @override
-  void initState() {
-    super.initState();
-    selectedGroup = widget.texts[0];
-  }
+  final List<String> texts;
+  final Color color;
+  final Function selectCategoryCallback;
+  final String category;
 
   @override
   Widget build(BuildContext context) {
@@ -31,22 +21,18 @@ class _ChatCategoryHeaderState extends State<ChatCategoryHeader> {
         height: MediaQuery.of(context).size.width / 9,
         child: ListView.separated(
           scrollDirection: Axis.horizontal,
-          itemCount: widget.texts.length,
+          itemCount: texts.length,
           itemBuilder: (context, index) {
-            final text = widget.texts[index];
+            final text = texts[index];
 
             return Material(
               borderRadius: BorderRadius.vertical(
                 top: Radius.circular(10.0),
               ),
-              color:
-                  (selectedGroup == text) ? widget.color : Colors.transparent,
+              color: (category == text) ? color : Colors.transparent,
               child: GestureDetector(
                 onTap: () {
-                  setState(() {
-                    selectedGroup = text;
-                  });
-                  widget.selectCategoryCallback(text);
+                  selectCategoryCallback(text);
                 },
                 child: Container(
                   constraints: BoxConstraints(
@@ -57,9 +43,8 @@ class _ChatCategoryHeaderState extends State<ChatCategoryHeader> {
                     child: Text(
                       text,
                       style: TextStyle(
-                          color: (selectedGroup == text)
-                              ? Colors.black
-                              : Colors.white),
+                          color:
+                              (category == text) ? Colors.black : Colors.white),
                     ),
                   ),
                 ),

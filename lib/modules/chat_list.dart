@@ -1,5 +1,4 @@
 import 'package:badges/badges.dart';
-import 'package:chat_planner_app/api_in_local/hive_chat_api.dart';
 import 'package:chat_planner_app/functions/chat_room_enter_function.dart';
 import 'package:chat_planner_app/functions/date_time_function.dart';
 import 'package:chat_planner_app/models_hive/chat_room_model.dart';
@@ -11,9 +10,13 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 class ChatList extends StatefulWidget {
   //type is chat or plan
-  ChatList({required this.chatRoomSelectCallback, this.type = 'chat'});
+  ChatList(
+      {required this.chatRoomSelectCallback,
+      this.type = 'chat',
+      required this.category});
   final Function(String, String) chatRoomSelectCallback;
   final String type;
+  final String category;
   @override
   _ChatListState createState() => _ChatListState();
 }
@@ -24,13 +27,39 @@ class _ChatListState extends State<ChatList> {
     return ValueListenableBuilder(
         valueListenable: Hive.box<ChatRoomModel>('chatRoom').listenable(),
         builder: (context, Box<ChatRoomModel> box, child) {
+          if (box.length == 0) {
+            return Center(
+                child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  'assets/images/heart_flower_2.png',
+                  width: 160,
+                  height: 160,
+                  fit: BoxFit.fill,
+                  color: Colors.black,
+                ),
+                Text('실천채팅방에서 계획을 함께 공유해보세요!'),
+              ],
+            ));
+          }
+
           return ListView.builder(
             scrollDirection: Axis.vertical,
             shrinkWrap: true,
             itemBuilder: (context, index) {
               print('builder : box.keys : ${box.keys}');
               final item = box.getAt(index);
-              return getChatRoomTile(box, index, item!);
+
+              if (widget.category == '전체') {
+                return getChatRoomTile(box, index, item!);
+              }
+
+              if (item!.category == widget.category) {
+                return getChatRoomTile(box, index, item);
+              } else {
+                return Container();
+              }
             },
             itemCount: box.length,
           );

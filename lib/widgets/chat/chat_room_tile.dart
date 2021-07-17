@@ -20,15 +20,20 @@ class ChatRoomTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
+                Text(
+                  chatRoom.category,
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15.0,
+                      color: Colors.teal),
+                ),
                 Row(
                   children: [
                     if (chatRoom.password != '') Icon(Icons.lock),
                     Text(
                       chatRoom.chatRoomTitle,
                       style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18.0,
-                          color: Colors.teal),
+                          fontWeight: FontWeight.bold, fontSize: 18.0),
                     ),
                     Text(
                       '(${chatRoom.currentMemberNum}명/${chatRoom.maxMemberNum}명)',

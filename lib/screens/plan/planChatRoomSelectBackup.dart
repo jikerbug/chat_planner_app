@@ -22,7 +22,7 @@ class _PlanChatRoomSelectState extends State<PlanChatRoomSelect> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * 2 / 3,
+      height: MediaQuery.of(context).size.height * 3 / 5,
       child: Row(
         children: <Widget>[
           Expanded(
@@ -34,8 +34,11 @@ class _PlanChatRoomSelectState extends State<PlanChatRoomSelect> {
                   onPressed: (type) {
                     if (type == 'search') {
                       if (widget.callerScreen == PlanScreen.id) {
+                        BuildContext mainRouteContext =
+                            Provider.of<Data>(context, listen: false)
+                                .mainRouteContext;
                         Navigator.push(
-                          context,
+                          mainRouteContext,
                           CupertinoPageRoute(
                             builder: (BuildContext context) =>
                                 ChatSearchScreen(),
@@ -52,8 +55,11 @@ class _PlanChatRoomSelectState extends State<PlanChatRoomSelect> {
                       }
                     } else if (type == 'add') {
                       if (widget.callerScreen == PlanScreen.id) {
+                        BuildContext mainRouteContext =
+                            Provider.of<Data>(context, listen: false)
+                                .mainRouteContext;
                         Navigator.push(
-                          context,
+                          mainRouteContext,
                           CupertinoPageRoute(
                             builder: (BuildContext context) => ChatAddScreen(),
                           ),
@@ -69,40 +75,15 @@ class _PlanChatRoomSelectState extends State<PlanChatRoomSelect> {
                     }
                   },
                 ),
-                Expanded(
-                  child: ChatList(
-                    chatRoomSelectCallback: widget.chatRoomSelectCallback,
-                    type: 'plan',
-                    category: '전체',
-                  ),
+                ChatList(
+                  chatRoomSelectCallback: widget.chatRoomSelectCallback,
+                  type: 'plan',
+                  category: '전체',
                 ),
                 Divider(height: 0.0),
-                if (widget.callerScreen == PlanScreen.id)
-                  InkWell(
-                    onTap: () {
-                      widget.chatRoomSelectCallback('all', '전체');
-                      Navigator.pop(context);
-                    },
-                    child: ListTile(
-                      title: Row(
-                        children: [
-                          SizedBox(
-                            width: 10.0,
-                          ),
-                          Text(
-                            '전체',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                if (widget.callerScreen == PlanScreen.id) Divider(height: 0.5),
                 InkWell(
                   onTap: () {
-                    widget.chatRoomSelectCallback('none', '없음');
+                    widget.chatRoomSelectCallback('no_chat_room_id', '없음');
                     Navigator.pop(context);
                   },
                   child: ListTile(

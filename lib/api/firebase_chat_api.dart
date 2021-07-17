@@ -13,6 +13,35 @@ class FirebaseChatApi {
   static final DatabaseReference chatMessageInfoRef =
       database.reference().child("chatListInfo");
 
+  static void updateLastSentInfoAndMsgCount(
+      {chatRoomId, now, lastMessage, type = ''}) async {
+    final totalMessageCount = (await chatMessageInfoRef
+            .child(chatRoomId)
+            .child('totalMessageCount')
+            .once())
+        .value;
+
+    chatMessageInfoRef.child(chatRoomId).child('messageInfo').update({
+      'lastSentTime': now.toString(),
+      'lastMessage': lastMessage,
+      'totalMessageCount': totalMessageCount + 1, //for badge
+    });
+
+    ///TODO:선택의 기로 : 오늘 다같이 실천한 개수를 표시하고 많은 사용량/등록한 습관 개수를 보여주고 적은 사용량
+    ///일단, 습관개수를 보여주는개 좀더 좋은 정보라는 생각이 들었다
+    ///그리고 대신에 내가 안읽은 실천수를 볼 수 있게 해주는 것,,,!!
+    ///아니면, done의 경우에는 push message를 보여줄 수도,,,,,
+    ///어차피 채팅방 입장하면 오늘 몇번실천했는지가 보일것!!!
+    ///이렇게 바꾸는게 낫겠다
+    // if (type == 'done') {
+    //   final totalMessageCount = (await chatMessageInfoRef
+    //       .child(chatRoomId)
+    //       .child('totalMessageCount')
+    //       .once())
+    //       .value;
+    // }
+  }
+
   static void createChatRoomInfo(chatRoomId, now, category) {
     String nowString = now.toString();
     //어차피 today랑 다르면 todayDoneCount를 0으로 초기화시켜줘야한다
@@ -21,7 +50,8 @@ class FirebaseChatApi {
       'lastMessage': '',
       'todayDoneCount': 0, //리스너 필요
       //todayDoneCount 있으니까, 굳이 뱃지로 또 새로운 Done을 보여줄 필요는 없다고 보여짐 (한번에 3개의 정보는 너무함. 하루에 몇개 했는지만 보여줘도 충분)
-      'today': nowString, //그냥 자정되면 리셋되는게맞다... 어차피 주간정보도 있으니
+      'today':
+          nowString, //그냥 자정되면 리셋되는게맞다... 어차피 주간정보도 있으니 //리스너 달아서 오늘날짜랑 다르면 업데이트하고 리셋//로컬에서는 또 따로 리셋
       'totalMessageCount': 0, //for badge
       'currentMemberNum': 1,
     });
@@ -118,9 +148,6 @@ class FirebaseChatApi {
   static void setDefaultChatInfo(userId) {}
 
   static void chatRoomStateChangeIdentified(userId) {}
-
-  static void changeChatRoomStateOfFriendIfMatched(
-      String chatRoomId, String userId, String friendUserId) {}
 
   static Map combinedInfoToChatInfoMap(String combinedInfo) {
     List infoList = combinedInfo.split('-|-');

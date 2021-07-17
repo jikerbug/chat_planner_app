@@ -1,6 +1,8 @@
 import 'package:chat_planner_app/functions/date_time_function.dart';
 import 'package:chat_planner_app/modules/plan_list.dart';
+import 'package:chat_planner_app/providers/data.dart';
 import 'package:chat_planner_app/widgets/plan/info_panel.dart';
+import 'package:provider/provider.dart';
 import 'plan_chat_room_select.dart';
 import 'package:chat_planner_app/widgets/thin_button.dart';
 import 'package:flutter/material.dart';
@@ -18,8 +20,8 @@ class PlanScreen extends StatefulWidget {
 class _PlanScreenState extends State<PlanScreen> {
   late String selectedDay;
   late DateTime nowSyncedAtReload;
-  String selectedChatRoomId = 'none';
-  String selectedChatRoomName = '없음';
+  String selectedChatRoomId = 'all';
+  String selectedChatRoomName = '전체';
 
   @override
   void initState() {
@@ -103,9 +105,12 @@ class _PlanScreenState extends State<PlanScreen> {
                   children: [
                     ThinButton(
                       onPressed: () {
+                        BuildContext mainRouteContext =
+                            Provider.of<Data>(context, listen: false)
+                                .mainRouteContext;
                         showModalBottomSheet(
                           isScrollControlled: true,
-                          context: context,
+                          context: mainRouteContext,
                           builder: (context) => PlanChatRoomSelect(
                               chatRoomSelectCallback:
                                   (chatRoomId, chatRoomName) {
@@ -136,7 +141,12 @@ class _PlanScreenState extends State<PlanScreen> {
                     ),
                   ],
                 ),
-                Expanded(child: PlanList(selectedDay, nowSyncedAtReload)),
+                Expanded(
+                    child: PlanList(
+                  selectedDay,
+                  nowSyncedAtReload,
+                  chatRoomIdCategory: selectedChatRoomId,
+                )),
               ],
             ),
           ),

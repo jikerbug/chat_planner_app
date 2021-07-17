@@ -9,6 +9,7 @@ class ChatRoom {
   final int currentMemberNum;
   final int maxMemberNum;
   final String password;
+  final String category;
 
   const ChatRoom({
     required this.chatRoomId,
@@ -20,6 +21,7 @@ class ChatRoom {
     required this.description,
     required this.currentMemberNum,
     required this.maxMemberNum,
-    required this.password
+    required this.password,
+    required this.category,
   });
 }

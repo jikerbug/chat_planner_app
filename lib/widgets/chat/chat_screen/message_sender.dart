@@ -66,8 +66,9 @@ class _MessageSenderState extends State<MessageSender> {
                 onPressed: () async {
                   textEditingController.clear();
                   if (text != '') {
-                    await FireStoreApi.sendDateBubbleIfLastSentDateIsNotToday(
-                        widget.chatRoomId);
+                    await FireStoreApi
+                        .sendDateBubbleIfLastSentDateIsNotTodayAndLastSentUpdate(
+                            widget.chatRoomId);
                     DateTime sendTime = DateTime.now();
                     bool isFirstTimeline =
                         checkIfMsgIsFirstTimeline(sendTime, lastSentTime);

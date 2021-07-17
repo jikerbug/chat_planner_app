@@ -18,10 +18,12 @@ import 'package:provider/provider.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class PlanList extends StatefulWidget {
-  PlanList(this.selectedDay, this.nowSyncedAtReload);
+  PlanList(this.selectedDay, this.nowSyncedAtReload,
+      {this.chatRoomIdCategory = 'all'});
 
   final String selectedDay;
   final DateTime nowSyncedAtReload;
+  final chatRoomIdCategory;
   @override
   _PlanListState createState() => _PlanListState();
 }
@@ -126,6 +128,12 @@ class _PlanListState extends State<PlanList> {
   }
 
   bool isItemInvisibleCondition(PlanModel item) {
+    if (widget.chatRoomIdCategory != 'all') {
+      if (item.selectedChatRoomId != widget.chatRoomIdCategory) {
+        return true;
+      }
+    }
+
     if (widget.selectedDay != '전체') {
       DateTime selectedDateTime = DateTimeFunction.getDateTimeOfSelectedDate(
           widget.selectedDay, widget.nowSyncedAtReload);

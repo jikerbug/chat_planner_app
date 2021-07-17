@@ -16,6 +16,8 @@ class ChatListScreen extends StatefulWidget {
 class _ChatListScreenState extends State<ChatListScreen> {
   final List<String> texts = ['전체', '공부', '운동', '독서', '취미', '건강', '커스텀'];
 
+  String category = '전체';
+
   @override
   void initState() {
     super.initState();
@@ -32,7 +34,12 @@ class _ChatListScreenState extends State<ChatListScreen> {
         InfoPanel('reward'),
         ChatCategoryHeader(
           texts: texts,
-          selectCategoryCallback: () {},
+          selectCategoryCallback: (category) {
+            setState(() {
+              this.category = category;
+            });
+          },
+          category: category,
         ),
         Expanded(
           child: Ink(
@@ -42,6 +49,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
             ),
             child: ChatList(
               chatRoomSelectCallback: (no, meaning) {},
+              category: category,
             ),
           ),
         ),

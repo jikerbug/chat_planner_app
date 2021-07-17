@@ -23,6 +23,24 @@ class _ChatSearchScreenState extends State<ChatSearchScreen>
   String selectedCategory = '전체';
   String selectedRankCriteria = '';
 
+  late TabController _controller;
+  int _currentIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TabController(vsync: this, length: 3);
+    _controller.addListener(_handleTabSelection);
+  }
+
+  _handleTabSelection() {
+    if (_controller.indexIsChanging) {
+      setState(() {
+        _currentIndex = _controller.index;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget categoryHeader = ChatCategoryHeader(
@@ -32,6 +50,7 @@ class _ChatSearchScreenState extends State<ChatSearchScreen>
           this.selectedCategory = selectedCategory;
         });
       },
+      category: selectedCategory,
     );
     return Container(
       decoration: BoxDecoration(
