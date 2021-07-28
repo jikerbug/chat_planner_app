@@ -162,10 +162,9 @@ class FireStoreApi {
     });
   }
 
-  static void sendAddMessages(
-      title, selectedCategory, userId, chatRoomId) async {
+  static void sendAddMessages(title, userId, chatRoomId) async {
     DateTime now = DateTime.now();
-    String userMsg = '$title $selectedCategory 해볼게';
+    String userMsg = '$title 실천 해볼게';
 
     FirebaseChatApi.updateLastSentInfoAndMsgCount(
         chatRoomId: chatRoomId, now: now, lastMessage: userMsg);

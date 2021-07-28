@@ -9,10 +9,13 @@
 // 그것 이외에도 7시기상, 6시기상 같은 것들에 대해 전체 사용자가 얼마나 해당 습관을
 // 채택하고 있는지 보는 것도 좋을 것 같다.
 
+import 'package:chat_planner_app/api/firestore_api.dart';
 import 'package:chat_planner_app/api_in_local/hive_plan_api.dart';
 import 'package:chat_planner_app/constants.dart';
+import 'package:chat_planner_app/functions/chat_room_enter_function.dart';
 import 'package:chat_planner_app/functions/custom_dialog_function.dart';
 import 'package:chat_planner_app/functions/date_time_function.dart';
+import 'package:chat_planner_app/models_singleton/user.dart';
 import 'plan_chat_room_select.dart';
 import 'package:chat_planner_app/widgets/circle_border_box.dart';
 import 'package:chat_planner_app/widgets/rounded_button.dart';
@@ -20,6 +23,8 @@ import 'package:chat_planner_app/widgets/thin_button.dart';
 import 'package:flutter/material.dart';
 
 class PlanAddScreen extends StatefulWidget {
+  PlanAddScreen({required this.mainRouteContext});
+  final BuildContext mainRouteContext;
   static String id = 'plan_add_screen';
   @override
   _PlanAddScreenState createState() => _PlanAddScreenState();
@@ -198,7 +203,18 @@ class _PlanAddScreenState extends State<PlanAddScreen> {
                                 planEndDateInfo: planEndDateInfo,
                                 selectedChatRoomId: selectedChatRoomId,
                               );
-                              Navigator.pop(context);
+
+                              if (selectedChatRoomId != '') {
+                                FireStoreApi.sendAddMessages(
+                                    title, User().userId, selectedChatRoomId);
+                                ChatRoomEnterFunctions.chatRoomEnterProcess(
+                                    widget.mainRouteContext,
+                                    selectedChatRoomId,
+                                    selectedChatRoomName,
+                                    type: PlanAddScreen.id);
+                              } else {
+                                Navigator.pop(context);
+                              }
                             }
                           },
                           title: '추가'),

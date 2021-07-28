@@ -32,15 +32,22 @@ class _ChatListScreenState extends State<ChatListScreen> {
         child: Column(
       children: [
         InfoPanel('reward'),
-        ChatCategoryHeader(
-          texts: texts,
-          selectCategoryCallback: (category) {
-            setState(() {
-              this.category = category;
-            });
-          },
-          category: category,
+        Container(
+          height: MediaQuery.of(context).size.width / 9,
+          child: Text(
+            '이번달 목표 : 책 5권읽기',
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
         ),
+        // ChatCategoryHeader(
+        //   texts: texts,
+        //   selectCategoryCallback: (category) {
+        //     setState(() {
+        //       this.category = category;
+        //     });
+        //   },
+        //   category: category,
+        // ),
         Expanded(
           child: Ink(
             decoration: BoxDecoration(

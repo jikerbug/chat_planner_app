@@ -1,7 +1,6 @@
 import 'package:chat_planner_app/screens/chat/cheer_message_select.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:chat_planner_app/screens/profile_view_screen.dart';
 
 class Bubble extends StatefulWidget {
   Bubble(
@@ -49,7 +48,7 @@ class _BubbleState extends State<Bubble> {
       if (widget.type == 'add') {
         chatColor = Colors.teal;
         fontColor = Colors.white;
-        addTimeDecorator = ' 등록';
+        addTimeDecorator = ''; //' 등록';
       } else if (widget.type == 'guide') {
         chatColor = Colors.lightGreen[50]!;
         fontColor = Colors.black;
@@ -96,7 +95,7 @@ class _BubbleState extends State<Bubble> {
                 shape: CircleBorder(),
                 child: CircleAvatar(
                   radius: 45.0,
-                  backgroundImage: AssetImage("images/promise.jpg"),
+                  backgroundImage: AssetImage("assets/images/promise.jpg"),
                   //해당 이미지는 저작권 문제 없기는 하지만 약간의 조건이 있는듯하다
                   //참고링크 : https://www.freepik.com/free-vector/hand-drawn-pinky-promise-concept_2721746.htm#page=2&query=promise&position=34
                 ),
@@ -174,17 +173,12 @@ class _BubbleState extends State<Bubble> {
         fontColor = widget.isMe ? Colors.white : Colors.black;
       }
 
-      return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 10.0),
+      return Container(
+        padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
         child: Column(
           crossAxisAlignment:
               widget.isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
           children: [
-            if (widget.isFirstTimeline && !widget.isMe) ...[
-              SizedBox(
-                height: 5.5,
-              )
-            ],
             Row(
               children: widget.isMe || !widget.isFirstTimeline
                   ? []
@@ -197,61 +191,38 @@ class _BubbleState extends State<Bubble> {
                       ),
                     ],
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                  vertical: messageBubbleGap, horizontal: 4.0),
-              child: Row(
-                  mainAxisAlignment: widget.isMe
-                      ? MainAxisAlignment.end
-                      : MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      widget.isMe ? widget.time + addTimeDecorator : '',
+            Container(
+              width: MediaQuery.of(context).size.width * 3 / 5,
+              height: MediaQuery.of(context).size.width * 35 / 100,
+              padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.width * 2 / 25),
+              child: Column(
+                children: [
+                  Center(
+                    child: Text(
+                      '${widget.text}\n${widget.time}',
                       style: TextStyle(
-                          fontSize:
-                              widget.isLastTimeline || (widget.type == 'add')
-                                  ? 12.0
-                                  : 0.0),
-                    ),
-                    Container(
-                      constraints: BoxConstraints(
-                        maxWidth: MediaQuery.of(context).size.width * 0.7,
+                        color: widget.isMe ? Colors.black : Colors.black,
+                        fontSize: messageFontSize,
+                        fontWeight: FontWeight.bold,
                       ),
-                      child: Material(
-                        elevation: 2.0,
-                        borderRadius: BorderRadius.only(
-                          topLeft: widget.topLeftRadius,
-                          topRight: widget.topRightRadius,
-                          bottomRight: Radius.circular(19.0),
-                          bottomLeft: Radius.circular(19.0),
-                        ),
-                        color: chatColor,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 8.0, horizontal: 15.0),
-                          child: Text(
-                            widget.text,
-                            style: TextStyle(
-                                color: fontColor, fontSize: messageFontSize),
-                          ),
-                        ),
-                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    Text(
-                      widget.isMe ? '' : widget.time + addTimeDecorator,
-                      style: TextStyle(
-                          fontSize:
-                              widget.isLastTimeline || (widget.type == 'add')
-                                  ? 12.0
-                                  : 0.0),
-                    ),
-                  ]),
+                  ),
+                ],
+              ),
+              decoration: BoxDecoration(
+                color: Colors.transparent,
+                image: DecorationImage(
+                  image: AssetImage("assets/images/done_card.png"),
+                  fit: BoxFit.fitWidth,
+                ),
+              ),
             ),
-            if (widget.isLastMessage) ...[
+            if (widget.isFirstTimeline && !widget.isMe) ...[
               SizedBox(
                 height: 5.5,
-              ),
+              )
             ],
             Row(
               mainAxisAlignment:
@@ -263,10 +234,22 @@ class _BubbleState extends State<Bubble> {
                     setState(() {
                       isHearted = true;
                     });
+                    String planType;
+                    if (widget.type == 'done') {
+                      planType = '실천';
+                    } else if (widget.type == 'add') {
+                      planType = '약속';
+                    } else {
+                      planType = 'no_way';
+                    }
                     showModalBottomSheet(
                       isScrollControlled: true,
                       context: context,
-                      builder: (context) => CheerMessageSelect(),
+                      builder: (context) => CheerMessageSelect(
+                        plan: widget.text.split('완료')[0].trim(),
+                        planType: planType,
+                        cheerUserId: widget.sender,
+                      ),
                     );
                   },
                   child: isHearted
@@ -280,7 +263,12 @@ class _BubbleState extends State<Bubble> {
                         ),
                 ),
               ],
-            )
+            ),
+            if (widget.isLastMessage) ...[
+              SizedBox(
+                height: 5.5,
+              ),
+            ],
           ],
         ),
       );

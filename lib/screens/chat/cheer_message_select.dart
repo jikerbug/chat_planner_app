@@ -1,8 +1,14 @@
+import 'package:chat_planner_app/api/firestore_cheer_api.dart';
+import 'package:chat_planner_app/models_singleton/user.dart';
 import 'package:chat_planner_app/widgets/circle_border_box.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CheerMessageSelect extends StatefulWidget {
+  CheerMessageSelect({this.cheerUserId, this.plan, this.planType});
+  final cheerUserId;
+  final plan;
+  final planType;
   @override
   _CheerMessageSelectState createState() => _CheerMessageSelectState();
 }
@@ -12,14 +18,14 @@ class _CheerMessageSelectState extends State<CheerMessageSelect> {
   static String chatTypeMyself = '나';
   static String typeNone = '없음';
 
-  final List planCategoryList = ['응원해요', '칭찬해요', '최고에요', '좋아요'];
+  final List cheerCategoryList = ['응원해요', '칭찬해요', '좋아요'];
 
   bool isChatCategoryFolded = false;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * 3 / 5,
+      height: MediaQuery.of(context).size.height / 2,
       child: Column(
         children: [
           categoryHeaderTile(
@@ -33,15 +39,33 @@ class _CheerMessageSelectState extends State<CheerMessageSelect> {
               itemBuilder: (context, index) {
                 return ListTile(
                   onTap: () {
+                    String type;
+                    if (cheerCategoryList[index] == '응원해요') {
+                      type = '응원';
+                    } else if (cheerCategoryList[index] == '칭찬해요') {
+                      type = '칭찬';
+                    } else if (cheerCategoryList[index] == '좋아요') {
+                      type = '좋아';
+                    } else {
+                      type = 'no_way';
+                    }
+
+                    FireStoreCheerApi.sendCheerMessage(
+                        cheerUserId: widget.cheerUserId,
+                        senderNickname: User().nickname,
+                        senderUserId: User().userId,
+                        type: type,
+                        plan: widget.plan,
+                        planType: widget.planType);
                     Navigator.pop(context);
                   },
                   title: Text(
-                    planCategoryList[index],
+                    cheerCategoryList[index],
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 );
               },
-              itemCount: planCategoryList.length,
+              itemCount: cheerCategoryList.length,
               separatorBuilder: (context, index) {
                 return Divider(
                   height: 0.0,

@@ -37,11 +37,9 @@ class _BottomBarState extends State<BottomBar> {
         widget.navigatorKey.currentState.pushNamed('/chats');
         break;
       case 2:
-        widget.navigatorKey.currentState.pushNamed('/hearts');
+        widget.navigatorKey.currentState.pushNamed('/cheers');
         break;
     }
-    // widget.navigatorKey.currentState
-    //     .pushNamed('/friends', duration: Duration(seconds: 0));
   }
 
   @override

@@ -43,6 +43,7 @@ class ChatCategoryHeader extends StatelessWidget {
                     child: Text(
                       text,
                       style: TextStyle(
+                          fontSize: 17.0,
                           color:
                               (category == text) ? Colors.black : Colors.white),
                     ),

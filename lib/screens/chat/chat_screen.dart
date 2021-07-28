@@ -1,5 +1,8 @@
 import 'package:chat_planner_app/api/firebase_chat_api.dart';
+import 'package:chat_planner_app/api/firestore_api.dart';
 import 'package:chat_planner_app/api_in_local/hive_chat_api.dart';
+import 'package:chat_planner_app/constants.dart';
+import 'package:chat_planner_app/screens/chat/end_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:chat_planner_app/functions/custom_dialog_function.dart';
 import 'package:chat_planner_app/modules/message_stream.dart';
@@ -23,7 +26,13 @@ class _ChatScreenState extends State<ChatScreen> {
   String userId = '';
   String friendNickname = '';
   String friendProfileUrl = '';
+  late List<dynamic> memberList;
+  late Map chatRoomInfoFromServer;
   var messageStream = MessageStream('', '', '', '', '');
+  var endDrawer = EndDrawer(
+    chatRoomId: '',
+    memberList: [],
+  );
 
   @override
   void initState() {
@@ -53,6 +62,13 @@ class _ChatScreenState extends State<ChatScreen> {
 
       messageStream = MessageStream(
           userId, chatRoomId, friendNickname, friendUserId, friendProfileUrl);
+
+      chatRoomInfoFromServer = await FireStoreApi.getChatRoomInfo(chatRoomId);
+      memberList = chatRoomInfoFromServer['memberList'];
+      endDrawer = EndDrawer(
+        chatRoomId: chatRoomId,
+        memberList: memberList,
+      );
       setState(() {});
     });
   }
@@ -64,25 +80,10 @@ class _ChatScreenState extends State<ChatScreen> {
     super.dispose();
   }
 
-  void handleAppBarMenuClick(String value) {
-    switch (value) {
-      case '채팅방 나가기':
-        print("채팅방 나가기?");
-        CustomDialogFunction.dialog(
-            isLeftAlign: false,
-            context: context,
-            isTwoButton: true,
-            onPressed: () {
-              HiveChatApi.exitChatRoom(chatRoomId);
-              Navigator.pop(context);
-            },
-            title: "채팅방 나가기",
-            text: '실천친구와의 매칭이 종료됩니다.\n채팅방을 나가시겠습니까?',
-            size: 'middle');
-        break;
-      case '채팅방 정보 보기':
-        break;
-    }
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  void _openEndDrawer() {
+    _scaffoldKey.currentState!.openEndDrawer();
   }
 
   @override
@@ -95,28 +96,33 @@ class _ChatScreenState extends State<ChatScreen> {
     chatRoomName = argument['chatRoomName'];
 
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: Colors.grey[100],
+      endDrawer: endDrawer,
       appBar: AppBar(
           elevation: 0.0,
           iconTheme: IconThemeData(
             color: Colors.black, //change your color here
           ),
           backgroundColor: Colors.grey[100],
+          leading: GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Icon(Icons.arrow_back)),
           title: Text(
             chatRoomName,
             style: TextStyle(color: Colors.black),
           ),
           actions: [
-            PopupMenuButton<String>(
-              onSelected: handleAppBarMenuClick,
-              itemBuilder: (BuildContext context) {
-                return {'채팅방 정보 보기', '채팅방 나가기'}.map((String choice) {
-                  return PopupMenuItem<String>(
-                    value: choice,
-                    child: Text(choice),
-                  );
-                }).toList();
+            GestureDetector(
+              child: Icon(Icons.menu),
+              onTap: () {
+                _openEndDrawer();
               },
+            ),
+            SizedBox(
+              width: kAppbarRightMargin(context),
             ),
           ]),
       floatingActionButton: DoneCountFAB(

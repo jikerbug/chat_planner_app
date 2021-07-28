@@ -41,49 +41,45 @@ class _PlanScreenState extends State<PlanScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Column(
+        InfoPanel('heart'),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            InfoPanel('heart'),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                SizedBox(
-                  width: 5,
-                ),
-                for (String dayCategory
-                    in DateTimeFunction.dayListForPlanScreen) ...{
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        selectedDay = dayCategory;
-                      });
-                    },
-                    child: Material(
-                      color: (selectedDay == dayCategory)
-                          ? Colors.white
-                          : Colors.transparent,
-                      borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(10.0),
-                      ),
-                      child: CircleAvatar(
-                        radius: MediaQuery.of(context).size.width / 18,
-                        backgroundColor: Colors.transparent,
-                        child: Text(
-                          dayCategory,
-                          style: TextStyle(
-                              color: (selectedDay == dayCategory)
-                                  ? Colors.black
-                                  : Colors.white),
-                        ),
-                      ),
-                    ),
-                  )
+            SizedBox(
+              width: 5,
+            ),
+            for (String dayCategory
+                in DateTimeFunction.dayListForPlanScreen) ...{
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    selectedDay = dayCategory;
+                  });
                 },
-                SizedBox(
-                  width: 5,
+                child: Material(
+                  color: (selectedDay == dayCategory)
+                      ? Colors.white
+                      : Colors.transparent,
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(10.0),
+                  ),
+                  child: CircleAvatar(
+                    radius: MediaQuery.of(context).size.width / 18,
+                    backgroundColor: Colors.transparent,
+                    child: Text(
+                      dayCategory,
+                      style: TextStyle(
+                          color: (selectedDay == dayCategory)
+                              ? Colors.black
+                              : Colors.white),
+                    ),
+                  ),
                 ),
-              ],
-            )
+              )
+            },
+            SizedBox(
+              width: 5,
+            ),
           ],
         ),
         Expanded(

@@ -18,6 +18,29 @@ class _InfoPanelState extends State<InfoPanel> {
   Widget build(BuildContext context) {
     bool isRewardDisplaySetting = (widget.type == 'reward');
 
+    Widget textInfo;
+    if (widget.type == 'reward') {
+      textInfo = Text(
+        '보상에 76% 도달',
+        style: TextStyle(
+            fontSize: 18.0, color: Colors.white, fontWeight: FontWeight.bold),
+      );
+    } else if (widget.type == 'heart') {
+      textInfo = Text(
+        '금일 하트 0개 획득',
+        style: TextStyle(
+            fontSize: 18.0, color: Colors.white, fontWeight: FontWeight.bold),
+      );
+    } else if (widget.type == 'heart_total') {
+      textInfo = Text(
+        '하트 10개 보유',
+        style: TextStyle(
+            fontSize: 18.0, color: Colors.white, fontWeight: FontWeight.bold),
+      );
+    } else {
+      textInfo = Container();
+    }
+
     return Stack(
       children: [
         Positioned(
@@ -39,21 +62,7 @@ class _InfoPanelState extends State<InfoPanel> {
             Container(
               height: AppBar().preferredSize.height,
               alignment: Alignment.center,
-              child: (isRewardDisplaySetting)
-                  ? Text(
-                      '보상에 76% 도달',
-                      style: TextStyle(
-                          fontSize: 18.0,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold),
-                    )
-                  : Text(
-                      '금일 하트 0개 획득',
-                      style: TextStyle(
-                          fontSize: 18.0,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold),
-                    ),
+              child: textInfo,
             ),
             SizedBox(
               width: 3.0,

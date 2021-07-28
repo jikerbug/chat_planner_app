@@ -17,6 +17,7 @@ class FirebaseChatApi {
       {chatRoomId, now, lastMessage, type = ''}) async {
     final totalMessageCount = (await chatMessageInfoRef
             .child(chatRoomId)
+            .child('messageInfo')
             .child('totalMessageCount')
             .once())
         .value;

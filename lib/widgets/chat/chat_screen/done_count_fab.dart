@@ -50,7 +50,7 @@ class _DoneCountFABState extends State<DoneCountFAB>
             children: [
               Transform.translate(
                 offset: Offset.fromDirection(
-                    getRadiansFromDegree(90), unfoldAnimation.value * 120),
+                    getRadiansFromDegree(90), unfoldAnimation.value * 60),
                 child: FloatingActionButton.extended(
                   heroTag: null,
                   elevation: hiddenButtonElevation,
@@ -61,21 +61,6 @@ class _DoneCountFABState extends State<DoneCountFAB>
                   label: Text(
                     "총 42002회 실천",
                     style: TextStyle(color: Colors.black),
-                  ),
-                ),
-              ),
-              Transform.translate(
-                offset: Offset.fromDirection(
-                    getRadiansFromDegree(90), unfoldAnimation.value * 60),
-                child: FloatingActionButton.extended(
-                  heroTag: null,
-                  elevation: hiddenButtonElevation,
-                  onPressed: () {
-                    //Navigator.pushNamed(context, TaskScreen.id);
-                  },
-                  backgroundColor: Colors.green,
-                  label: Text(
-                    "금주 100회 실천",
                   ),
                 ),
               ),
@@ -100,7 +85,7 @@ class _DoneCountFABState extends State<DoneCountFAB>
                     alignment: Alignment.center,
                     child: Icon(Icons.people)),
                 backgroundColor: Colors.teal,
-                label: Text("금일 32회 실천"),
+                label: Text("금주 32회 실천"),
               ),
             ],
           ),

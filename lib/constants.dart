@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-double kAppbarLeftMargin(context) {
+double kAppbarRightMargin(context) {
   return MediaQuery.of(context).size.width / 20;
 }
 

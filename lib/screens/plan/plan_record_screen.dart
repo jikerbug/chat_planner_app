@@ -111,7 +111,7 @@ class _PlanRecordScreenState extends State<PlanRecordScreen> {
         actions: [
           Icon(Icons.edit),
           SizedBox(
-            width: kAppbarLeftMargin(context),
+            width: kAppbarRightMargin(context),
           ),
           GestureDetector(
             child: Icon(Icons.done),
@@ -119,7 +119,7 @@ class _PlanRecordScreenState extends State<PlanRecordScreen> {
               print('planEndDate를 오늘로 바꿔준다');
             },
           ),
-          SizedBox(width: kAppbarLeftMargin(context)),
+          SizedBox(width: kAppbarRightMargin(context)),
           GestureDetector(
             child: Icon(Icons.delete),
             onTap: () {
@@ -137,7 +137,7 @@ class _PlanRecordScreenState extends State<PlanRecordScreen> {
             },
           ),
           SizedBox(
-            width: kAppbarLeftMargin(context),
+            width: kAppbarRightMargin(context),
           )
         ],
       ),

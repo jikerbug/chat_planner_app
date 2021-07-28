@@ -13,6 +13,8 @@ import '../plan/plan_screen.dart';
 
 import 'package:chat_planner_app/api/firestore_heart_api.dart';
 
+import 'cheer_screen.dart';
+
 class MainRouteScreen extends StatefulWidget {
   MainRouteScreen({
     required this.userInfo,
@@ -136,7 +138,8 @@ class _HomeState extends State<Home> {
                         isScrollControlled:
                             true, //full screen으로 modal 쓸 수 있게 해준다.
                         context: context,
-                        builder: (context) => PlanAddScreen(),
+                        builder: (context) =>
+                            PlanAddScreen(mainRouteContext: context),
                       );
                     }),
           backgroundColor: Colors.transparent,
@@ -153,6 +156,9 @@ class _HomeState extends State<Home> {
                   break;
                 case '/chats':
                   builder = (context) => ChatListScreen(fabCallback: changeFAB);
+                  break;
+                case '/cheers':
+                  builder = (context) => CheerScreen(fabFunc: changeFAB);
                   break;
               }
               return NoDelayPageRoute(

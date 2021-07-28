@@ -17,7 +17,16 @@ class ChatSearchScreen extends StatefulWidget {
 
 class _ChatSearchScreenState extends State<ChatSearchScreen>
     with TickerProviderStateMixin {
-  final List<String> texts = ['전체', '공부', '운동', '독서', '취미', '건강', '커스텀'];
+  //final List<String> texts = ['전체', '공부', '운동', '독서', '취미', '건강', '커스텀'];
+  final List<String> texts = [
+    '전체',
+    '\u{1F4D2}',
+    '\u{1F3C3}',
+    '\u{1F4D6}',
+    '\u{1F3B5}',
+    '건강',
+    '커스텀'
+  ];
   bool isDoneSort = true;
   bool isCreatedTimeSort = false;
   String selectedCategory = '전체';
